@@ -1,8 +1,8 @@
 CREATE TABLE users (
   username VARCHAR(50) NOT NULL,
-  password VARCHAR(50) NOT NULL,
-  session_token VARCHAR(36) UNIQUE,
-  session_token_created DATETIME,
-  session_token_last_used DATETIME,
+  password VARCHAR(60) NOT NULL,
+  sessionToken VARCHAR(36) UNIQUE,
+  sessionTokenCreated DATETIME,
+  sessionTokenLastUsed DATETIME,
   PRIMARY KEY (username)
 ) ENGINE = InnoDB;

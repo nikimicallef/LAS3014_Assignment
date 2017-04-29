@@ -5,14 +5,16 @@ import java.util.Map;
 public class Resources {
     public static String jsonMessageBuilder(final Map<String, String> jsonBody){
         final StringBuilder jsonOutputStringBuilder = new StringBuilder();
-        jsonOutputStringBuilder.append("{\n");
+        jsonOutputStringBuilder.append("{");
 
         for(final String key : jsonBody.keySet()){
-            final String keyValuePair = "\t\"" + key + "\" : \"" + jsonBody.get(key) + "\"\n";
+            final String keyValuePair = "\n\t\"" + key + "\" : \"" + jsonBody.get(key) + "\",";
             jsonOutputStringBuilder.append(keyValuePair);
         }
 
-        jsonOutputStringBuilder.append("}");
+        jsonOutputStringBuilder.deleteCharAt(jsonOutputStringBuilder.lastIndexOf(","));
+
+        jsonOutputStringBuilder.append("\n}");
 
         return jsonOutputStringBuilder.toString();
     }

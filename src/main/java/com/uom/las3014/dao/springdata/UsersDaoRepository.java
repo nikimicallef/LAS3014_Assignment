@@ -8,5 +8,7 @@ import org.springframework.stereotype.Repository;
 public interface UsersDaoRepository extends JpaRepository<User, String>{
     User findUsersByUsername(final String username);
 
-    User findUsersBySession_token(final String sessionToken);
+    User findUsersBySessionToken(final String sessionToken);
+
+    Integer countUsersByUsername(final String username);
 }

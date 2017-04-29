@@ -6,9 +6,14 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.sql.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Entity
 @Table(name = "Users")
@@ -20,14 +25,14 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "session_token")
-    private String session_token;
+    @Column(name = "session_Token")
+    private String sessionToken;
 
-    @Column(name = "session_token_created")
-    private Date session_token_created;
+    @Column(name = "session_Token_Created")
+    private Timestamp sessionTokenCreated;
 
-    @Column(name = "session_token_last_used")
-    private Date session_token_last_used;
+    @Column(name = "session_Token_Last_Used")
+    private Timestamp sessionTokenLastUsed;
 
     public User() {}
 
@@ -52,28 +57,39 @@ public class User {
         this.password = password;
     }
 
-    public String getSession_token() {
-        return session_token;
+    public String getSessionToken() {
+        return sessionToken;
     }
 
-    public void setSession_token(String session_token) {
-        this.session_token = session_token;
+    public void setSessionToken(String sessionToken) {
+        this.sessionToken = sessionToken;
     }
 
-    public Date getSession_token_created() {
-        return session_token_created;
+    public Timestamp getSessionTokenCreated() {
+        return sessionTokenCreated;
     }
 
-    public void setSession_token_created(Date session_token_created) {
-        this.session_token_created = session_token_created;
+    public void setSessionTokenCreated(final Timestamp sessionTokenCreated) {
+        this.sessionTokenCreated = sessionTokenCreated;
     }
 
-    public Date getSession_token_last_used() {
-        return session_token_last_used;
+    public Timestamp getSessionTokenLastUsed() {
+        return sessionTokenLastUsed;
     }
 
-    public void setSession_token_last_used(Date session_token_last_used) {
-        this.session_token_last_used = session_token_last_used;
+    public void setSessionTokenLastUsed(Timestamp sessionTokenLastUsed) {
+        this.sessionTokenLastUsed = sessionTokenLastUsed;
+    }
+
+    public boolean hasActiveSessionToken(){
+        final Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        timestamp.toLocalDateTime();
+
+        return sessionToken != null
+                && ((sessionTokenCreated != null
+                        && ChronoUnit.SECONDS.between(sessionTokenCreated.toLocalDateTime(), timestamp.toLocalDateTime()) <= 30)
+                    || (sessionTokenLastUsed != null
+                        && ChronoUnit.SECONDS.between(sessionTokenLastUsed.toLocalDateTime(), timestamp.toLocalDateTime()) <= 30));
     }
 
     @Override
@@ -81,9 +97,9 @@ public class User {
         final Map<String, String> jsonBodyKeyValuePair = new HashMap<>();
         jsonBodyKeyValuePair.put("username", username);
         jsonBodyKeyValuePair.put("password", password);
-        jsonBodyKeyValuePair.put("session_token", session_token);
-        jsonBodyKeyValuePair.put("session_token_created", session_token_created.toString());
-        jsonBodyKeyValuePair.put("session_token_last_used", session_token_last_used.toString() );
+        jsonBodyKeyValuePair.put("sessionToken", sessionToken);
+        jsonBodyKeyValuePair.put("sessionTokenCreated", sessionTokenCreated.toString());
+        jsonBodyKeyValuePair.put("sessionTokenLastUsed", sessionTokenLastUsed.toString() );
 
         return Resources.jsonMessageBuilder(jsonBodyKeyValuePair);
     }
