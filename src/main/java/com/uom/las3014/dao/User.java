@@ -1,6 +1,7 @@
 package com.uom.las3014.dao;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.sql.Timestamp;
@@ -9,7 +10,11 @@ import java.time.temporal.ChronoUnit;
 @Entity
 @Table(name = "users")
 public class User {
+    //TODO: Implement joins
     @Id
+    @GeneratedValue
+    private Integer userId;
+
 //    @Column(name="username")
     private String username;
 
@@ -30,6 +35,14 @@ public class User {
     public User(final String username, final String password) {
         this.username = username;
         this.password = password;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public String getUsername() {

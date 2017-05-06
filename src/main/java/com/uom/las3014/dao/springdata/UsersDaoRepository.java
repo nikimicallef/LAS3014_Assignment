@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UsersDaoRepository extends JpaRepository<User, String>{
+public interface UsersDaoRepository extends JpaRepository<User, Integer>{
     User findUsersByUsername(final String username);
 
     User findUsersBySessionToken(final String sessionToken);
