@@ -7,4 +7,6 @@ public interface UserService {
     ResponseEntity createNewUser(final UserCredentialsBody userCredentialsBody);
 
     ResponseEntity loginAndGenerateToken(final UserCredentialsBody userCredentialsBody);
+
+    ResponseEntity logout(final String sessionToken);
 }

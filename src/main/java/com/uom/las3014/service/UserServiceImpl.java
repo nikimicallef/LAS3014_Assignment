@@ -3,6 +3,8 @@ package com.uom.las3014.service;
 import com.uom.las3014.api.UserCredentialsBody;
 import com.uom.las3014.dao.User;
 import com.uom.las3014.dao.springdata.UsersDaoRepository;
+import com.uom.las3014.exceptions.InvalidCredentialsException;
+import com.uom.las3014.exceptions.UserAlreadyExistsException;
 import com.uom.las3014.resources.Resources;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +20,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class UserServiceImpl implements UserService {
     @Autowired
     private UsersDaoRepository usersDaoRepository;
@@ -26,17 +28,11 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    //TODO: One return per method
-
     private final Map<String, String> jsonBodyKeyValuePair = new HashMap<>();
 
     public ResponseEntity createNewUser(final UserCredentialsBody userCredentialsBody){
         if (userExistsInDbByUsername(userCredentialsBody.getUsername())) {
-            jsonBodyKeyValuePair.put("error", "Account with that username already exists.");
-
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(Resources.jsonMessageBuilder(jsonBodyKeyValuePair));
+            throw new UserAlreadyExistsException();
         } else {
             jsonBodyKeyValuePair.putAll(createAndSaveNewUser(userCredentialsBody.getUsername(), userCredentialsBody.getPassword()));
 
@@ -49,18 +45,34 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity loginAndGenerateToken(final UserCredentialsBody userCredentialsBody){
         final User user = getUserFromDb(userCredentialsBody.getUsername());
 
-        if (user != null && validateUserPassword(userCredentialsBody.getPassword(), user.getPassword())) {
-            jsonBodyKeyValuePair.put("error", "Invalid credentials.");
-
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(Resources.jsonMessageBuilder(jsonBodyKeyValuePair));
+        if (user != null && !validateUserPassword(userCredentialsBody.getPassword(), user.getPassword())) {
+            throw new InvalidCredentialsException();
         } else {
             jsonBodyKeyValuePair.putAll(generateSessionToken(user));
 
             return ResponseEntity.status(HttpStatus.OK)
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(Resources.jsonMessageBuilder(jsonBodyKeyValuePair));
+        }
+    }
+
+    public ResponseEntity logout(final String sessionToken){
+        final User user = getUserFromDbUsingSessionToken(sessionToken);
+
+        if (user != null) {
+            user.setSessionToken(null);
+            user.setSessionTokenCreated(null);
+            user.setSessionTokenLastUsed(null);
+
+            usersDaoRepository.save(user);
+
+            jsonBodyKeyValuePair.put("message", "Logged out successfully.");
+
+            return ResponseEntity.status(HttpStatus.OK)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(Resources.jsonMessageBuilder(jsonBodyKeyValuePair));
+        } else {
+            throw new InvalidCredentialsException();
         }
     }
 

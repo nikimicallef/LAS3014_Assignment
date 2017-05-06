@@ -1,5 +1,8 @@
 package com.uom.las3014.rest;
 
+import com.uom.las3014.exceptions.InvalidCredentialsException;
+import com.uom.las3014.exceptions.UserAlreadyExistsException;
+import com.uom.las3014.resources.Resources;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,8 +20,38 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-//@ControllerAdvice
+@ControllerAdvice
 public class ExceptionMapper extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity userAlreadyExists() {
+        final Map<String, String> jsonBodyKeyValuePair = new HashMap<>();
+        jsonBodyKeyValuePair.put("error", "User already exists.");
+
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Resources.jsonMessageBuilder(jsonBodyKeyValuePair));
+    }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity invalidCredentials() {
+        final Map<String, String> jsonBodyKeyValuePair = new HashMap<>();
+        jsonBodyKeyValuePair.put("error", "Invalid Credentials.");
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Resources.jsonMessageBuilder(jsonBodyKeyValuePair));
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity catchAll() {
+        final Map<String, String> jsonBodyKeyValuePair = new HashMap<>();
+        jsonBodyKeyValuePair.put("error", "Internal server error.");
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Resources.jsonMessageBuilder(jsonBodyKeyValuePair));
+    }
 
 //    @Override
 //    protected ResponseEntity<Object> handleMethodArgumentNotValid(final MethodArgumentNotValidException ex, final HttpHeaders headers, final HttpStatus status, final WebRequest request) {

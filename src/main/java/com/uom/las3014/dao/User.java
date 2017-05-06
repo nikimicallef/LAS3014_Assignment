@@ -1,37 +1,28 @@
 package com.uom.las3014.dao;
 
-import com.uom.las3014.resources.Resources;
-
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 @Entity
-@Table(name = "Users")
+@Table(name = "users")
 public class User {
     @Id
-    @Column(name = "username")
+//    @Column(name="username")
     private String username;
 
-    @Column(name = "password")
+//    @Column(name="password")
     private String password;
 
-    @Column(name = "session_Token")
+//    @Column(name="session_token")
     private String sessionToken;
 
-    @Column(name = "session_Token_Created")
+//    @Column(name="session_token_created")
     private Timestamp sessionTokenCreated;
 
-    @Column(name = "session_Token_Last_Used")
+//    @Column(name="session_token_last_used")
     private Timestamp sessionTokenLastUsed;
 
     public User() {}
@@ -85,6 +76,8 @@ public class User {
         final Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         timestamp.toLocalDateTime();
 
+        //TODO: 30 minutes not 30 seconds
+
         return sessionToken != null
                 && ((sessionTokenCreated != null
                         && ChronoUnit.SECONDS.between(sessionTokenCreated.toLocalDateTime(), timestamp.toLocalDateTime()) <= 30)
@@ -92,15 +85,15 @@ public class User {
                         && ChronoUnit.SECONDS.between(sessionTokenLastUsed.toLocalDateTime(), timestamp.toLocalDateTime()) <= 30));
     }
 
-    @Override
-    public String toString() {
-        final Map<String, String> jsonBodyKeyValuePair = new HashMap<>();
-        jsonBodyKeyValuePair.put("username", username);
-        jsonBodyKeyValuePair.put("password", password);
-        jsonBodyKeyValuePair.put("sessionToken", sessionToken);
-        jsonBodyKeyValuePair.put("sessionTokenCreated", sessionTokenCreated.toString());
-        jsonBodyKeyValuePair.put("sessionTokenLastUsed", sessionTokenLastUsed.toString() );
-
-        return Resources.jsonMessageBuilder(jsonBodyKeyValuePair);
-    }
+//    @Override
+//    public String toString() {
+//        final Map<String, String> jsonBodyKeyValuePair = new HashMap<>();
+//        jsonBodyKeyValuePair.put("username", username);
+//        jsonBodyKeyValuePair.put("password", password);
+//        jsonBodyKeyValuePair.put("sessionToken", sessionToken);
+//        jsonBodyKeyValuePair.put("sessionTokenCreated", sessionTokenCreated.toString());
+//        jsonBodyKeyValuePair.put("sessionTokenLastUsed", sessionTokenLastUsed.toString() );
+//
+//        return Resources.jsonMessageBuilder(jsonBodyKeyValuePair);
+//    }
 }
