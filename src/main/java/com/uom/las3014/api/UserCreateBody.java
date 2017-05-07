@@ -1,19 +1,24 @@
 package com.uom.las3014.api;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
-public class UserCredentialsBody {
+public class UserCreateBody {
     @NotNull(message="Username can not be empty")
     private String username;
 
     @NotNull(message="Password can not be empty")
     private String password;
 
-    public UserCredentialsBody() {}
+    @NotNull(message="List of interested topics must be present.")
+    private List<String> interestedTopics;
 
-    public UserCredentialsBody(final String username, final String password) {
+    public UserCreateBody() {}
+
+    public UserCreateBody(final String username, final String password, final List<String> interestedTopics) {
         this.username = username;
         this.password = password;
+        this.interestedTopics = interestedTopics;
     }
 
     public String getUsername() {
@@ -30,5 +35,13 @@ public class UserCredentialsBody {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<String> getInterestedTopics() {
+        return interestedTopics;
+    }
+
+    public void setInterestedTopics(List<String> interestedTopics) {
+        this.interestedTopics = interestedTopics;
     }
 }

@@ -1,6 +1,8 @@
 package com.uom.las3014.service;
 
-import com.uom.las3014.api.UserCredentialsBody;
+import com.uom.las3014.api.UserCreateBody;
+import com.uom.las3014.api.UserLoginBody;
+import com.uom.las3014.dao.Topic;
 import com.uom.las3014.dao.User;
 import com.uom.las3014.dao.springdata.UsersDaoRepository;
 import com.uom.las3014.exceptions.InvalidCredentialsException;
@@ -17,7 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -28,13 +32,18 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private TopicServiceImpl topicService;
+
     private final Map<String, String> jsonBodyKeyValuePair = new HashMap<>();
 
-    public ResponseEntity createNewUser(final UserCredentialsBody userCredentialsBody){
-        if (userExistsInDbByUsername(userCredentialsBody.getUsername())) {
+    public ResponseEntity createNewUser(final UserCreateBody userCreateBody){
+        if (userExistsInDbByUsername(userCreateBody.getUsername())) {
             throw new UserAlreadyExistsException();
         } else {
-            jsonBodyKeyValuePair.putAll(createAndSaveNewUser(userCredentialsBody.getUsername(), userCredentialsBody.getPassword()));
+            final Set<Topic> interestedTopics = userCreateBody.getInterestedTopics().stream().map(topicService::createNewTopicIfNotExists).collect(Collectors.toSet());
+
+            jsonBodyKeyValuePair.putAll(createAndSaveNewUser(userCreateBody.getUsername(), userCreateBody.getPassword(), interestedTopics));
 
             return ResponseEntity.status(HttpStatus.OK)
                     .contentType(MediaType.APPLICATION_JSON)
@@ -42,10 +51,10 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    public ResponseEntity loginAndGenerateToken(final UserCredentialsBody userCredentialsBody){
-        final User user = getUserFromDb(userCredentialsBody.getUsername());
+    public ResponseEntity loginAndGenerateToken(final UserLoginBody userLoginBody){
+        final User user = getUserFromDb(userLoginBody.getUsername());
 
-        if (user != null && !validateUserPassword(userCredentialsBody.getPassword(), user.getPassword())) {
+        if (user != null && !validateUserPassword(userLoginBody.getPassword(), user.getPassword())) {
             throw new InvalidCredentialsException();
         } else {
             jsonBodyKeyValuePair.putAll(generateSessionToken(user));
@@ -84,8 +93,8 @@ public class UserServiceImpl implements UserService {
         return usersDaoRepository.findUsersBySessionToken(sessionToken);
     }
 
-    private Map<String, String> createAndSaveNewUser(final String username, final String password) {
-        final User newUser = new User(username, passwordEncoder.encode(password));
+    private Map<String, String> createAndSaveNewUser(final String username, final String password, final Set<Topic> interestedTopics) {
+        final User newUser = new User(username, passwordEncoder.encode(password), interestedTopics);
 
         final Map<String, String> jsonBodyKeyValuePair = new HashMap<>();
 

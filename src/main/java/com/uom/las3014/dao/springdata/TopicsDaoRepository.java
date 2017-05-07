@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TopicsDaoRepository extends JpaRepository<Topic, Integer> {
+    Topic findTopicsByTopicName(final String topicName);
 }

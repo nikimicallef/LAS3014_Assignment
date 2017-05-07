@@ -1,22 +1,23 @@
 package com.uom.las3014.dao;
 
-import javax.annotation.Generated;
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "Topics")
 public class Topic {
-    //TODO: Implement joins
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer topicId;
 
     private String topicName;
 
+    @ManyToMany(mappedBy = "topics")
+    private Set<User> users;
+
     public Topic(){}
 
-    public Topic(final Integer topicId, final String topicName) {
-        this.topicId = topicId;
+    public Topic(final String topicName) {
         this.topicName = topicName;
     }
 

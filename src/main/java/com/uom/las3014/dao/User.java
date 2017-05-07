@@ -1,40 +1,43 @@
 package com.uom.las3014.dao;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.temporal.ChronoUnit;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
 public class User {
-    //TODO: Implement joins
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer userId;
 
-//    @Column(name="username")
     private String username;
 
-//    @Column(name="password")
     private String password;
 
-//    @Column(name="session_token")
     private String sessionToken;
 
-//    @Column(name="session_token_created")
     private Timestamp sessionTokenCreated;
 
-//    @Column(name="session_token_last_used")
     private Timestamp sessionTokenLastUsed;
 
-    public User() {}
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "user_topic_mapping",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "userId"),
+            inverseJoinColumns = @JoinColumn(name = "topic_id", referencedColumnName = "topicId"))
+    private Set<Topic> topics;
 
     public User(final String username, final String password) {
         this.username = username;
         this.password = password;
+    }
+
+    public User(final String username, final String password, final Set<Topic> interestedTopics) {
+        this.username = username;
+        this.password = password;
+        this.topics = interestedTopics;
     }
 
     public Integer getUserId() {
@@ -85,6 +88,15 @@ public class User {
         this.sessionTokenLastUsed = sessionTokenLastUsed;
     }
 
+    public Set<Topic> getTopics() {
+        if (topics == null){
+            topics = new HashSet<>();
+            return topics;
+        } else {
+            return topics;
+        }
+    }
+
     public boolean hasActiveSessionToken(){
         final Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         timestamp.toLocalDateTime();
@@ -97,16 +109,4 @@ public class User {
                     || (sessionTokenLastUsed != null
                         && ChronoUnit.SECONDS.between(sessionTokenLastUsed.toLocalDateTime(), timestamp.toLocalDateTime()) <= 30));
     }
-
-//    @Override
-//    public String toString() {
-//        final Map<String, String> jsonBodyKeyValuePair = new HashMap<>();
-//        jsonBodyKeyValuePair.put("username", username);
-//        jsonBodyKeyValuePair.put("password", password);
-//        jsonBodyKeyValuePair.put("sessionToken", sessionToken);
-//        jsonBodyKeyValuePair.put("sessionTokenCreated", sessionTokenCreated.toString());
-//        jsonBodyKeyValuePair.put("sessionTokenLastUsed", sessionTokenLastUsed.toString() );
-//
-//        return Resources.jsonMessageBuilder(jsonBodyKeyValuePair);
-//    }
 }

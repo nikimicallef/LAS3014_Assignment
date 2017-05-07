@@ -1,12 +1,13 @@
 package com.uom.las3014.service;
 
-import com.uom.las3014.api.UserCredentialsBody;
+import com.uom.las3014.api.UserCreateBody;
+import com.uom.las3014.api.UserLoginBody;
 import org.springframework.http.ResponseEntity;
 
 public interface UserService {
-    ResponseEntity createNewUser(final UserCredentialsBody userCredentialsBody);
+    ResponseEntity createNewUser(final UserCreateBody userCreateBody);
 
-    ResponseEntity loginAndGenerateToken(final UserCredentialsBody userCredentialsBody);
+    ResponseEntity loginAndGenerateToken(final UserLoginBody userLoginBody);
 
     ResponseEntity logout(final String sessionToken);
 }

@@ -1,6 +1,7 @@
 package com.uom.las3014.rest.users;
 
-import com.uom.las3014.api.UserCredentialsBody;
+import com.uom.las3014.api.UserCreateBody;
+import com.uom.las3014.api.UserLoginBody;
 import com.uom.las3014.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,13 +16,13 @@ public class UserManagement {
     private UserService userService;
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity createNewUser(final @RequestBody @Valid UserCredentialsBody userCredentialsBody) {
-        return userService.createNewUser(userCredentialsBody);
+    public ResponseEntity createNewUser(final @RequestBody @Valid UserCreateBody userCreateBody) {
+        return userService.createNewUser(userCreateBody);
     }
 
     @RequestMapping(value = "/login")
-    public ResponseEntity loginAndGenerateToken(final @RequestBody @Valid UserCredentialsBody userCredentialsBody) {
-        return userService.loginAndGenerateToken(userCredentialsBody);
+    public ResponseEntity loginAndGenerateToken(final @RequestBody @Valid UserLoginBody userLoginBody) {
+        return userService.loginAndGenerateToken(userLoginBody);
     }
 
     @RequestMapping(value = "/logout")
