@@ -17,6 +17,7 @@ public class TopicServiceImpl implements TopicService{
         final Topic existingTopic = topicsDaoRepository.findTopicsByTopicName(topicName);
         if(existingTopic == null) {
             final Topic newTopic = new Topic(topicName);
+            //TODO: Investigate if we can replace this with sets
             return topicsDaoRepository.save(newTopic);
         } else {
             return existingTopic;

@@ -29,10 +29,7 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "topic_id", referencedColumnName = "topicId"))
     private Set<Topic> topics;
 
-    public User(final String username, final String password) {
-        this.username = username;
-        this.password = password;
-    }
+    public User(){}
 
     public User(final String username, final String password, final Set<Topic> interestedTopics) {
         this.username = username;

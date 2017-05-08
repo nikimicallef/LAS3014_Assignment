@@ -44,9 +44,11 @@ public class ExceptionMapper extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity catchAll() {
+    public ResponseEntity catchAll(final Exception exception) {
         final Map<String, String> jsonBodyKeyValuePair = new HashMap<>();
         jsonBodyKeyValuePair.put("error", "Internal server error.");
+
+        logger.error(exception);
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .contentType(MediaType.APPLICATION_JSON)

@@ -1,5 +1,6 @@
 package com.uom.las3014.rest.users;
 
+import com.uom.las3014.annotations.AuthBySessionToken;
 import com.uom.las3014.api.UserCreateBody;
 import com.uom.las3014.api.UserLoginBody;
 import com.uom.las3014.service.UserService;
@@ -25,8 +26,9 @@ public class UserManagement {
         return userService.loginAndGenerateToken(userLoginBody);
     }
 
+    @AuthBySessionToken
     @RequestMapping(value = "/logout")
-    public ResponseEntity logoutUser(final @RequestHeader String sessionToken) {
+    public ResponseEntity logoutUser(final @RequestHeader(name = "X-SessionToken") String sessionToken) {
         return userService.logout(sessionToken);
     }
 }

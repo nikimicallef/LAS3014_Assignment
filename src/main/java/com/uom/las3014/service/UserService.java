@@ -2,6 +2,7 @@ package com.uom.las3014.service;
 
 import com.uom.las3014.api.UserCreateBody;
 import com.uom.las3014.api.UserLoginBody;
+import com.uom.las3014.dao.User;
 import org.springframework.http.ResponseEntity;
 
 public interface UserService {
@@ -10,4 +11,8 @@ public interface UserService {
     ResponseEntity loginAndGenerateToken(final UserLoginBody userLoginBody);
 
     ResponseEntity logout(final String sessionToken);
+
+    User getUserFromDbUsingSessionToken(final String sessionToken);
+
+    void saveUser(final User user);
 }

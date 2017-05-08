@@ -35,14 +35,16 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private TopicServiceImpl topicService;
 
-    private final Map<String, String> jsonBodyKeyValuePair = new HashMap<>();
+    private Map<String, String> jsonBodyKeyValuePair;
 
     public ResponseEntity createNewUser(final UserCreateBody userCreateBody){
+        //TODO: Convert this to AOP. But we need this once so is AOP useful here??
         if (userExistsInDbByUsername(userCreateBody.getUsername())) {
             throw new UserAlreadyExistsException();
         } else {
-            final Set<Topic> interestedTopics = userCreateBody.getInterestedTopics().stream().map(topicService::createNewTopicIfNotExists).collect(Collectors.toSet());
+            final Set<Topic> interestedTopics = userCreateBody.getInterestedTopics().stream().map(String::toLowerCase).map(topicService::createNewTopicIfNotExists).collect(Collectors.toSet());
 
+            jsonBodyKeyValuePair = new HashMap<>();
             jsonBodyKeyValuePair.putAll(createAndSaveNewUser(userCreateBody.getUsername(), userCreateBody.getPassword(), interestedTopics));
 
             return ResponseEntity.status(HttpStatus.OK)
@@ -52,11 +54,13 @@ public class UserServiceImpl implements UserService {
     }
 
     public ResponseEntity loginAndGenerateToken(final UserLoginBody userLoginBody){
+        //TODO: Convert this to AOP. But we need this once so is AOP useful here??
         final User user = getUserFromDb(userLoginBody.getUsername());
 
         if (user != null && !validateUserPassword(userLoginBody.getPassword(), user.getPassword())) {
             throw new InvalidCredentialsException();
         } else {
+            jsonBodyKeyValuePair = new HashMap<>();
             jsonBodyKeyValuePair.putAll(generateSessionToken(user));
 
             return ResponseEntity.status(HttpStatus.OK)
@@ -66,31 +70,34 @@ public class UserServiceImpl implements UserService {
     }
 
     public ResponseEntity logout(final String sessionToken){
+        //TODO: Get user from pointcut
         final User user = getUserFromDbUsingSessionToken(sessionToken);
 
-        if (user != null) {
-            user.setSessionToken(null);
-            user.setSessionTokenCreated(null);
-            user.setSessionTokenLastUsed(null);
+        user.setSessionToken(null);
+        user.setSessionTokenCreated(null);
+        user.setSessionTokenLastUsed(null);
 
-            usersDaoRepository.save(user);
+//        usersDaoRepository.save(user);
 
-            jsonBodyKeyValuePair.put("message", "Logged out successfully.");
+        jsonBodyKeyValuePair = new HashMap<>();
+        jsonBodyKeyValuePair.put("message", "Logged out successfully.");
 
-            return ResponseEntity.status(HttpStatus.OK)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(Resources.jsonMessageBuilder(jsonBodyKeyValuePair));
-        } else {
-            throw new InvalidCredentialsException();
-        }
+        return ResponseEntity.status(HttpStatus.OK)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Resources.jsonMessageBuilder(jsonBodyKeyValuePair));
     }
 
     private boolean userExistsInDbByUsername(final String username){
         return usersDaoRepository.countUsersByUsername(username) > 0;
     }
 
-    private User getUserFromDbUsingSessionToken(final String sessionToken){
+    public User getUserFromDbUsingSessionToken(final String sessionToken){
         return usersDaoRepository.findUsersBySessionToken(sessionToken);
+    }
+
+    public void saveUser(final User user){
+        //TODO: Replace with sets
+        usersDaoRepository.save(user);
     }
 
     private Map<String, String> createAndSaveNewUser(final String username, final String password, final Set<Topic> interestedTopics) {
@@ -99,6 +106,7 @@ public class UserServiceImpl implements UserService {
         final Map<String, String> jsonBodyKeyValuePair = new HashMap<>();
 
         try {
+            //TODO: Investigate create with sets
             usersDaoRepository.save(newUser);
         } catch (Exception e) {
             jsonBodyKeyValuePair.put("error", "User can't be created at the moment.");
@@ -128,6 +136,7 @@ public class UserServiceImpl implements UserService {
             user.setSessionTokenLastUsed(sessionTokenLastUsed);
 
             try {
+                //TODO: Redundant??
                 usersDaoRepository.save(user);
 
                 jsonBodyKeyValuePair.put("message", "Logged in.");
@@ -146,6 +155,7 @@ public class UserServiceImpl implements UserService {
             user.setSessionTokenLastUsed(null);
 
             try {
+                //TODO: Not required
                 usersDaoRepository.save(user);
 
                 jsonBodyKeyValuePair.put("message", "Logged in.");
