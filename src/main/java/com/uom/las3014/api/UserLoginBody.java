@@ -11,11 +11,6 @@ public class UserLoginBody {
 
     public UserLoginBody() {}
 
-    public UserLoginBody(final String username, final String password) {
-        this.username = username;
-        this.password = password;
-    }
-
     public String getUsername() {
         return username;
     }

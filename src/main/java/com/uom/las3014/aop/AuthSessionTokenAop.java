@@ -18,9 +18,10 @@ public class AuthSessionTokenAop {
     private UserService userService;
 
     //TODO: Bind on the parameter name so you always catch the correct parameter even if it is not the first one.
-    @Pointcut("execution(* com.uom.las3014.rest..*.*(@org.springframework.web.bind.annotation.RequestHeader (java.lang.String))) && args(sessionToken)")
+    @Pointcut("execution(* com.uom.las3014.rest..*.*(@org.springframework.web.bind.annotation.RequestHeader (java.lang.String),..)) && args(sessionToken,..)")
     public void sessionTokenPointcut(final String sessionToken) {}
 
+    //TODO: Change to around so tokenLastUsed updated after each entry which requires validation
     @Before("sessionTokenPointcut(sessionToken) && @annotation(com.uom.las3014.annotations.AuthBySessionToken)")
     public void sessionTokenBefore(final String sessionToken){
         final User user = userService.getUserFromDbUsingSessionToken(sessionToken);

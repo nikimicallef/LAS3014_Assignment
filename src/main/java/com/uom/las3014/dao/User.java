@@ -102,8 +102,8 @@ public class User {
 
         return sessionToken != null
                 && ((sessionTokenCreated != null
-                        && ChronoUnit.SECONDS.between(sessionTokenCreated.toLocalDateTime(), timestamp.toLocalDateTime()) <= 30)
+                        && ChronoUnit.MINUTES.between(sessionTokenCreated.toLocalDateTime(), timestamp.toLocalDateTime()) <= 30)
                     || (sessionTokenLastUsed != null
-                        && ChronoUnit.SECONDS.between(sessionTokenLastUsed.toLocalDateTime(), timestamp.toLocalDateTime()) <= 30));
+                        && ChronoUnit.MINUTES.between(sessionTokenLastUsed.toLocalDateTime(), timestamp.toLocalDateTime()) <= 30));
     }
 }

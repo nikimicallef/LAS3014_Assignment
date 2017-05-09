@@ -15,12 +15,6 @@ public class UserCreateBody {
 
     public UserCreateBody() {}
 
-    public UserCreateBody(final String username, final String password, final List<String> interestedTopics) {
-        this.username = username;
-        this.password = password;
-        this.interestedTopics = interestedTopics;
-    }
-
     public String getUsername() {
         return username;
     }

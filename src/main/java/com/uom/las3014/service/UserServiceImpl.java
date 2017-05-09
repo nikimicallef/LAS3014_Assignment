@@ -20,10 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -87,6 +84,29 @@ public class UserServiceImpl implements UserService {
                 .body(Resources.jsonMessageBuilder(jsonBodyKeyValuePair));
     }
 
+    public ResponseEntity changeInterestedTopics(final String sessionToken, final List<String> additions, final List<String> removals){
+        //TODO: Get user from pointcut
+        final User user = getUserFromDbUsingSessionToken(sessionToken);
+
+        if(additions != null){
+            additions.stream().map(String::toLowerCase).map(topicService::createNewTopicIfNotExists).forEach(topic -> user.getTopics().add(topic));
+        }
+
+        if(removals != null) {
+            removals.stream().map(String::toLowerCase).map(topicService::createNewTopicIfNotExists).forEach(topic -> user.getTopics().remove(topic));
+        }
+
+        //TODO: Convert to AOP around
+        user.setSessionTokenLastUsed(new Timestamp(System.currentTimeMillis()));
+
+        jsonBodyKeyValuePair = new HashMap<>();
+        jsonBodyKeyValuePair.put("message", "Topic changes applied.");
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Resources.jsonMessageBuilder(jsonBodyKeyValuePair));
+    }
+
     public void invalidateSessionToken(final User user) {
         user.setSessionToken(null);
         user.setSessionTokenCreated(null);
@@ -122,9 +142,7 @@ public class UserServiceImpl implements UserService {
         final Map<String, String> jsonBodyKeyValuePair = new HashMap<>();
 
         if(user.hasActiveSessionToken()){
-            final Timestamp sessionTokenLastUsed = new Timestamp(System.currentTimeMillis());
-
-            user.setSessionTokenLastUsed(sessionTokenLastUsed);
+            user.setSessionTokenLastUsed(new Timestamp(System.currentTimeMillis()));
 
             jsonBodyKeyValuePair.put("sessionToken", user.getSessionToken());
         } else {
@@ -147,8 +165,8 @@ public class UserServiceImpl implements UserService {
 
     //TODO: Set to run every 10 minutes
     //TODO: Move to scheduling module
-    //@Scheduled(fixedDelay = 600000)
-    @Scheduled(fixedDelay = 5000)
+    @Scheduled(fixedDelay = 600000)
+    //@Scheduled(fixedDelay = 5000)
     public void invalidateInactiveSessionTokensScheduledTask(){
         logger.debug("Running scheduled task which invalidates inactive session tokens.");
         usersDaoRepository.streamUsersBySessionTokenNotNull().filter(user -> !user.hasActiveSessionToken()).forEach(this::invalidateSessionToken);
