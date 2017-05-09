@@ -14,5 +14,5 @@ public interface UserService {
 
     User getUserFromDbUsingSessionToken(final String sessionToken);
 
-    void saveUser(final User user);
+    void invalidateSessionToken(final User user);
 }
