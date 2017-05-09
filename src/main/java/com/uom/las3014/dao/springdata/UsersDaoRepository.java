@@ -4,6 +4,8 @@ import com.uom.las3014.dao.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.stream.Stream;
+
 @Repository
 public interface UsersDaoRepository extends JpaRepository<User, Integer>{
     User findUsersByUsername(final String username);
@@ -11,4 +13,6 @@ public interface UsersDaoRepository extends JpaRepository<User, Integer>{
     User findUsersBySessionToken(final String sessionToken);
 
     Integer countUsersByUsername(final String username);
+
+    Stream<User> streamUsersBySessionTokenNotNull();
 }

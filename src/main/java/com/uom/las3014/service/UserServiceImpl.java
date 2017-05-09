@@ -8,10 +8,13 @@ import com.uom.las3014.dao.springdata.UsersDaoRepository;
 import com.uom.las3014.exceptions.InvalidCredentialsException;
 import com.uom.las3014.exceptions.UserAlreadyExistsException;
 import com.uom.las3014.resources.Resources;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +39,7 @@ public class UserServiceImpl implements UserService {
     private TopicServiceImpl topicService;
 
     private Map<String, String> jsonBodyKeyValuePair;
+    private final Log logger = LogFactory.getLog(this.getClass());
 
     public ResponseEntity createNewUser(final UserCreateBody userCreateBody){
         //TODO: Convert this to AOP. But we need this once so is AOP useful here??
@@ -73,11 +77,7 @@ public class UserServiceImpl implements UserService {
         //TODO: Get user from pointcut
         final User user = getUserFromDbUsingSessionToken(sessionToken);
 
-        user.setSessionToken(null);
-        user.setSessionTokenCreated(null);
-        user.setSessionTokenLastUsed(null);
-
-//        usersDaoRepository.save(user);
+        invalidateSessionToken(user);
 
         jsonBodyKeyValuePair = new HashMap<>();
         jsonBodyKeyValuePair.put("message", "Logged out successfully.");
@@ -85,6 +85,12 @@ public class UserServiceImpl implements UserService {
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Resources.jsonMessageBuilder(jsonBodyKeyValuePair));
+    }
+
+    public void invalidateSessionToken(final User user) {
+        user.setSessionToken(null);
+        user.setSessionTokenCreated(null);
+        user.setSessionTokenLastUsed(null);
     }
 
     private boolean userExistsInDbByUsername(final String username){
@@ -95,25 +101,10 @@ public class UserServiceImpl implements UserService {
         return usersDaoRepository.findUsersBySessionToken(sessionToken);
     }
 
-    public void saveUser(final User user){
-        //TODO: Replace with sets
-        usersDaoRepository.save(user);
-    }
-
     private Map<String, String> createAndSaveNewUser(final String username, final String password, final Set<Topic> interestedTopics) {
-        final User newUser = new User(username, passwordEncoder.encode(password), interestedTopics);
+        usersDaoRepository.save(new User(username, passwordEncoder.encode(password), interestedTopics));
 
         final Map<String, String> jsonBodyKeyValuePair = new HashMap<>();
-
-        try {
-            //TODO: Investigate create with sets
-            usersDaoRepository.save(newUser);
-        } catch (Exception e) {
-            jsonBodyKeyValuePair.put("error", "User can't be created at the moment.");
-
-            return jsonBodyKeyValuePair;
-        }
-
         jsonBodyKeyValuePair.put("message", "Created successfully. Login to get your token and use your newly created account.");
 
         return jsonBodyKeyValuePair;
@@ -135,15 +126,7 @@ public class UserServiceImpl implements UserService {
 
             user.setSessionTokenLastUsed(sessionTokenLastUsed);
 
-            try {
-                //TODO: Redundant??
-                usersDaoRepository.save(user);
-
-                jsonBodyKeyValuePair.put("message", "Logged in.");
-                jsonBodyKeyValuePair.put("sessionToken", user.getSessionToken());
-            } catch (Exception e){
-                jsonBodyKeyValuePair.put("error", "User can't be logged in at the moment.");
-            }
+            jsonBodyKeyValuePair.put("sessionToken", user.getSessionToken());
         } else {
             final UUID uuid = UUID.randomUUID();
             final String sessionToken = uuid.toString();
@@ -154,18 +137,20 @@ public class UserServiceImpl implements UserService {
             user.setSessionTokenCreated(sessionTokenCreated);
             user.setSessionTokenLastUsed(null);
 
-            try {
-                //TODO: Not required
-                usersDaoRepository.save(user);
-
-                jsonBodyKeyValuePair.put("message", "Logged in.");
-                jsonBodyKeyValuePair.put("sessionToken", sessionToken);
-            } catch (Exception e){
-                jsonBodyKeyValuePair.put("error", "User can't be logged in at the moment.");
-            }
+            jsonBodyKeyValuePair.put("sessionToken", sessionToken);
         }
+
+        jsonBodyKeyValuePair.put("message", "Logged in.");
 
         return jsonBodyKeyValuePair;
     }
 
+    //TODO: Set to run every 10 minutes
+    //TODO: Move to scheduling module
+    //@Scheduled(fixedDelay = 600000)
+    @Scheduled(fixedDelay = 5000)
+    public void invalidateInactiveSessionTokensScheduledTask(){
+        logger.debug("Running scheduled task which invalidates inactive session tokens.");
+        usersDaoRepository.streamUsersBySessionTokenNotNull().filter(user -> !user.hasActiveSessionToken()).forEach(this::invalidateSessionToken);
+    }
 }

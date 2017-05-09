@@ -28,12 +28,7 @@ public class AuthSessionTokenAop {
         if(user == null){
             throw new InvalidCredentialsException();
         } else if (!user.hasActiveSessionToken()){
-            user.setSessionToken(null);
-            user.setSessionTokenCreated(null);
-            user.setSessionTokenLastUsed(null);
-
-            //TODO: Replace with new method which sets rather than saves
-            userService.saveUser(user);
+            userService.invalidateSessionToken(user);
 
             throw new InvalidCredentialsException();
         }
