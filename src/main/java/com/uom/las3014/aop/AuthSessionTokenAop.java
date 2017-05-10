@@ -11,6 +11,8 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 @Aspect
 public class AuthSessionTokenAop {
@@ -24,12 +26,12 @@ public class AuthSessionTokenAop {
     //TODO: Change to around so tokenLastUsed updated after each entry which requires validation
     @Before("sessionTokenPointcut(sessionToken) && @annotation(com.uom.las3014.annotations.AuthBySessionToken)")
     public void sessionTokenBefore(final String sessionToken){
-        final User user = userService.getUserFromDbUsingSessionToken(sessionToken);
+        final Optional<User> user = userService.getUserFromDbUsingSessionToken(sessionToken);
 
-        if(user == null){
-            throw new InvalidCredentialsException();
-        } else if (!user.hasActiveSessionToken()){
-            userService.invalidateSessionToken(user);
+        final User retrievedUser = user.orElseThrow(InvalidCredentialsException::new);
+
+        if (!retrievedUser.hasActiveSessionToken()){
+            userService.invalidateSessionToken(retrievedUser);
 
             throw new InvalidCredentialsException();
         }

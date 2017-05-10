@@ -6,6 +6,7 @@ import com.uom.las3014.dao.User;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
     ResponseEntity createNewUser(final UserCreateBody userCreateBody);
@@ -16,7 +17,9 @@ public interface UserService {
 
     ResponseEntity changeInterestedTopics(final String sessionToken, final List<String> additions, final List<String> removals);
 
-    User getUserFromDbUsingSessionToken(final String sessionToken);
+    Optional<User> getUserFromDbUsingSessionToken(final String sessionToken);
 
     void invalidateSessionToken(final User user);
+
+    void invalidateInactiveSessionTokens();
 }

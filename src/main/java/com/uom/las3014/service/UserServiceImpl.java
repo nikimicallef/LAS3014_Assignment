@@ -56,13 +56,15 @@ public class UserServiceImpl implements UserService {
 
     public ResponseEntity loginAndGenerateToken(final UserLoginBody userLoginBody){
         //TODO: Convert this to AOP. But we need this once so is AOP useful here??
-        final User user = getUserFromDb(userLoginBody.getUsername());
+        final Optional<User> user = getUserFromDb(userLoginBody.getUsername());
 
-        if (user != null && !validateUserPassword(userLoginBody.getPassword(), user.getPassword())) {
+        final User retrievedUser = user.orElseThrow(InvalidCredentialsException::new);
+
+        if (!validateUserPassword(userLoginBody.getPassword(), retrievedUser.getPassword())) {
             throw new InvalidCredentialsException();
         } else {
             jsonBodyKeyValuePair = new HashMap<>();
-            jsonBodyKeyValuePair.putAll(generateSessionToken(user));
+            jsonBodyKeyValuePair.putAll(generateSessionToken(retrievedUser));
 
             return ResponseEntity.status(HttpStatus.OK)
                     .contentType(MediaType.APPLICATION_JSON)
@@ -72,9 +74,11 @@ public class UserServiceImpl implements UserService {
 
     public ResponseEntity logout(final String sessionToken){
         //TODO: Get user from pointcut
-        final User user = getUserFromDbUsingSessionToken(sessionToken);
+        final Optional<User> user = getUserFromDbUsingSessionToken(sessionToken);
 
-        invalidateSessionToken(user);
+        final User retrievedUser = user.orElseThrow(InvalidCredentialsException::new);
+
+        invalidateSessionToken(retrievedUser);
 
         jsonBodyKeyValuePair = new HashMap<>();
         jsonBodyKeyValuePair.put("message", "Logged out successfully.");
@@ -86,18 +90,20 @@ public class UserServiceImpl implements UserService {
 
     public ResponseEntity changeInterestedTopics(final String sessionToken, final List<String> additions, final List<String> removals){
         //TODO: Get user from pointcut
-        final User user = getUserFromDbUsingSessionToken(sessionToken);
+        final Optional<User> user = getUserFromDbUsingSessionToken(sessionToken);
+
+        final User retrievedUser = user.orElseThrow(InvalidCredentialsException::new);
 
         if(additions != null){
-            additions.stream().map(String::toLowerCase).map(topicService::createNewTopicIfNotExists).forEach(topic -> user.getTopics().add(topic));
+            additions.stream().map(String::toLowerCase).map(topicService::createNewTopicIfNotExists).forEach(topic -> retrievedUser.getTopics().add(topic));
         }
 
         if(removals != null) {
-            removals.stream().map(String::toLowerCase).map(topicService::createNewTopicIfNotExists).forEach(topic -> user.getTopics().remove(topic));
+            removals.stream().map(String::toLowerCase).map(topicService::createNewTopicIfNotExists).forEach(topic -> retrievedUser.getTopics().remove(topic));
         }
 
         //TODO: Convert to AOP around
-        user.setSessionTokenLastUsed(new Timestamp(System.currentTimeMillis()));
+        retrievedUser.setSessionTokenLastUsed(new Timestamp(System.currentTimeMillis()));
 
         jsonBodyKeyValuePair = new HashMap<>();
         jsonBodyKeyValuePair.put("message", "Topic changes applied.");
@@ -117,7 +123,7 @@ public class UserServiceImpl implements UserService {
         return usersDaoRepository.countUsersByUsername(username) > 0;
     }
 
-    public User getUserFromDbUsingSessionToken(final String sessionToken){
+    public Optional<User> getUserFromDbUsingSessionToken(final String sessionToken){
         return usersDaoRepository.findUsersBySessionToken(sessionToken);
     }
 
@@ -130,7 +136,7 @@ public class UserServiceImpl implements UserService {
         return jsonBodyKeyValuePair;
     }
 
-    private User getUserFromDb(final String username){
+    private Optional<User> getUserFromDb(final String username){
         return usersDaoRepository.findUsersByUsername(username);
     }
 
@@ -163,12 +169,10 @@ public class UserServiceImpl implements UserService {
         return jsonBodyKeyValuePair;
     }
 
-    //TODO: Set to run every 10 minutes
-    //TODO: Move to scheduling module
-    @Scheduled(fixedDelay = 600000)
-    //@Scheduled(fixedDelay = 5000)
-    public void invalidateInactiveSessionTokensScheduledTask(){
-        logger.debug("Running scheduled task which invalidates inactive session tokens.");
-        usersDaoRepository.streamUsersBySessionTokenNotNull().filter(user -> !user.hasActiveSessionToken()).forEach(this::invalidateSessionToken);
+    public void invalidateInactiveSessionTokens(){
+        usersDaoRepository.streamUsersBySessionTokenNotNull()
+                .filter(user -> !user.hasActiveSessionToken())
+                .peek(user -> logger.debug("Invalidating session token " + user.getSessionToken() + " for user ID "+ user.getUserId()))
+                .forEach(this::invalidateSessionToken);
     }
 }
