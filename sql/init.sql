@@ -23,6 +23,9 @@ CREATE TABLE `topics` (
 CREATE TABLE `user_topic_mapping` (
   `user_id` int NOT NULL,
   `topic_id` int NOT NULL,
+  `is_enabled` bit(1) DEFAULT 1,
+  `interested_from` DATETIME,
+  `interested_to` DATETIME,
   PRIMARY KEY (`user_id`, `topic_id`),
   CONSTRAINT `fk_usertopicmapping_userid` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_usertopicmapping_topicid` FOREIGN KEY (`topic_id`) REFERENCES `topics` (`topic_id`) ON DELETE CASCADE ON UPDATE CASCADE

@@ -4,6 +4,7 @@ import com.uom.las3014.api.UserCreateBody;
 import com.uom.las3014.api.UserLoginBody;
 import com.uom.las3014.dao.Topic;
 import com.uom.las3014.dao.User;
+import com.uom.las3014.dao.UserTopicMapping;
 import com.uom.las3014.dao.springdata.UsersDaoRepository;
 import com.uom.las3014.exceptions.InvalidCredentialsException;
 import com.uom.las3014.exceptions.UserAlreadyExistsException;
@@ -14,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Transactional
@@ -95,11 +96,26 @@ public class UserServiceImpl implements UserService {
         final User retrievedUser = user.orElseThrow(InvalidCredentialsException::new);
 
         if(additions != null){
-            additions.stream().map(String::toLowerCase).map(topicService::createNewTopicIfNotExists).forEach(topic -> retrievedUser.getTopics().add(topic));
+            additions.stream()
+                    .map(String::toLowerCase)
+                    .map(String::trim)
+                    .map(topicService::createNewTopicIfNotExists)
+                    .forEach(topic -> retrievedUser.getUserTopics()
+                            .add(new UserTopicMapping(retrievedUser, topic, new Timestamp(System.currentTimeMillis()))));
         }
 
         if(removals != null) {
-            removals.stream().map(String::toLowerCase).map(topicService::createNewTopicIfNotExists).forEach(topic -> retrievedUser.getTopics().remove(topic));
+            final Set<String> topicNamesToRemove = removals.stream()
+                    .map(String::toLowerCase)
+                    .map(String::trim)
+                    .collect(Collectors.toSet());
+
+            retrievedUser.getUserTopics().stream()
+                    .filter(userTopicMapping -> topicNamesToRemove.contains(userTopicMapping.getTopic().getTopicName()))
+                    .forEach(item -> {
+                        item.setEnabled(false);
+                        item.setInterestedTo(new Timestamp(System.currentTimeMillis()));
+                    });
         }
 
         //TODO: Convert to AOP around
@@ -128,7 +144,11 @@ public class UserServiceImpl implements UserService {
     }
 
     private Map<String, String> createAndSaveNewUser(final String username, final String password, final Set<Topic> interestedTopics) {
-        usersDaoRepository.save(new User(username, passwordEncoder.encode(password), interestedTopics));
+        final User user = new User(username, passwordEncoder.encode(password));
+
+        interestedTopics.forEach(topic -> user.getUserTopics().add(new UserTopicMapping(user, topic, new Timestamp(System.currentTimeMillis()))));
+
+        usersDaoRepository.save(user);
 
         final Map<String, String> jsonBodyKeyValuePair = new HashMap<>();
         jsonBodyKeyValuePair.put("message", "Created successfully. Login to get your token and use your newly created account.");

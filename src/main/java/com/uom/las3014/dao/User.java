@@ -12,29 +12,25 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer userId;
-
     private String username;
-
     private String password;
-
     private String sessionToken;
-
     private Timestamp sessionTokenCreated;
-
     private Timestamp sessionTokenLastUsed;
-
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "user_topic_mapping",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "userId"),
-            inverseJoinColumns = @JoinColumn(name = "topic_id", referencedColumnName = "topicId"))
-    private Set<Topic> topics;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<UserTopicMapping> userTopicMappings;
 
     public User(){}
 
-    public User(final String username, final String password, final Set<Topic> interestedTopics) {
+    public User(final String username, final String password) {
         this.username = username;
         this.password = password;
-        this.topics = interestedTopics;
+    }
+
+    public User(final String username, final String password, final Set<UserTopicMapping> userTopicMappings) {
+        this.username = username;
+        this.password = password;
+        this.userTopicMappings = userTopicMappings;
     }
 
     public Integer getUserId() {
@@ -85,12 +81,12 @@ public class User {
         this.sessionTokenLastUsed = sessionTokenLastUsed;
     }
 
-    public Set<Topic> getTopics() {
-        if (topics == null){
-            topics = new HashSet<>();
-            return topics;
+    public Set<UserTopicMapping> getUserTopics() {
+        if (userTopicMappings == null){
+            userTopicMappings = new HashSet<>();
+            return userTopicMappings;
         } else {
-            return topics;
+            return userTopicMappings;
         }
     }
 

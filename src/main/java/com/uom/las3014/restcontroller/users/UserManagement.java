@@ -1,4 +1,4 @@
-package com.uom.las3014.rest.users;
+package com.uom.las3014.restcontroller.users;
 
 import com.uom.las3014.annotations.AuthBySessionToken;
 import com.uom.las3014.api.UserCreateBody;
