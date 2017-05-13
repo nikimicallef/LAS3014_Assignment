@@ -67,26 +67,4 @@ public class UserTopicMapping implements Serializable{
     public void setInterestedTo(Timestamp interestedTo) {
         this.interestedTo = interestedTo;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        final UserTopicMapping that = (UserTopicMapping) o;
-
-        return user.getUserId().equals(that.user.getUserId()) && topic.getTopicId().equals(that.topic.getTopicId());
-    }
-
-    @Override
-    public int hashCode() {
-        int result = user.hashCode();
-        result = 31 * result + topic.hashCode();
-        return result;
-    }
 }

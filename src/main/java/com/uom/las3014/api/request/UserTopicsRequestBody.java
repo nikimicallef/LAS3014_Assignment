@@ -1,16 +1,16 @@
-package com.uom.las3014.api;
+package com.uom.las3014.api.request;
 
 import java.util.List;
 
-public class UserTopicsBody {
+public class UserTopicsRequestBody {
     private List<String> additions;
 
     private List<String> removals;
 
-    public UserTopicsBody() {
+    public UserTopicsRequestBody() {
     }
 
-    public UserTopicsBody(List<String> additions, List<String> removals) {
+    public UserTopicsRequestBody(List<String> additions, List<String> removals) {
         this.additions = additions;
         this.removals = removals;
     }

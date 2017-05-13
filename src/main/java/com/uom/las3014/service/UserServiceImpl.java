@@ -1,14 +1,15 @@
 package com.uom.las3014.service;
 
-import com.uom.las3014.api.UserCreateBody;
-import com.uom.las3014.api.UserLoginBody;
+import com.uom.las3014.api.request.UserCreateRequestBody;
+import com.uom.las3014.api.request.UserLoginRequestBody;
+import com.uom.las3014.api.response.GenericMessageResponse;
+import com.uom.las3014.api.response.SessionTokenAndMessageResponse;
 import com.uom.las3014.dao.Topic;
 import com.uom.las3014.dao.User;
 import com.uom.las3014.dao.UserTopicMapping;
 import com.uom.las3014.dao.springdata.UsersDaoRepository;
 import com.uom.las3014.exceptions.InvalidCredentialsException;
 import com.uom.las3014.exceptions.UserAlreadyExistsException;
-import com.uom.las3014.resources.Resources;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @Transactional
@@ -36,44 +36,37 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private TopicServiceImpl topicService;
 
-    private Map<String, String> jsonBodyKeyValuePair;
     private final Log logger = LogFactory.getLog(this.getClass());
 
-    public ResponseEntity createNewUser(final UserCreateBody userCreateBody){
+    public ResponseEntity<GenericMessageResponse> createNewUser(final UserCreateRequestBody userCreateRequestBody){
         //TODO: Convert this to AOP. But we need this once so is AOP useful here??
-        if (userExistsInDbByUsername(userCreateBody.getUsername())) {
+        if (userExistsInDbByUsername(userCreateRequestBody.getUsername())) {
             throw new UserAlreadyExistsException();
         } else {
-            final Set<Topic> interestedTopics = userCreateBody.getInterestedTopics().stream().map(String::toLowerCase).map(topicService::createNewTopicIfNotExists).collect(Collectors.toSet());
-
-            jsonBodyKeyValuePair = new HashMap<>();
-            jsonBodyKeyValuePair.putAll(createAndSaveNewUser(userCreateBody.getUsername(), userCreateBody.getPassword(), interestedTopics));
+            final Set<Topic> interestedTopics = userCreateRequestBody.getInterestedTopics().stream().map(String::toLowerCase).map(topicService::createNewTopicIfNotExists).collect(Collectors.toSet());
 
             return ResponseEntity.status(HttpStatus.OK)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .body(Resources.jsonMessageBuilder(jsonBodyKeyValuePair));
+                    .body(createAndSaveNewUser(userCreateRequestBody.getUsername(), userCreateRequestBody.getPassword(), interestedTopics));
         }
     }
 
-    public ResponseEntity loginAndGenerateToken(final UserLoginBody userLoginBody){
+    public ResponseEntity<SessionTokenAndMessageResponse> loginAndGenerateToken(final UserLoginRequestBody userLoginRequestBody){
         //TODO: Convert this to AOP. But we need this once so is AOP useful here??
-        final Optional<User> user = getUserFromDb(userLoginBody.getUsername());
+        final Optional<User> user = getUserFromDb(userLoginRequestBody.getUsername());
 
         final User retrievedUser = user.orElseThrow(InvalidCredentialsException::new);
 
-        if (!validateUserPassword(userLoginBody.getPassword(), retrievedUser.getPassword())) {
+        if (!validateUserPassword(userLoginRequestBody.getPassword(), retrievedUser.getPassword())) {
             throw new InvalidCredentialsException();
         } else {
-            jsonBodyKeyValuePair = new HashMap<>();
-            jsonBodyKeyValuePair.putAll(generateSessionToken(retrievedUser));
-
             return ResponseEntity.status(HttpStatus.OK)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .body(Resources.jsonMessageBuilder(jsonBodyKeyValuePair));
+                    .body(generateSessionToken(retrievedUser));
         }
     }
 
-    public ResponseEntity logout(final String sessionToken){
+    public ResponseEntity<GenericMessageResponse> logout(final String sessionToken){
         //TODO: Get user from pointcut
         final Optional<User> user = getUserFromDbUsingSessionToken(sessionToken);
 
@@ -81,15 +74,12 @@ public class UserServiceImpl implements UserService {
 
         invalidateSessionToken(retrievedUser);
 
-        jsonBodyKeyValuePair = new HashMap<>();
-        jsonBodyKeyValuePair.put("message", "Logged out successfully.");
-
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(Resources.jsonMessageBuilder(jsonBodyKeyValuePair));
+                .body(new GenericMessageResponse("Logged out successfully."));
     }
 
-    public ResponseEntity changeInterestedTopics(final String sessionToken, final List<String> additions, final List<String> removals){
+    public ResponseEntity<GenericMessageResponse> changeInterestedTopics(final String sessionToken, final List<String> additions, final List<String> removals){
         //TODO: Get user from pointcut
         final Optional<User> user = getUserFromDbUsingSessionToken(sessionToken);
 
@@ -121,12 +111,9 @@ public class UserServiceImpl implements UserService {
         //TODO: Convert to AOP around
         retrievedUser.setSessionTokenLastUsed(new Timestamp(System.currentTimeMillis()));
 
-        jsonBodyKeyValuePair = new HashMap<>();
-        jsonBodyKeyValuePair.put("message", "Topic changes applied.");
-
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(Resources.jsonMessageBuilder(jsonBodyKeyValuePair));
+                .body(new GenericMessageResponse("Topic changes applied."));
     }
 
     public void invalidateSessionToken(final User user) {
@@ -143,17 +130,14 @@ public class UserServiceImpl implements UserService {
         return usersDaoRepository.findUsersBySessionToken(sessionToken);
     }
 
-    private Map<String, String> createAndSaveNewUser(final String username, final String password, final Set<Topic> interestedTopics) {
+    private GenericMessageResponse createAndSaveNewUser(final String username, final String password, final Set<Topic> interestedTopics) {
         final User user = new User(username, passwordEncoder.encode(password));
 
         interestedTopics.forEach(topic -> user.getUserTopics().add(new UserTopicMapping(user, topic, new Timestamp(System.currentTimeMillis()))));
 
         usersDaoRepository.save(user);
 
-        final Map<String, String> jsonBodyKeyValuePair = new HashMap<>();
-        jsonBodyKeyValuePair.put("message", "Created successfully. Login to get your token and use your newly created account.");
-
-        return jsonBodyKeyValuePair;
+        return new GenericMessageResponse("Created successfully. Login to get your token and use your newly created account.");
     }
 
     private Optional<User> getUserFromDb(final String username){
@@ -164,13 +148,13 @@ public class UserServiceImpl implements UserService {
         return passwordEncoder.matches(rawPassword, hashedPassword);
     }
 
-    private Map<String, String> generateSessionToken(final User user) {
-        final Map<String, String> jsonBodyKeyValuePair = new HashMap<>();
+    private SessionTokenAndMessageResponse generateSessionToken(final User user) {
+        final String sessionTokenResponse;
 
         if(user.hasActiveSessionToken()){
             user.setSessionTokenLastUsed(new Timestamp(System.currentTimeMillis()));
 
-            jsonBodyKeyValuePair.put("sessionToken", user.getSessionToken());
+            sessionTokenResponse = user.getSessionToken();
         } else {
             final UUID uuid = UUID.randomUUID();
             final String sessionToken = uuid.toString();
@@ -181,12 +165,10 @@ public class UserServiceImpl implements UserService {
             user.setSessionTokenCreated(sessionTokenCreated);
             user.setSessionTokenLastUsed(null);
 
-            jsonBodyKeyValuePair.put("sessionToken", sessionToken);
+            sessionTokenResponse = sessionToken;
         }
 
-        jsonBodyKeyValuePair.put("message", "Logged in.");
-
-        return jsonBodyKeyValuePair;
+        return new SessionTokenAndMessageResponse("Logged in", sessionTokenResponse);
     }
 
     public void invalidateInactiveSessionTokens(){

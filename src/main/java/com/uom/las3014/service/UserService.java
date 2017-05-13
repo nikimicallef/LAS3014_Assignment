@@ -1,7 +1,9 @@
 package com.uom.las3014.service;
 
-import com.uom.las3014.api.UserCreateBody;
-import com.uom.las3014.api.UserLoginBody;
+import com.uom.las3014.api.request.UserCreateRequestBody;
+import com.uom.las3014.api.request.UserLoginRequestBody;
+import com.uom.las3014.api.response.GenericMessageResponse;
+import com.uom.las3014.api.response.SessionTokenAndMessageResponse;
 import com.uom.las3014.dao.User;
 import org.springframework.http.ResponseEntity;
 
@@ -9,13 +11,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
-    ResponseEntity createNewUser(final UserCreateBody userCreateBody);
+    ResponseEntity<GenericMessageResponse> createNewUser(final UserCreateRequestBody userCreateRequestBody);
 
-    ResponseEntity loginAndGenerateToken(final UserLoginBody userLoginBody);
+    ResponseEntity<SessionTokenAndMessageResponse> loginAndGenerateToken(final UserLoginRequestBody userLoginRequestBody);
 
-    ResponseEntity logout(final String sessionToken);
+    ResponseEntity<GenericMessageResponse> logout(final String sessionToken);
 
-    ResponseEntity changeInterestedTopics(final String sessionToken, final List<String> additions, final List<String> removals);
+    ResponseEntity<GenericMessageResponse> changeInterestedTopics(final String sessionToken, final List<String> additions, final List<String> removals);
 
     Optional<User> getUserFromDbUsingSessionToken(final String sessionToken);
 
