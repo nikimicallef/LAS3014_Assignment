@@ -108,9 +108,6 @@ public class UserServiceImpl implements UserService {
                     });
         }
 
-        //TODO: Convert to AOP around
-        retrievedUser.setSessionTokenLastUsed(new Timestamp(System.currentTimeMillis()));
-
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(new GenericMessageResponse("Topic changes applied."));
@@ -163,7 +160,6 @@ public class UserServiceImpl implements UserService {
 
             user.setSessionToken(sessionToken);
             user.setSessionTokenCreated(sessionTokenCreated);
-            user.setSessionTokenLastUsed(null);
 
             sessionTokenResponse = sessionToken;
         }
@@ -176,5 +172,9 @@ public class UserServiceImpl implements UserService {
                 .filter(user -> !user.hasActiveSessionToken())
                 .peek(user -> logger.debug("Invalidating session token " + user.getSessionToken() + " for user ID "+ user.getUserId()))
                 .forEach(this::invalidateSessionToken);
+    }
+
+    public void updateSessionTokenLastUsed(final User user){
+        user.setSessionTokenLastUsed(new Timestamp(System.currentTimeMillis()));
     }
 }

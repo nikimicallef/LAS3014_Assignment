@@ -8,9 +8,11 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @EnableScheduling
 @EnableAsync
+@EnableWebMvc
 @Configuration
 @SpringBootApplication
 public class AssignmentApplication {

@@ -8,10 +8,11 @@ import java.sql.Timestamp;
 @Table(name = "user_topic_mapping")
 public class UserTopicMapping implements Serializable{
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer mappingId;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    @Id
     @ManyToOne
     @JoinColumn(name = "topic_id")
     private Topic topic;
@@ -26,6 +27,14 @@ public class UserTopicMapping implements Serializable{
         this.topic = topic;
         this.interestedFrom = interestedFrom;
         this.isEnabled = true;
+    }
+
+    public Integer getMappingId() {
+        return mappingId;
+    }
+
+    public void setMappingId(Integer mappingId) {
+        this.mappingId = mappingId;
     }
 
     public User getUser() {
@@ -66,5 +75,23 @@ public class UserTopicMapping implements Serializable{
 
     public void setInterestedTo(Timestamp interestedTo) {
         this.interestedTo = interestedTo;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        final UserTopicMapping that = (UserTopicMapping) o;
+
+        return isEnabled == that.isEnabled && user.equals(that.user) && topic.equals(that.topic);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = user.hashCode();
+        result = 31 * result + topic.hashCode();
+        result = 31 * result + (isEnabled ? 1 : 0);
+        return result;
     }
 }

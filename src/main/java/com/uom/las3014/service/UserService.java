@@ -24,4 +24,6 @@ public interface UserService {
     void invalidateSessionToken(final User user);
 
     void invalidateInactiveSessionTokens();
+
+    void updateSessionTokenLastUsed(final User user);
 }
