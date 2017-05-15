@@ -43,7 +43,11 @@ public class UserServiceImpl implements UserService {
         if (userExistsInDbByUsername(userCreateRequestBody.getUsername())) {
             throw new UserAlreadyExistsException();
         } else {
-            final Set<Topic> interestedTopics = userCreateRequestBody.getInterestedTopics().stream().map(String::toLowerCase).map(topicService::createNewTopicIfNotExists).collect(Collectors.toSet());
+            final Set<Topic> interestedTopics = userCreateRequestBody
+                                                    .getInterestedTopics().stream()
+                                                    .map(String::toLowerCase)
+                                                    .map(topicService::createNewTopicIfNotExists)
+                                                    .collect(Collectors.toSet());
 
             return ResponseEntity.status(HttpStatus.OK)
                     .contentType(MediaType.APPLICATION_JSON)
