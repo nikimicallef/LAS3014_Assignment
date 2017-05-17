@@ -1,12 +1,10 @@
 package com.uom.las3014.service;
 
-import com.uom.las3014.api.response.GenericMessageResponse;
 import com.uom.las3014.dao.Topic;
 import com.uom.las3014.dao.springdata.TopicsDaoRepository;
-import com.uom.las3014.httpconnection.HackernewsRequestor;
+import com.uom.las3014.httpconnection.HackernewsRequester;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +17,7 @@ public class TopicServiceImpl implements TopicService{
     private TopicsDaoRepository topicsDaoRepository;
 
     @Autowired
-    private HackernewsRequestor hackernewsRequestor;
+    private HackernewsRequester hackernewsRequester;
 
     @Cacheable("topicPojo")
     public Topic createNewTopicIfNotExists(final String topicName){
@@ -28,6 +26,18 @@ public class TopicServiceImpl implements TopicService{
 
         return existingTopic.orElseGet(() -> topicsDaoRepository.save(new Topic(topicName)));
     }
+
+//    public ResponseEntity<GenericMessageResponse> getNewItems(){
+//        try {
+//            hackernewsRequestor.getNewStories();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return ResponseEntity.status(HttpStatus.OK)
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .body(new GenericMessageResponse("TEST"));
+//    }
 
 //    public ResponseEntity<GenericMessageResponse> getItem(final Integer item){
 //        try {

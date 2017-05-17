@@ -8,4 +8,6 @@ public interface TopicService {
     Topic createNewTopicIfNotExists(final String topic);
 
 //    ResponseEntity<GenericMessageResponse> getItem(final Integer item);
+
+//    ResponseEntity<GenericMessageResponse> getNewItems();
 }

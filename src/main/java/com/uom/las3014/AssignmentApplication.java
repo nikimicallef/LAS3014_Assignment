@@ -1,6 +1,7 @@
 package com.uom.las3014;
 
 import com.google.common.cache.CacheBuilder;
+import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.CacheManager;
@@ -20,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 @EnableAsync
 @EnableWebMvc
 @EnableCaching
+@EnableBatchProcessing
 @Configuration
 @SpringBootApplication
 public class AssignmentApplication {

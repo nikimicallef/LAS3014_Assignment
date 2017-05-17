@@ -17,6 +17,6 @@ public class TopicsController {
 
 //    @RequestMapping(method = RequestMethod.GET, value ="/{itemNo}")
 //    public ResponseEntity<GenericMessageResponse> getTopicItem(final @PathVariable Integer itemNo){
-//        return topicService.getItem(itemNo);
+//        return topicService.getNewItems();
 //    }
 }
