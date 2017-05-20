@@ -3,28 +3,33 @@ package com.uom.las3014.dao;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "Stories")
 public class Story {
     @Id
-    private Integer storyId;
+    private Long storyId;
     private Integer score;
     private String title;
+    private String url;
+    private Timestamp dateCreated;
 
     public Story(){}
 
-    public Story(Integer storyId, Integer score, String title) {
+    public Story(Long storyId, Integer score, String title, String url, Timestamp dateCreated) {
         this.storyId = storyId;
         this.score = score;
         this.title = title;
+        this.url = url;
+        this.dateCreated = dateCreated;
     }
 
-    public Integer getStoryId() {
+    public Long getStoryId() {
         return storyId;
     }
 
-    public void setStoryId(Integer storyId) {
+    public void setStoryId(Long storyId) {
         this.storyId = storyId;
     }
 
@@ -44,12 +49,30 @@ public class Story {
         this.title = title;
     }
 
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public Timestamp getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(Timestamp dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
     @Override
     public String toString() {
         return "Story{" +
                 "storyId=" + storyId +
                 ", score=" + score +
                 ", title='" + title + '\'' +
+                ", url='" + url + '\'' +
+                ", dateCreated=" + dateCreated +
                 '}';
     }
 }

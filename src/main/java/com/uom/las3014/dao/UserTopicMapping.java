@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 public class UserTopicMapping implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer mappingId;
+    private Long mappingId;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -29,11 +29,11 @@ public class UserTopicMapping implements Serializable{
         this.isEnabled = true;
     }
 
-    public Integer getMappingId() {
+    public Long getMappingId() {
         return mappingId;
     }
 
-    public void setMappingId(Integer mappingId) {
+    public void setMappingId(Long mappingId) {
         this.mappingId = mappingId;
     }
 

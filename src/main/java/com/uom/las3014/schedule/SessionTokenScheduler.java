@@ -15,7 +15,7 @@ public class SessionTokenScheduler {
     private final Log logger = LogFactory.getLog(this.getClass());
 
     //TODO: Set to run every 10 minutes
-    @Scheduled(fixedDelay = 600_000)
+    @Scheduled(fixedDelay = 600_000, initialDelay = 60_000)
     //@Scheduled(fixedDelay = 5_000)
     public void invalidateInactiveSessionTokensScheduledTask() throws InterruptedException {
         logger.debug("Running scheduled task which invalidates inactive session tokens.");

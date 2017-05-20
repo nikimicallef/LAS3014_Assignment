@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class NewStoriesStep {
 
     @Autowired
-    public StepBuilderFactory stepBuilderFactory;
+    private StepBuilderFactory stepBuilderFactory;
 
     @Autowired
     private NewStoriesReader newStoriesReader;
@@ -28,7 +28,7 @@ public class NewStoriesStep {
     @Bean
     public Step newStoriesStepMethod() {
         return stepBuilderFactory.get("NewStoriesStep")
-                .<String, Story>chunk(10)
+                .<String, Story>chunk(100)
                 .reader(newStoriesReader)
                 .processor(newStoriesProcessor)
                 .writer(newStoriesWriter)

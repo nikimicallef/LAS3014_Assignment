@@ -9,7 +9,7 @@ import java.util.Set;
 public class Topic {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer topicId;
+    private Long topicId;
     private String topicName;
     @OneToMany(mappedBy = "topic")
     private Set<UserTopicMapping> userTopicMappings;
@@ -20,11 +20,11 @@ public class Topic {
         this.topicName = topicName;
     }
 
-    public Integer getTopicId() {
+    public Long getTopicId() {
         return topicId;
     }
 
-    public void setTopicId(Integer topicId) {
+    public void setTopicId(Long topicId) {
         this.topicId = topicId;
     }
 

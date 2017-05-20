@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 @Repository
-public interface UsersDaoRepository extends JpaRepository<User, Integer>{
+public interface UsersDaoRepository extends JpaRepository<User, Long>{
     Optional<User> findUsersByUsername(final String username);
 
     Optional<User> findUsersBySessionToken(final String sessionToken);

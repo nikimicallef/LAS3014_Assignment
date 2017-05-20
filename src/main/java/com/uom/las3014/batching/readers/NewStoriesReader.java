@@ -1,14 +1,11 @@
 package com.uom.las3014.batching.readers;
 
-import com.uom.las3014.httpconnection.HackernewsRequester;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.NonTransientResourceException;
 import org.springframework.batch.item.ParseException;
 import org.springframework.batch.item.UnexpectedInputException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.Iterator;
 
 /**
@@ -16,15 +13,10 @@ import java.util.Iterator;
  */
 @Component
 public class NewStoriesReader implements ItemReader<String> {
+    private Iterator<String> newStoryIds;
 
-    private final HackernewsRequester hackernewsRequester;
-
-    private final Iterator<String> newStoryIds;
-
-    @Autowired
-    public NewStoriesReader(HackernewsRequester hackernewsRequester) throws IOException {
-        this.hackernewsRequester = hackernewsRequester;
-        newStoryIds = hackernewsRequester.getNewStories().iterator();
+    public void setNewStoryIds(final Iterator<String> newStoryIds){
+        this.newStoryIds = newStoryIds;
     }
 
     @Override

@@ -12,18 +12,6 @@ import org.springframework.context.annotation.Configuration;
 public class NewStoriesJob {
     @Autowired
     private JobBuilderFactory jobBuilderFactory;
-//
-//    @Autowired
-//    private NewStoriesStep newStoriesStep;
-
-//    @Autowired
-//    private NewStoriesReader newStoriesReader;
-//
-//    @Autowired
-//    private NewStoriesProcessor newStoriesProcessor;
-//
-//    @Autowired
-//    private NewStoriesWriter newStoriesWriter;
 
     @Bean
     public Job newStoriesJobMethod(final Step step) {
