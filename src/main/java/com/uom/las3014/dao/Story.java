@@ -14,6 +14,7 @@ public class Story {
     private String title;
     private String url;
     private Timestamp dateCreated;
+    private boolean deleted;
 
     public Story(){}
 
@@ -23,6 +24,7 @@ public class Story {
         this.title = title;
         this.url = url;
         this.dateCreated = dateCreated;
+        this.deleted = false;
     }
 
     public Long getStoryId() {
@@ -65,6 +67,14 @@ public class Story {
         this.dateCreated = dateCreated;
     }
 
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
     @Override
     public String toString() {
         return "Story{" +
@@ -73,6 +83,7 @@ public class Story {
                 ", title='" + title + '\'' +
                 ", url='" + url + '\'' +
                 ", dateCreated=" + dateCreated +
+                ", deleted=" + deleted +
                 '}';
     }
 }

@@ -8,18 +8,18 @@ import org.springframework.batch.item.UnexpectedInputException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
+import java.util.Iterator;
+
 @Component
-public class UpdateRecentStoriesScoreReader implements ItemReader<Story> {
-    private Story storyToUpdate;
+public class UpdateStoriesReader implements ItemReader<Story> {
+    private Iterator<Story> storiesToUpdate;
 
-    public UpdateRecentStoriesScoreReader(){}
-
-    public UpdateRecentStoriesScoreReader(final Story storyToUpdate) {
-        this.storyToUpdate = storyToUpdate;
+    public void setStoriesToUpdate(Iterator<Story> storiesToUpdate) {
+        this.storiesToUpdate = storiesToUpdate;
     }
 
     @Override
-    public Story read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
-        return storyToUpdate;
+    public Story read() throws Exception {
+        return storiesToUpdate.hasNext() ? storiesToUpdate.next() : null;
     }
 }

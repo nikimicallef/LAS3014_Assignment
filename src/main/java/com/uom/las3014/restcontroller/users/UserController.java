@@ -19,6 +19,8 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    //TODO: If entry already exists in db do not GET it and then set. Just save as it will merge.
+
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<GenericMessageResponse> createNewUser(final @RequestBody @Valid UserCreateRequestBody userCreateRequestBody) {
         return userService.createNewUser(userCreateRequestBody);

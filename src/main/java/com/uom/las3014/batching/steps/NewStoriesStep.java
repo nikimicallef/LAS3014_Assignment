@@ -25,7 +25,7 @@ public class NewStoriesStep {
     @Autowired
     private NewStoriesWriter newStoriesWriter;
 
-    @Bean
+    @Bean(name = "NewStoriesStepBean")
     public Step newStoriesStepMethod() {
         return stepBuilderFactory.get("NewStoriesStep")
                 .<String, Story>chunk(100)

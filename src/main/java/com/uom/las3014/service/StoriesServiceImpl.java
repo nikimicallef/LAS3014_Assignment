@@ -6,7 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Transactional
@@ -16,17 +19,11 @@ public class StoriesServiceImpl implements StoriesService{
 
     @Override
     public Story createNewOrUpdateExistingStory(final Story story) {
-        final Optional<Story> storyDb = storiesDaoRepository.findStoryByStoryId(story.getStoryId());
+        return storiesDaoRepository.save(story);
+    }
 
-        final Story returnStory;
-
-        if(storyDb.isPresent()){
-            returnStory = storyDb.get();
-            returnStory.setScore(story.getScore());
-        } else {
-            returnStory = storiesDaoRepository.save(story);
-        }
-
-        return returnStory;
+    @Override
+    public List<Story> getLastWeeksUndeletedTopics() {
+        return storiesDaoRepository.findAllByDateCreatedAfterAndDeletedIs(new Timestamp(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(7)), false);
     }
 }

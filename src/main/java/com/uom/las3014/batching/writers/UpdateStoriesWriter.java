@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class NewStoriesWriter implements ItemWriter<Story> {
+public class UpdateStoriesWriter implements ItemWriter<Story> {
     private final Log logger = LogFactory.getLog(this.getClass());
 
     @Autowired
@@ -20,9 +20,8 @@ public class NewStoriesWriter implements ItemWriter<Story> {
     @Override
     public void write(List<? extends Story> list) throws Exception {
         list.forEach(story -> {
-            if(story != null) {
-                logger.debug(story.toString());
-                storiesService.createNewOrUpdateExistingStory(story);
-        }});
+            logger.debug(story.toString());
+            storiesService.createNewOrUpdateExistingStory(story);
+        });
     }
 }

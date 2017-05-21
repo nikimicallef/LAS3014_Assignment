@@ -9,9 +9,6 @@ import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
 
-/**
- * Created by niki on 17/05/17.
- */
 @Component
 public class NewStoriesProcessor implements ItemProcessor<String, Story> {
 
@@ -21,12 +18,18 @@ public class NewStoriesProcessor implements ItemProcessor<String, Story> {
     //TODO: Error handling. What if url or title is too long? What if we get no response from HN etc.
     @Override
     public Story process(String storyId) throws Exception {
-        final JsonObject responseJson = hackernewsRequester.getItem(Integer.parseInt(storyId));
+        final JsonObject responseJson = hackernewsRequester.getItem(Long.parseLong(storyId)).orElse(null);
 
-        return new Story(responseJson.get("id").getAsLong(),
-                        responseJson.get("score").getAsInt(),
-                        responseJson.get("title").getAsString(),
-                        responseJson.has("url") ? responseJson.get("url").getAsString() : "",
-                        new Timestamp(System.currentTimeMillis()));
+        Story story = null;
+
+        if(responseJson != null && !responseJson.has("deleted")){
+            story = new Story(responseJson.get("id").getAsLong(),
+                                responseJson.get("score").getAsInt(),
+                                responseJson.get("title").getAsString(),
+                                responseJson.has("url") ? responseJson.get("url").getAsString() : "",
+                                new Timestamp(System.currentTimeMillis()));
+        }
+
+        return story;
     }
 }

@@ -39,5 +39,6 @@ CREATE TABLE `stories` (
   `title` varchar(500) NOT NULL,
   `url` varchar(500),
   `date_created` DATETIME,
+  `deleted` bit(1) DEFAULT 0,
   PRIMARY KEY (`story_id`)
 ) ENGINE = InnoDB;

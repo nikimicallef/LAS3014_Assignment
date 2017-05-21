@@ -10,14 +10,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class NewStoriesJob {
+public class UpdateStoriesJob {
     @Autowired
     private JobBuilderFactory jobBuilderFactory;
 
-    @Bean(name = "NewStoriesJobBean")
+    @Bean(name = "UpdateStoriesJobBean")
     @Autowired
-    public Job newStoriesJobMethod(final @Qualifier("NewStoriesStepBean") Step step) {
-        return jobBuilderFactory.get("NewStoriesStep")
+    public Job newStoriesJobMethod(final @Qualifier("UpdateStoriesStepBean") Step step) {
+        return jobBuilderFactory.get("UpdateStoriesStep")
                 .incrementer(new RunIdIncrementer())
                 .flow(step)
                 .end()
