@@ -4,9 +4,13 @@ import com.uom.las3014.dao.Story;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Repository
 public interface StoriesDaoRepository extends JpaRepository<Story, Long> {
     Optional<Story> findStoryByStoryId(final Long storyId);
+
+    Stream<Story> streamAllByDateCreatedAfter(final Timestamp cutoffDate);
 }
