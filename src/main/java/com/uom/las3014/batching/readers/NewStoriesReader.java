@@ -8,9 +8,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Iterator;
 
-/**
- * Created by niki on 17/05/17.
- */
 @Component
 public class NewStoriesReader implements ItemReader<String> {
     private Iterator<String> newStoryIds;
@@ -20,7 +17,7 @@ public class NewStoriesReader implements ItemReader<String> {
     }
 
     @Override
-    public String read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
+    public String read() throws Exception {
         return newStoryIds.hasNext() ? newStoryIds.next() : null;
     }
 }

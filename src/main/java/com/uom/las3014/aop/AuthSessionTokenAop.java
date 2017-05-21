@@ -1,10 +1,8 @@
 package com.uom.las3014.aop;
 
 import com.uom.las3014.dao.User;
-import com.uom.las3014.dao.springdata.UsersDaoRepository;
 import com.uom.las3014.exceptions.InvalidCredentialsException;
 import com.uom.las3014.service.UserService;
-import com.uom.las3014.service.UserServiceImpl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.aspectj.lang.annotation.Aspect;
@@ -13,7 +11,6 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.sql.Timestamp;
 import java.util.Optional;
 
 @Component
