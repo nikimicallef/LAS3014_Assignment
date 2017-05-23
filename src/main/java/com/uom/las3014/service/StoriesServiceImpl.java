@@ -24,6 +24,11 @@ public class StoriesServiceImpl implements StoriesService{
 
     @Override
     public List<Story> getLastWeeksUndeletedTopics() {
-        return storiesDaoRepository.findAllByDateCreatedAfterAndDeletedIs(new Timestamp(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(7)), false);
+        return storiesDaoRepository.findAllByDateCreatedIsBetweenAndDeletedIs(new Timestamp(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(7)), new Timestamp(System.currentTimeMillis() - TimeUnit.HOURS.toMillis(12)), false);
+    }
+
+    @Override
+    public List<Story> get12HrsUndeletedTopics() {
+        return storiesDaoRepository.findAllByDateCreatedIsBetweenAndDeletedIs(new Timestamp(System.currentTimeMillis() - TimeUnit.HOURS.toMillis(12)), new Timestamp(System.currentTimeMillis()), false);
     }
 }

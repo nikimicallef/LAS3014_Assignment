@@ -14,7 +14,5 @@ import java.util.stream.Stream;
 public interface StoriesDaoRepository extends JpaRepository<Story, Long> {
     Optional<Story> findStoryByStoryId(final Long storyId);
 
-    List<Story> findAllByDateCreatedAfterAndDeletedIs(final Timestamp dateCreatedAfter, final boolean deleted);
-
-//    List<Story> findAllByDateCreatedIsBetweenAndDeletedIs
+    List<Story> findAllByDateCreatedIsBetweenAndDeletedIs(final Timestamp createdAfter, final Timestamp createdBefore, final boolean deleted);
 }

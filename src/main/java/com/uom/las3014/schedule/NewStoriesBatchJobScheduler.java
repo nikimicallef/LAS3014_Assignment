@@ -16,6 +16,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import java.util.ArrayList;
 import java.util.List;
 
+//TODO: Configure error handling and multi threaded
 @Configuration
 public class NewStoriesBatchJobScheduler {
     private final Log logger = LogFactory.getLog(this.getClass());
@@ -35,8 +36,8 @@ public class NewStoriesBatchJobScheduler {
 
     //TODO: Configure this hourly
     //TODO: What happens to job if DB goes down or HN goesdown?
-    @Scheduled(cron = "0 0 2 1/1 * ?")
-//    @Scheduled(fixedDelay = 60_000, initialDelay = 1_000)
+    @Scheduled(cron = "0 0 * * * *")
+//    @Scheduled(fixedDelay = 999_000, initialDelay = 1_000)
     public void perform() throws Exception {
         final List<String> newStories = hackernewsRequester.getNewStories().orElse(new ArrayList<>());
 
