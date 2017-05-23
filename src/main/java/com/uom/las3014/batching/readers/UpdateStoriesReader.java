@@ -2,10 +2,6 @@ package com.uom.las3014.batching.readers;
 
 import com.uom.las3014.dao.Story;
 import org.springframework.batch.item.ItemReader;
-import org.springframework.batch.item.NonTransientResourceException;
-import org.springframework.batch.item.ParseException;
-import org.springframework.batch.item.UnexpectedInputException;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.util.Iterator;
@@ -16,6 +12,11 @@ public class UpdateStoriesReader implements ItemReader<Story> {
 
     public void setStoriesToUpdate(Iterator<Story> storiesToUpdate) {
         this.storiesToUpdate = storiesToUpdate;
+    }
+
+    //TODO: REMOVE
+    public Iterator<Story> getStoriesToUpdate() {
+        return storiesToUpdate;
     }
 
     @Override
