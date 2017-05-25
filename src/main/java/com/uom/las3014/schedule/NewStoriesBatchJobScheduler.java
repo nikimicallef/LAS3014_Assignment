@@ -1,7 +1,5 @@
 package com.uom.las3014.schedule;
 
-import com.uom.las3014.batching.readers.NewStoriesReader;
-import com.uom.las3014.httpconnection.HackernewsRequester;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.batch.core.Job;
@@ -12,9 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Scheduled;
-
-import java.util.ArrayList;
-import java.util.List;
 
 //TODO: Configure error handling and multi threaded
 @Configuration
@@ -28,21 +23,11 @@ public class NewStoriesBatchJobScheduler {
     @Qualifier("NewStoriesJobBean")
     private Job newStoriesJob;
 
-    @Autowired
-    private NewStoriesReader newStoriesReader;
-
-    @Autowired
-    private HackernewsRequester hackernewsRequester;
-
     //TODO: Configure this hourly
     //TODO: What happens to job if DB goes down or HN goesdown?
     @Scheduled(cron = "0 0 * * * *")
 //    @Scheduled(fixedDelay = 999_000, initialDelay = 1_000)
     public void perform() throws Exception {
-        final List<String> newStories = hackernewsRequester.getNewStories().orElse(new ArrayList<>());
-
-        newStoriesReader.setNewStoryIds(newStories.iterator());
-
         final JobParameters param = new JobParametersBuilder().addString("JobID", String.valueOf(System.currentTimeMillis())).toJobParameters();
 
         jobLauncher.run(newStoriesJob, param);

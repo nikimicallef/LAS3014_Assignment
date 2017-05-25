@@ -82,16 +82,13 @@ public class UserTopicMapping implements Serializable{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        final UserTopicMapping that = (UserTopicMapping) o;
+        UserTopicMapping that = (UserTopicMapping) o;
 
-        return isEnabled == that.isEnabled && user.equals(that.user) && topic.equals(that.topic);
+        return mappingId.equals(that.mappingId);
     }
 
     @Override
     public int hashCode() {
-        int result = user.hashCode();
-        result = 31 * result + topic.hashCode();
-        result = 31 * result + (isEnabled ? 1 : 0);
-        return result;
+        return mappingId.hashCode();
     }
 }

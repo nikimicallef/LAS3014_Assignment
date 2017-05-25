@@ -16,10 +16,12 @@ public class UpdateStoriesJob {
 
     @Bean(name = "UpdateStoriesJobBean")
     @Autowired
-    public Job newStoriesJobMethod(final @Qualifier("UpdateStoriesStepBean") Step step) {
-        return jobBuilderFactory.get("UpdateStoriesStep")
+    public Job newStoriesJobMethod(final @Qualifier("UpdateStoriesStepBean") Step updateStoriesStep,
+                                   final @Qualifier("TopStoryPerTopicStepBean") Step topStoriesPerTopic) {
+        return jobBuilderFactory.get("UpdateStoriesJobName")
                 .incrementer(new RunIdIncrementer())
-                .flow(step)
+                .flow(updateStoriesStep)
+                .next(topStoriesPerTopic)
                 .end()
                 .build();
     }

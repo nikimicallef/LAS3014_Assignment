@@ -11,7 +11,10 @@ public class Topic {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long topicId;
     private String topicName;
-    @OneToMany(mappedBy = "topic")
+    @ManyToOne
+    @JoinColumn(name = "top_story_id")
+    private Story topStoryId;
+    @OneToMany(mappedBy = "topic", cascade = CascadeType.MERGE, orphanRemoval = true)
     private Set<UserTopicMapping> userTopicMappings;
 
     public Topic(){}
@@ -34,6 +37,14 @@ public class Topic {
 
     public void setTopicName(String topicName) {
         this.topicName = topicName;
+    }
+
+    public Story getTopStoryId() {
+        return topStoryId;
+    }
+
+    public void setTopStoryId(Story topStoryId) {
+        this.topStoryId = topStoryId;
     }
 
     public Set<UserTopicMapping> getUserTopics() {

@@ -3,15 +3,12 @@ package com.uom.las3014.httpconnection;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
@@ -34,10 +31,10 @@ public class HackernewsRequester {
             throw new IllegalArgumentException();
         }
 
-
         final String responseBody = getResponseFromHackernews(httpUrlConnection);
 
-        if(responseBody == null){
+        //Sometimes HN API returns null for items which do not exist.
+        if(responseBody == null || responseBody.equals("null")){
             return Optional.empty();
         } else {
             return Optional.of(new JsonParser().parse(responseBody).getAsJsonObject());

@@ -31,4 +31,9 @@ public class StoriesServiceImpl implements StoriesService{
     public List<Story> get12HrsUndeletedTopics() {
         return storiesDaoRepository.findAllByDateCreatedIsBetweenAndDeletedIs(new Timestamp(System.currentTimeMillis() - TimeUnit.HOURS.toMillis(12)), new Timestamp(System.currentTimeMillis()), false);
     }
+
+    @Override
+    public Optional<Story> getTopStoryContainingKeyword(final String keyword) {
+        return storiesDaoRepository.findTop1ByTitleContainingOrderByScoreDesc(keyword);
+    }
 }

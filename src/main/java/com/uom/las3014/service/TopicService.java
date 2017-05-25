@@ -1,9 +1,13 @@
 package com.uom.las3014.service;
 
-import com.uom.las3014.api.response.GenericMessageResponse;
 import com.uom.las3014.dao.Topic;
-import org.springframework.http.ResponseEntity;
+
+import java.util.List;
 
 public interface TopicService {
     Topic createNewTopicIfNotExists(final String topic);
+
+    List<Topic> getAllTopics();
+
+    void saveTopic(Topic topic);
 }

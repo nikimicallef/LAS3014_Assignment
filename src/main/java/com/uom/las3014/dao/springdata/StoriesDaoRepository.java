@@ -15,4 +15,6 @@ public interface StoriesDaoRepository extends JpaRepository<Story, Long> {
     Optional<Story> findStoryByStoryId(final Long storyId);
 
     List<Story> findAllByDateCreatedIsBetweenAndDeletedIs(final Timestamp createdAfter, final Timestamp createdBefore, final boolean deleted);
+
+    Optional<Story> findTop1ByTitleContainingOrderByScoreDesc(final String keyword);
 }

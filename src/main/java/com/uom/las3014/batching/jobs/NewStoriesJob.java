@@ -17,7 +17,7 @@ public class NewStoriesJob {
     @Bean(name = "NewStoriesJobBean")
     @Autowired
     public Job newStoriesJobMethod(final @Qualifier("NewStoriesStepBean") Step step) {
-        return jobBuilderFactory.get("NewStoriesStep")
+        return jobBuilderFactory.get("NewStoriesJobName")
                 .incrementer(new RunIdIncrementer())
                 .flow(step)
                 .end()
