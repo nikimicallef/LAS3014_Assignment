@@ -3,12 +3,15 @@ package com.uom.las3014.batching.processors;
 import com.google.gson.JsonObject;
 import com.uom.las3014.dao.Story;
 import com.uom.las3014.httpconnection.HackernewsRequester;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UpdateStoriesProcessor implements ItemProcessor<Story, Story>{
+    private final Log logger = LogFactory.getLog(this.getClass());
 
     @Autowired
     private HackernewsRequester hackernewsRequester;
@@ -21,6 +24,8 @@ public class UpdateStoriesProcessor implements ItemProcessor<Story, Story>{
         if(updatedStory!= null && updatedStory.has("deleted")){
             story.setDeleted(true);
         } else if(updatedStory != null && updatedStory.get("score").getAsInt() != story.getScore()){
+            logger.debug(story.getStoryId() + " story's score has been updated from " + story.getScore() + " to " + updatedStory.get("score").getAsInt());
+
             story.setScore(updatedStory.get("score").getAsInt());
         }
 

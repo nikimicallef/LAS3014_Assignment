@@ -22,7 +22,7 @@ public class UpdateStoriesBatchJobScheduler {
     //TODO: Set to cron
     @Scheduled(cron = "0 0 2 ? * *")
 //    @Scheduled(fixedDelay = 999_000, initialDelay = 1_000)
-    public void perform() throws Exception {
+    public void performUpdateWeeklyStoriesJob() throws Exception {
         final JobParameters param = new JobParametersBuilder()
                 .addString("JobID", String.valueOf(System.currentTimeMillis()))
                 .addString("identifier", "week")
@@ -31,9 +31,9 @@ public class UpdateStoriesBatchJobScheduler {
         jobLauncher.run(updateStoriesJob, param);
     }
 
-//    @Scheduled(fixedDelay = 20_000, initialDelay = 3_000)
+//    @Scheduled(fixedDelay = 9999_000, initialDelay = 120_000)
     @Scheduled(cron = "0 0 * * * ?")
-    public void perform1() throws Exception {
+    public void performUpdate12hStoriesJob() throws Exception {
         final JobParameters param = new JobParametersBuilder()
                 .addString("JobID", String.valueOf(System.currentTimeMillis()))
                 .addString("identifier", "12hrs")

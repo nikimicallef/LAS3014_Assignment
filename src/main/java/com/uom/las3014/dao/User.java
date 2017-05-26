@@ -25,13 +25,14 @@ public class User {
     public User(final String username, final String password) {
         this.username = username;
         this.password = password;
+        userTopicMappings = new HashSet<>();
     }
 
-    public User(final String username, final String password, final Set<UserTopicMapping> userTopicMappings) {
-        this.username = username;
-        this.password = password;
-        this.userTopicMappings = userTopicMappings;
-    }
+//    public User(final String username, final String password, final Set<UserTopicMapping> userTopicMappings) {
+//        this.username = username;
+//        this.password = password;
+//        this.userTopicMappings = userTopicMappings;
+//    }
 
     public Long getUserId() {
         return userId;
@@ -101,23 +102,5 @@ public class User {
                         && ChronoUnit.MINUTES.between(sessionTokenCreated.toLocalDateTime(), timestamp.toLocalDateTime()) <= 30)
                     || (sessionTokenLastUsed != null
                         && ChronoUnit.MINUTES.between(sessionTokenLastUsed.toLocalDateTime(), timestamp.toLocalDateTime()) <= 30));
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        User user = (User) o;
-
-        if (!userId.equals(user.userId)) return false;
-        return username.equals(user.username);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = userId.hashCode();
-        result = 31 * result + username.hashCode();
-        return result;
     }
 }

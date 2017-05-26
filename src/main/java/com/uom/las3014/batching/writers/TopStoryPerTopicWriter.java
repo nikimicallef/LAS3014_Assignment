@@ -13,18 +13,16 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class TopStoryPerTopicWriter implements ItemWriter<Pair<Topic, Story>> {
+public class TopStoryPerTopicWriter implements ItemWriter<Topic> {
     @Autowired
     private TopicService topicService;
 
-    private final Log logger = LogFactory.getLog(this.getClass());
-
     @Override
-    public void write(List<? extends Pair<Topic, Story>> list) throws Exception {
-        list.stream().filter(topicStoryPair -> topicStoryPair.getSecond() != null).forEach(topicStoryPair -> {
-                topicStoryPair.getFirst().setTopStoryId(topicStoryPair.getSecond());
-                topicService.saveTopic(topicStoryPair.getFirst());
-                logger.debug(topicStoryPair.getFirst().getTopicName() + " has top story id " + topicStoryPair.getSecond().getStoryId() + " and name " + topicStoryPair.getSecond().getTitle());
+    public void write(List<? extends Topic> list) throws Exception {
+        //TODO: SAveAll?
+//        topicService.saveTopics(list);
+        list.stream().filter(topic -> topic.getTopStoryId() != null).forEach(topic -> {
+                topicService.saveTopic(topic);
         });
     }
 }

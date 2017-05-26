@@ -29,6 +29,8 @@ public class ExceptionMapper extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<GenericErrorMessageResponse> catchAll(final Exception exception) {
+        exception.printStackTrace();
+
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(new GenericErrorMessageResponse("Internal server error."));

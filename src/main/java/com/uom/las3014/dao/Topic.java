@@ -14,7 +14,7 @@ public class Topic {
     @ManyToOne
     @JoinColumn(name = "top_story_id")
     private Story topStoryId;
-    @OneToMany(mappedBy = "topic", cascade = CascadeType.MERGE, orphanRemoval = true)
+    @OneToMany(mappedBy = "topic")
     private Set<UserTopicMapping> userTopicMappings;
 
     public Topic(){}

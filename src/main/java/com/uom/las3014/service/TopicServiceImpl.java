@@ -47,6 +47,11 @@ public class TopicServiceImpl implements TopicService{
         topicsDaoRepository.save(topic);
     }
 
+//    @Override
+//    public void saveTopics(List<Topic> topics) {
+//        topicsDaoRepository.save(topics);
+//    }
+
     @Async
     private void setTopStoryForTopic(final Topic topic){
         final Optional<Story> topStoryContainingKeyword = storiesService.getTopStoryContainingKeyword(topic.getTopicName());

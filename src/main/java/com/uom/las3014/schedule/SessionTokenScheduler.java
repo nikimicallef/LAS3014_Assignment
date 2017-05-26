@@ -17,7 +17,7 @@ public class SessionTokenScheduler {
     //TODO: Set to run every 10 minutes
     @Scheduled(fixedDelay = 600_000, initialDelay = 60_000)
     //@Scheduled(fixedDelay = 5_000)
-    public void invalidateInactiveSessionTokensScheduledTask() throws InterruptedException {
+    public void performInvalidateInactiveSessionTokensJob() throws InterruptedException {
         logger.debug("Running scheduled task which invalidates inactive session tokens.");
         userService.invalidateInactiveSessionTokens();
     }

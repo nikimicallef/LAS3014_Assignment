@@ -24,12 +24,22 @@ CREATE TABLE `users` (
   PRIMARY KEY (`user_id`)
 ) ENGINE = InnoDB;
 
+CREATE TABLE `stories` (
+  `story_id` BIGINT UNSIGNED NOT NULL,
+  `score` int NOT NULL,
+  `title` varchar(500) NOT NULL,
+  `url` varchar(500),
+  `date_created` DATETIME,
+  `deleted` bit(1) DEFAULT 0,
+  PRIMARY KEY (`story_id`)
+) ENGINE = InnoDB;
+
 CREATE TABLE `topics` (
   `topic_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `topic_name` VARCHAR(50) NOT NULL,
   `top_story_id` BIGINT UNSIGNED,
   PRIMARY KEY (`topic_id`),
-  CONSTRAINT `fk_topics_topstoryid` FOREIGN KEY (`story_id`) REFERENCES `stories` (`story_id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `fk_topics_topstoryid` FOREIGN KEY (`top_story_id`) REFERENCES `stories` (`story_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB;
 
 CREATE TABLE `user_topic_mapping` (
@@ -42,14 +52,4 @@ CREATE TABLE `user_topic_mapping` (
   PRIMARY KEY (`mapping_id`),
   CONSTRAINT `fk_usertopicmapping_userid` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_usertopicmapping_topicid` FOREIGN KEY (`topic_id`) REFERENCES `topics` (`topic_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB;
-
-CREATE TABLE `stories` (
-  `story_id` BIGINT UNSIGNED NOT NULL,
-  `score` int NOT NULL,
-  `title` varchar(500) NOT NULL,
-  `url` varchar(500),
-  `date_created` DATETIME,
-  `deleted` bit(1) DEFAULT 0,
-  PRIMARY KEY (`story_id`)
 ) ENGINE = InnoDB;

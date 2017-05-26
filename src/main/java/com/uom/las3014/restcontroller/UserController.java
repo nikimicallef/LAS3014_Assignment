@@ -1,4 +1,4 @@
-package com.uom.las3014.restcontroller.users;
+package com.uom.las3014.restcontroller;
 
 import com.uom.las3014.annotations.AuthBySessionToken;
 import com.uom.las3014.api.request.UserCreateRequestBody;
@@ -18,8 +18,6 @@ import javax.validation.Valid;
 public class UserController {
     @Autowired
     private UserService userService;
-
-    //TODO: If entry already exists in db do not GET it and then set. Just save as it will merge.
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<GenericMessageResponse> createNewUser(final @RequestBody @Valid UserCreateRequestBody userCreateRequestBody) {

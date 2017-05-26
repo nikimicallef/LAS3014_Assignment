@@ -27,7 +27,7 @@ public class NewStoriesBatchJobScheduler {
     //TODO: What happens to job if DB goes down or HN goesdown?
     @Scheduled(cron = "0 0 * * * *")
 //    @Scheduled(fixedDelay = 999_000, initialDelay = 1_000)
-    public void perform() throws Exception {
+    public void performNewStoriesJob() throws Exception {
         final JobParameters param = new JobParametersBuilder().addString("JobID", String.valueOf(System.currentTimeMillis())).toJobParameters();
 
         jobLauncher.run(newStoriesJob, param);

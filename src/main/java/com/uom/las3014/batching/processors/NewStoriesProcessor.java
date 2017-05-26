@@ -27,7 +27,7 @@ public class NewStoriesProcessor implements ItemProcessor<String, Story> {
                                 responseJson.get("score").getAsInt(),
                                 responseJson.get("title").getAsString(),
                                 responseJson.has("url") ? responseJson.get("url").getAsString() : "",
-                                new Timestamp(System.currentTimeMillis()));
+                                new Timestamp(responseJson.get("time").getAsLong() * 1000L));
         }
 
         return story;
