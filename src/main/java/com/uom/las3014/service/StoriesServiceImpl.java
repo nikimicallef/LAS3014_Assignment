@@ -56,10 +56,14 @@ public class StoriesServiceImpl implements StoriesService{
         final User retrievedUser = user.orElseThrow(InvalidCredentialsException::new);
 
         final List<TopicTopStoryResponse> topicTopStoryResponses = retrievedUser.getUserTopics().stream().map(userTopicMapping -> {
-            final String topStoryTitle = userTopicMapping.getTopic().getTopStoryId().getTitle();
-            final String topStoryUrl = userTopicMapping.getTopic().getTopStoryId().getUrl();
-            final TopStoryResponse topStoryResponse = new TopStoryResponse(topStoryTitle, topStoryUrl);
-            return new TopicTopStoryResponse(userTopicMapping.getTopic().getTopicName(), topStoryResponse);
+            if(userTopicMapping.getTopic().getTopStoryId() != null) {
+                final String topStoryTitle = userTopicMapping.getTopic().getTopStoryId().getTitle();
+                final String topStoryUrl = userTopicMapping.getTopic().getTopStoryId().getUrl();
+                final TopStoryResponse topStoryResponse = new TopStoryResponse(topStoryTitle, topStoryUrl);
+                return new TopicTopStoryResponse(userTopicMapping.getTopic().getTopicName(), topStoryResponse);
+            } else {
+                return new TopicTopStoryResponse(userTopicMapping.getTopic().getTopicName(), null);
+            }
         }).collect(Collectors.toList());
 
         return ResponseEntity.status(HttpStatus.OK)

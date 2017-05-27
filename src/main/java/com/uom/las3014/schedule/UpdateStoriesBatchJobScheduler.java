@@ -32,7 +32,7 @@ public class UpdateStoriesBatchJobScheduler {
     }
 
 //    @Scheduled(fixedDelay = 9999_000, initialDelay = 120_000)
-    @Scheduled(cron = "0 0 * * * ?")
+    @Scheduled(cron = "0 15 * * * ?")
     public void performUpdate12hStoriesJob() throws Exception {
         final JobParameters param = new JobParametersBuilder()
                 .addString("JobID", String.valueOf(System.currentTimeMillis()))
