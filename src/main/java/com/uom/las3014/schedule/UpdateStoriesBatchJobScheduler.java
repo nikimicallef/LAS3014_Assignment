@@ -31,14 +31,16 @@ public class UpdateStoriesBatchJobScheduler {
         jobLauncher.run(updateStoriesJob, param);
     }
 
-//    @Scheduled(fixedDelay = 9999_000, initialDelay = 120_000)
-    @Scheduled(cron = "0 15 * * * ?")
-    public void performUpdate12hStoriesJob() throws Exception {
-        final JobParameters param = new JobParametersBuilder()
-                .addString("JobID", String.valueOf(System.currentTimeMillis()))
-                .addString("identifier", "12hrs")
-                .toJobParameters();
 
-        jobLauncher.run(updateStoriesJob, param);
-    }
+    //TODO: Is this necessary? The new stories is getting the top 500 and the top 500 nearly always covers 12 hrs
+//    @Scheduled(fixedDelay = 9999_000, initialDelay = 120_000)
+//    @Scheduled(cron = "0 15 * * * ?")
+//    public void performUpdate12hStoriesJob() throws Exception {
+//        final JobParameters param = new JobParametersBuilder()
+//                .addString("JobID", String.valueOf(System.currentTimeMillis()))
+//                .addString("identifier", "12hrs")
+//                .toJobParameters();
+//
+//        jobLauncher.run(updateStoriesJob, param);
+//    }
 }

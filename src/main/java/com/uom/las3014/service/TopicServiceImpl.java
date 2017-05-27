@@ -54,7 +54,7 @@ public class TopicServiceImpl implements TopicService{
 
     @Async
     private void setTopStoryForTopic(final Topic topic){
-        final Optional<Story> topStoryContainingKeyword = storiesService.getTopStoryContainingKeyword(topic.getTopicName());
+        final Optional<Story> topStoryContainingKeyword = storiesService.getTopStoryContainingKeywordAndCreatedInLastWeek(topic.getTopicName());
 
         topStoryContainingKeyword.ifPresent(topic::setTopStoryId);
     }

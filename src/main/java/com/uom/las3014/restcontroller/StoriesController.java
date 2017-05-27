@@ -19,6 +19,7 @@ public class StoriesController {
     @AuthBySessionToken
     @RequestMapping(method = RequestMethod.GET, value = "/top")
     public ResponseEntity<TopicsTopStoryResponse> getTopStory(final @RequestHeader(name = "X-SessionToken") String sessionToken){
+        //TODO: Cache this response?
         return storiesService.getTopStoryForTopics(sessionToken);
     }
 }

@@ -12,9 +12,11 @@ import java.util.stream.Stream;
 
 @Repository
 public interface StoriesDaoRepository extends JpaRepository<Story, Long> {
-    Optional<Story> findStoryByStoryId(final Long storyId);
+//    Optional<Story> findStoryByStoryId(final Long storyId);
 
     List<Story> findAllByDateCreatedIsBetweenAndDeletedIs(final Timestamp createdAfter, final Timestamp createdBefore, final boolean deleted);
 
-    Optional<Story> findTop1ByTitleContainingOrderByScoreDesc(final String keyword);
+//    Optional<Story> findTop1ByTitleContainingOrderByScoreDesc(final String keyword);
+
+    Optional<Story> findTop1ByTitleContainingAndDateCreatedIsAfterAndDeletedIsOrderByScoreDesc(final String keyword, final Timestamp createdAfter, boolean deleted);
 }

@@ -18,11 +18,10 @@ public class TopStoryPerTopicProcessor implements ItemProcessor<Topic, Topic> {
 
     @Override
     public Topic process(Topic topic) throws Exception {
-        final Story story = storiesService.getTopStoryContainingKeyword(topic.getTopicName()).orElse(null);
+        final Story story = storiesService.getTopStoryContainingKeywordAndCreatedInLastWeek(topic.getTopicName()).orElse(null);
 
         if(story != null) {
             topic.setTopStoryId(story);
-
             logger.debug(topic.getTopicName() + " has top story id " + story.getStoryId() + " and name " + story.getTitle());
         }
 

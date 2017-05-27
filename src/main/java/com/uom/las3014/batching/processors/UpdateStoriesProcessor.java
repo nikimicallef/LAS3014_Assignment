@@ -21,6 +21,9 @@ public class UpdateStoriesProcessor implements ItemProcessor<Story, Story>{
     public Story process(Story story) throws Exception {
         final JsonObject updatedStory = hackernewsRequester.getItem(story.getStoryId()).orElse(null);
 
+        logger.debug(story.getStoryId() + " <-- ID of story attemping to be updated");
+
+
         if(updatedStory!= null && updatedStory.has("deleted")){
             story.setDeleted(true);
         } else if(updatedStory != null && updatedStory.get("score").getAsInt() != story.getScore()){

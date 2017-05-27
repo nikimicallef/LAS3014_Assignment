@@ -34,19 +34,31 @@ public class StoriesServiceImpl implements StoriesService{
         return storiesDaoRepository.save(story);
     }
 
-    @Override
-    public List<Story> getLastWeeksUndeletedTopics() {
-        return storiesDaoRepository.findAllByDateCreatedIsBetweenAndDeletedIs(new Timestamp(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(7)), new Timestamp(System.currentTimeMillis() - TimeUnit.HOURS.toMillis(12)), false);
-    }
+//    @Override
+//    public List<Story> getLastWeeksUndeletedTopics() {
+//        return storiesDaoRepository.findAllByDateCreatedIsBetweenAndDeletedIs(new Timestamp(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(7)), new Timestamp(System.currentTimeMillis() - TimeUnit.HOURS.toMillis(12)), false);
+//    }
+//
+//    @Override
+//    public List<Story> get12HrsUndeletedTopics() {
+//        return storiesDaoRepository.findAllByDateCreatedIsBetweenAndDeletedIs(new Timestamp(System.currentTimeMillis() - TimeUnit.HOURS.toMillis(12)), new Timestamp(System.currentTimeMillis()), false);
+//    }
+
 
     @Override
-    public List<Story> get12HrsUndeletedTopics() {
-        return storiesDaoRepository.findAllByDateCreatedIsBetweenAndDeletedIs(new Timestamp(System.currentTimeMillis() - TimeUnit.HOURS.toMillis(12)), new Timestamp(System.currentTimeMillis()), false);
+    public List<Story> getUndeletedTopicsBetween(final Timestamp createdAfter, final Timestamp createdBefore) {
+        return storiesDaoRepository.findAllByDateCreatedIsBetweenAndDeletedIs(createdAfter, createdBefore, false);
     }
 
+//    @Override
+//    public Optional<Story> getTopStoryContainingKeyword(final String keyword) {
+//        return storiesDaoRepository.findTop1ByTitleContainingOrderByScoreDesc(keyword);
+//    }
+
+
     @Override
-    public Optional<Story> getTopStoryContainingKeyword(final String keyword) {
-        return storiesDaoRepository.findTop1ByTitleContainingOrderByScoreDesc(keyword);
+    public Optional<Story> getTopStoryContainingKeywordAndCreatedInLastWeek(final String keyword) {
+        return storiesDaoRepository.findTop1ByTitleContainingAndDateCreatedIsAfterAndDeletedIsOrderByScoreDesc(keyword, new Timestamp(System.currentTimeMillis() - TimeUnit.HOURS.toMillis(24)), false);
     }
 
     @Override
