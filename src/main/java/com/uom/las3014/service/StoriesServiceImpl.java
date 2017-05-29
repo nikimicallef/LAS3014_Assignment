@@ -30,35 +30,13 @@ public class StoriesServiceImpl implements StoriesService{
     private UserService userService;
 
     @Override
-    public Story createNewOrUpdateExistingStory(final Story story) {
-        return storiesDaoRepository.save(story);
+    public List<Story> getUndeletedTopicsAfterTimestamp(final Timestamp createdAfter) {
+        return storiesDaoRepository.findAllByDateCreatedIsAfterAndDeletedIsFalse(createdAfter);
     }
 
-//    @Override
-//    public List<Story> getLastWeeksUndeletedTopics() {
-//        return storiesDaoRepository.findAllByDateCreatedIsBetweenAndDeletedIs(new Timestamp(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(7)), new Timestamp(System.currentTimeMillis() - TimeUnit.HOURS.toMillis(12)), false);
-//    }
-//
-//    @Override
-//    public List<Story> get12HrsUndeletedTopics() {
-//        return storiesDaoRepository.findAllByDateCreatedIsBetweenAndDeletedIs(new Timestamp(System.currentTimeMillis() - TimeUnit.HOURS.toMillis(12)), new Timestamp(System.currentTimeMillis()), false);
-//    }
-
-
     @Override
-    public List<Story> getUndeletedTopicsBetween(final Timestamp createdAfter, final Timestamp createdBefore) {
-        return storiesDaoRepository.findAllByDateCreatedIsBetweenAndDeletedIs(createdAfter, createdBefore, false);
-    }
-
-//    @Override
-//    public Optional<Story> getTopStoryContainingKeyword(final String keyword) {
-//        return storiesDaoRepository.findTop1ByTitleContainingOrderByScoreDesc(keyword);
-//    }
-
-
-    @Override
-    public Optional<Story> getTopStoryContainingKeywordAndCreatedInLastWeek(final String keyword) {
-        return storiesDaoRepository.findTop1ByTitleContainingAndDateCreatedIsAfterAndDeletedIsOrderByScoreDesc(keyword, new Timestamp(System.currentTimeMillis() - TimeUnit.HOURS.toMillis(24)), false);
+    public List<Story> getUndeletedStoriesContainingKeywordAndAfterTimestamp(String keyword, Timestamp createdAfter) {
+        return storiesDaoRepository.findAllByTitleContainingAndDateCreatedIsAfterAndDeletedIsFalse(keyword, createdAfter);
     }
 
     @Override
@@ -81,5 +59,10 @@ public class StoriesServiceImpl implements StoriesService{
         return ResponseEntity.status(HttpStatus.OK)
         .contentType(MediaType.APPLICATION_JSON)
         .body(new TopicsTopStoryResponse(topicTopStoryResponses));
+    }
+
+    @Override
+    public void saveAllStories(final Iterable<? extends Story> stories) {
+        storiesDaoRepository.save(stories);
     }
 }

@@ -6,20 +6,13 @@ import org.springframework.http.ResponseEntity;
 
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Optional;
 
 public interface StoriesService {
-    Story createNewOrUpdateExistingStory(Story story);
+    List<Story> getUndeletedTopicsAfterTimestamp(Timestamp createdAfter);
 
-//    List<Story> getLastWeeksUndeletedTopics();
-//
-//    List<Story> get12HrsUndeletedTopics();
-
-    List<Story> getUndeletedTopicsBetween(Timestamp createdAfter, Timestamp createdBefore);
-
-//    Optional<Story> getTopStoryContainingKeyword(String keyword);
-
-    Optional<Story> getTopStoryContainingKeywordAndCreatedInLastWeek(String keyword);
+    List<Story> getUndeletedStoriesContainingKeywordAndAfterTimestamp(String keyword, Timestamp createdAfter);
 
     ResponseEntity<TopicsTopStoryResponse> getTopStoryForTopics(String sessionToken);
+
+    void saveAllStories(Iterable<? extends Story> stories);
 }

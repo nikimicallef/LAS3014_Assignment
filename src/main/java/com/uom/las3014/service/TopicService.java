@@ -9,7 +9,5 @@ public interface TopicService {
 
     List<Topic> getAllTopics();
 
-    void saveTopic(Topic topic);
-
-//    void saveTopics(List<Topic> topics);
+    void saveAllTopics(Iterable<? extends Topic> topics);
 }

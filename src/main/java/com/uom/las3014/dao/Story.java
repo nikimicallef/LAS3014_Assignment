@@ -86,4 +86,8 @@ public class Story {
                 ", deleted=" + deleted +
                 '}';
     }
+
+    public int compareTo(final Story story){
+        return this.getScore().compareTo(story.getScore());
+    }
 }

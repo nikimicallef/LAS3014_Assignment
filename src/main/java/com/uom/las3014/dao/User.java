@@ -28,12 +28,6 @@ public class User {
         userTopicMappings = new HashSet<>();
     }
 
-//    public User(final String username, final String password, final Set<UserTopicMapping> userTopicMappings) {
-//        this.username = username;
-//        this.password = password;
-//        this.userTopicMappings = userTopicMappings;
-//    }
-
     public Long getUserId() {
         return userId;
     }
@@ -93,7 +87,6 @@ public class User {
 
     public boolean hasActiveSessionToken(){
         final Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        timestamp.toLocalDateTime();
 
         //TODO: 30 minutes not 30 seconds
 

@@ -19,8 +19,6 @@ public class UpdateStoriesWriter implements ItemWriter<Story> {
 
     @Override
     public void write(List<? extends Story> list) throws Exception {
-        list.forEach(story -> {
-            storiesService.createNewOrUpdateExistingStory(story);
-        });
+        storiesService.saveAllStories(list);
     }
 }

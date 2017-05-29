@@ -9,24 +9,23 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Scheduled;
 
-//TODO: Configure error handling and multi threaded
 @Configuration
-public class UpdateStoriesBatchJobScheduler {
+public class WeeklyTopStoriesPerTopicScheduler {
     @Autowired
     private JobLauncher jobLauncher;
 
     @Autowired
-    @Qualifier("UpdateStoriesJobBean")
-    private Job updateStoriesJob;
+    @Qualifier("WeeklyTopStoriesPerTopicJobBean")
+    private Job weeklyTopStoriesPerTopicJob;
 
-    //TODO: Set to cron
-    @Scheduled(cron = "0 0 2 ? * *")
-//    @Scheduled(fixedDelay = 999_000, initialDelay = 1_000)
-    public void performUpdateWeeklyStoriesJob() throws Exception {
+
+    //TODO: Set to run at 9 am
+    @Scheduled(fixedDelay = 999_000, initialDelay = 1_000)
+    public void performWeeklyTopStoriesPerTopicJob() throws Exception {
         final JobParameters param = new JobParametersBuilder()
                 .addString("JobID", String.valueOf(System.currentTimeMillis()))
                 .toJobParameters();
 
-        jobLauncher.run(updateStoriesJob, param);
+        jobLauncher.run(weeklyTopStoriesPerTopicJob, param);
     }
 }

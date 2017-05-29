@@ -1,7 +1,9 @@
 package com.uom.las3014.batching.processors;
 
+import com.google.common.collect.Ordering;
 import com.uom.las3014.dao.Story;
 import com.uom.las3014.dao.Topic;
+import com.uom.las3014.dao.Digest;
 import com.uom.las3014.service.StoriesService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -13,20 +15,19 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Component
-public class TopStoryPerTopicProcessor implements ItemProcessor<Topic, Topic> {
+public class WeeklyTopStoriesPerTopicProcessor implements ItemProcessor<Topic,List<Digest>> {
     @Autowired
     private StoriesService storiesService;
 
     private final Log logger = LogFactory.getLog(this.getClass());
 
     @Override
-    public Topic process(Topic topic) throws Exception {
+    public List<Digest> process(Topic topic) throws Exception {
         final LocalDateTime localDateTime = LocalDateTime.of(LocalDate.now().getYear(),
                 LocalDate.now().getMonth(),
                 LocalDate.now().getDayOfMonth(),
@@ -37,15 +38,10 @@ public class TopStoryPerTopicProcessor implements ItemProcessor<Topic, Topic> {
 
         final List<Story> stories = storiesService.getUndeletedStoriesContainingKeywordAndAfterTimestamp(topic.getTopicName(), new Timestamp(localDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli() - TimeUnit.DAYS.toMillis(7)));
 
-        final Optional<Story>  topStoryOpt = stories.stream().max(Comparator.comparing(Story::getScore));
+        final List<Story> topStories = Ordering.from(Story::compareTo).greatestOf(stories, 3);
 
-        final Story topStory = topStoryOpt.orElse(null);
+        topStories.forEach(story -> logger.debug(topic.getTopicName() +" has top storey " + story.getStoryId() + " " + story.getTitle() + " " + story.getScore()));
 
-        if(topStory != null) {
-            logger.debug(topic.getTopicName() + " has top story " + topStory.getScore() + " and ID " + topStory.getStoryId());
-            topic.setTopStoryId(topStory);
-        }
-
-        return topic;
+        return topStories.stream().map(story -> new Digest(Timestamp.valueOf(localDateTime), topic, story)).collect(Collectors.toList());
     }
 }

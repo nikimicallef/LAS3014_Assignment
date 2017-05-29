@@ -11,11 +11,11 @@ import java.util.Iterator;
 
 @Component
 @StepScope
-public class TopStoryPerTopicReader implements ItemReader<Topic>{
+public class GetAllTopicsReader implements ItemReader<Topic>{
     private Iterator<Topic> topics;
 
     @Autowired
-    public TopStoryPerTopicReader(final TopicService topicService) {
+    public GetAllTopicsReader(final TopicService topicService) {
         topics = topicService.getAllTopics().iterator();
     }
 

@@ -18,16 +18,8 @@ public class UpdateStoriesReader implements ItemReader<Story> {
     private Iterator<Story> storiesToUpdate;
 
     @Autowired
-    public UpdateStoriesReader(@Value("#{jobParameters['identifier']}") String identifier, StoriesService storiesService) {
-        if(identifier.equals("week")){
-            storiesToUpdate = storiesService.getUndeletedTopicsBetween(new Timestamp(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(7)), new Timestamp(System.currentTimeMillis())).iterator();
-        } else if (identifier.equals("12hrs")){
-            storiesToUpdate = storiesService.getUndeletedTopicsBetween(new Timestamp(System.currentTimeMillis() - TimeUnit.HOURS.toMillis(12)), new Timestamp(System.currentTimeMillis())).iterator();
-        } else {
-            throw new IllegalArgumentException();
-        }
-
-        this.storiesToUpdate = storiesToUpdate;
+    public UpdateStoriesReader(StoriesService storiesService) {
+        this.storiesToUpdate = storiesService.getUndeletedTopicsAfterTimestamp(new Timestamp(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(7))).iterator();
     }
 
     @Override

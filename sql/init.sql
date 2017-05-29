@@ -53,3 +53,13 @@ CREATE TABLE `user_topic_mapping` (
   CONSTRAINT `fk_usertopicmapping_userid` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_usertopicmapping_topicid` FOREIGN KEY (`topic_id`) REFERENCES `topics` (`topic_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB;
+
+CREATE TABLE `digests` (
+  `entry_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `week_timestamp` DATETIME,
+  `topic_id` BIGINT UNSIGNED,
+  `story_id` BIGINT UNSIGNED,
+  PRIMARY KEY (`entry_id`),
+  CONSTRAINT `fk_digests_topicid` FOREIGN KEY (`topic_id`) REFERENCES `topics` (`topic_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_digests_storyid` FOREIGN KEY (`story_id`) REFERENCES `stories` (`story_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB;

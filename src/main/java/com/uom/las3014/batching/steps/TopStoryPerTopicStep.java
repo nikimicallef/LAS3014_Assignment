@@ -1,7 +1,7 @@
 package com.uom.las3014.batching.steps;
 
 import com.uom.las3014.batching.processors.TopStoryPerTopicProcessor;
-import com.uom.las3014.batching.readers.TopStoryPerTopicReader;
+import com.uom.las3014.batching.readers.GetAllTopicsReader;
 import com.uom.las3014.batching.writers.TopStoryPerTopicWriter;
 import com.uom.las3014.dao.Topic;
 import org.springframework.batch.core.Step;
@@ -16,7 +16,7 @@ public class TopStoryPerTopicStep {
     private StepBuilderFactory stepBuilderFactory;
 
     @Autowired
-    private TopStoryPerTopicReader topStoryPerTopicReader;
+    private GetAllTopicsReader getAllTopicsReader;
 
     @Autowired
     private TopStoryPerTopicProcessor topStoryPerTopicProcessor;
@@ -28,7 +28,7 @@ public class TopStoryPerTopicStep {
     public Step updateStoriesStepMethod() {
         return stepBuilderFactory.get("TopStoryPerTopicStep")
                 .<Topic, Topic>chunk(100)
-                .reader(topStoryPerTopicReader)
+                .reader(getAllTopicsReader)
                 .processor(topStoryPerTopicProcessor)
                 .writer(topStoryPerTopicWriter)
                 .build();

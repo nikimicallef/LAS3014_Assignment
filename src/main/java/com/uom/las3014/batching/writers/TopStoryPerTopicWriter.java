@@ -19,10 +19,6 @@ public class TopStoryPerTopicWriter implements ItemWriter<Topic> {
 
     @Override
     public void write(List<? extends Topic> list) throws Exception {
-        //TODO: SAveAll?
-//        topicService.saveTopics(list);
-        list.stream().filter(topic -> topic.getTopStoryId() != null).forEach(topic -> {
-                topicService.saveTopic(topic);
-        });
+        topicService.saveAllTopics(list);
     }
 }

@@ -9,8 +9,11 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Transactional
@@ -43,19 +46,16 @@ public class TopicServiceImpl implements TopicService{
     }
 
     @Override
-    public void saveTopic(Topic topic) {
-        topicsDaoRepository.save(topic);
+    public void saveAllTopics(Iterable<? extends Topic> topics){
+        topicsDaoRepository.save(topics);
     }
-
-//    @Override
-//    public void saveTopics(List<Topic> topics) {
-//        topicsDaoRepository.save(topics);
-//    }
 
     @Async
     private void setTopStoryForTopic(final Topic topic){
-        final Optional<Story> topStoryContainingKeyword = storiesService.getTopStoryContainingKeywordAndCreatedInLastWeek(topic.getTopicName());
+        final List<Story> topStoryContainingKeyword = storiesService.getUndeletedStoriesContainingKeywordAndAfterTimestamp(topic.getTopicName(), new Timestamp(System.currentTimeMillis() - TimeUnit.HOURS.toMillis(24)));
 
-        topStoryContainingKeyword.ifPresent(topic::setTopStoryId);
+        final Optional<Story>  topStoryOpt = topStoryContainingKeyword.stream().max(Comparator.comparing(Story::getScore));
+
+        topStoryOpt.ifPresent(topic::setTopStoryId);
     }
 }
