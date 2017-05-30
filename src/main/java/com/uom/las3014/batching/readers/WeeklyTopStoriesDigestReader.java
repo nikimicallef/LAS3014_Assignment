@@ -5,12 +5,10 @@ import com.uom.las3014.service.StoriesService;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 
@@ -19,17 +17,12 @@ import java.util.concurrent.TimeUnit;
 public class WeeklyTopStoriesDigestReader implements ItemReader<Story> {
     private Iterator<Story> topStories;
 
+    @Value("#{jobParameters['dateTimeExecutedMillis']}")
+    public long dateTimeExecutedMillis;
+
     @Autowired
     public WeeklyTopStoriesDigestReader(final StoriesService storiesService) {
-        final LocalDateTime localDateTime = LocalDateTime.of(LocalDate.now().getYear(),
-                LocalDate.now().getMonth(),
-                LocalDate.now().getDayOfMonth(),
-                9,
-                0,
-                0,
-                0);
-
-        topStories = storiesService.getTop3UndeletedStoriesAfterTimestamp(new Timestamp(localDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli() - TimeUnit.DAYS.toMillis(7))).iterator();
+        topStories = storiesService.getTop3UndeletedStoriesAfterTimestamp(new Timestamp(dateTimeExecutedMillis - TimeUnit.DAYS.toMillis(7))).iterator();
     }
 
     @Override

@@ -27,17 +27,9 @@ public class TopStoryPerTopicProcessor implements ItemProcessor<Topic, Topic> {
 
     @Override
     public Topic process(Topic topic) throws Exception {
-        final LocalDateTime localDateTime = LocalDateTime.of(LocalDate.now().getYear(),
-                LocalDate.now().getMonth(),
-                LocalDate.now().getDayOfMonth(),
-                9,
-                0,
-                0,
-                0);
+        final List<Story> topStoryContainingKeyword = storiesService.getUndeletedStoriesContainingKeywordAndAfterTimestamp(topic.getTopicName(), new Timestamp(System.currentTimeMillis() - TimeUnit.HOURS.toMillis(24)));
 
-        final List<Story> stories = storiesService.getUndeletedStoriesContainingKeywordAndAfterTimestamp(topic.getTopicName(), new Timestamp(localDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli() - TimeUnit.DAYS.toMillis(7)));
-
-        final Optional<Story> topStoryOpt = stories.stream().max(Comparator.comparing(Story::getScore));
+        final Optional<Story> topStoryOpt = topStoryContainingKeyword.stream().max(Comparator.comparing(Story::getScore));
 
         final Story topStory = topStoryOpt.orElse(null);
 

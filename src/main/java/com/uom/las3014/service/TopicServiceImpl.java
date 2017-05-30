@@ -54,7 +54,7 @@ public class TopicServiceImpl implements TopicService{
     private void setTopStoryForTopic(final Topic topic){
         final List<Story> topStoryContainingKeyword = storiesService.getUndeletedStoriesContainingKeywordAndAfterTimestamp(topic.getTopicName(), new Timestamp(System.currentTimeMillis() - TimeUnit.HOURS.toMillis(24)));
 
-        final Optional<Story>  topStoryOpt = topStoryContainingKeyword.stream().max(Comparator.comparing(Story::getScore));
+        final Optional<Story> topStoryOpt = topStoryContainingKeyword.stream().max(Comparator.comparing(Story::getScore));
 
         topStoryOpt.ifPresent(topic::setTopStoryId);
     }
