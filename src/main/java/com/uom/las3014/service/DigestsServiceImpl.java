@@ -11,7 +11,7 @@ public class DigestsServiceImpl implements DigestsService {
     private DigestsDaoRepository digestsDaoRepository;
 
     @Override
-    public void saveAll(Iterable<Digest> digests) {
+    public void saveAll(Iterable<? extends Digest> digests) {
         digestsDaoRepository.save(digests);
     }
 }

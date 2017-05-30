@@ -10,17 +10,19 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class NewStoriesJob {
+public class CreateDigestsJob {
     @Autowired
     private JobBuilderFactory jobBuilderFactory;
 
-    @Bean(name = "NewStoriesJobBean")
+    @Bean(name = "CreateDigestsJobBean")
     @Autowired
-    public Job newStoriesJobMethod(final @Qualifier("NewStoriesStepBean") Step step) {
-        return jobBuilderFactory.get("NewStoriesJobName")
-                .incrementer(new RunIdIncrementer())
-                .flow(step)
-                .end()
-                .build();
-    }
+    public Job newStoriesJobMethod(final @Qualifier("WeeklyTopStoriesDigestPerTopicStepBean") Step weeklyTopStoriesDigestPerTopic,
+                                   final @Qualifier("WeeklyTopStoriesDigestBean") Step weeklyTopStoriesDigestBean) {
+        return jobBuilderFactory.get("CreateDigestsJobName")
+        .incrementer(new RunIdIncrementer())
+        .flow(weeklyTopStoriesDigestPerTopic)
+        .next(weeklyTopStoriesDigestBean)
+        .end()
+        .build();
+        }
 }

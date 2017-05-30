@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Component
-public class WeeklyTopStoriesPerTopicProcessor implements ItemProcessor<Topic,List<Digest>> {
+public class WeeklyTopStoriesDigestPerTopicProcessor implements ItemProcessor<Topic,List<Digest>> {
     @Autowired
     private StoriesService storiesService;
 
@@ -40,7 +40,7 @@ public class WeeklyTopStoriesPerTopicProcessor implements ItemProcessor<Topic,Li
 
         final List<Story> topStories = Ordering.from(Story::compareTo).greatestOf(stories, 3);
 
-        topStories.forEach(story -> logger.debug(topic.getTopicName() +" has top storey " + story.getStoryId() + " " + story.getTitle() + " " + story.getScore()));
+        topStories.forEach(story -> logger.debug(topic.getTopicName() +" has top story " + story.getStoryId() + " " + story.getTitle() + " " + story.getScore()));
 
         return topStories.stream().map(story -> new Digest(Timestamp.valueOf(localDateTime), topic, story)).collect(Collectors.toList());
     }

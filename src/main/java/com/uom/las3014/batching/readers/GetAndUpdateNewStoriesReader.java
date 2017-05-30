@@ -12,11 +12,11 @@ import java.util.List;
 
 @Component
 @StepScope
-public class NewStoriesReader implements ItemReader<String> {
+public class GetAndUpdateNewStoriesReader implements ItemReader<String> {
     private Iterator<String> newStoryIds;
 
     @Autowired
-    public NewStoriesReader(final HackernewsRequester hackernewsRequester) {
+    public GetAndUpdateNewStoriesReader(final HackernewsRequester hackernewsRequester) {
         final List<String> newStories = hackernewsRequester.getNewStories().orElse(new ArrayList<>());
 
         newStoryIds = newStories.iterator();

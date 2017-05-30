@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import java.sql.Timestamp;
 
 @Component
-public class NewStoriesProcessor implements ItemProcessor<String, Story> {
+public class GetAndUpdateNewStoriesProcessor implements ItemProcessor<String, Story> {
     private final Log logger = LogFactory.getLog(this.getClass());
 
     @Autowired

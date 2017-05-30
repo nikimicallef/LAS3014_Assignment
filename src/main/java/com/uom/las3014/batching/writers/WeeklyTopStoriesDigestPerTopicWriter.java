@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class WeeklyTopStoriesPerTopicWriter implements ItemWriter<List<Digest>> {
+public class WeeklyTopStoriesDigestPerTopicWriter implements ItemWriter<List<Digest>> {
     @Autowired
     private DigestsService digestsService;
 

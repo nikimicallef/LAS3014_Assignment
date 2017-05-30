@@ -1,5 +1,6 @@
 package com.uom.las3014.service;
 
+import com.google.common.collect.Ordering;
 import com.uom.las3014.api.response.TopStoryResponse;
 import com.uom.las3014.api.response.TopicTopStoryResponse;
 import com.uom.las3014.api.response.TopicsTopStoryResponse;
@@ -17,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -64,5 +64,12 @@ public class StoriesServiceImpl implements StoriesService{
     @Override
     public void saveAllStories(final Iterable<? extends Story> stories) {
         storiesDaoRepository.save(stories);
+    }
+
+    @Override
+    public List<Story> getTop3UndeletedStoriesAfterTimestamp(final Timestamp dateAfter) {
+        final List<Story> stories = storiesDaoRepository.findAllByDateCreatedIsAfterAndDeletedIsFalseAndScoreGreaterThan(dateAfter, 5);
+
+        return Ordering.from(Story::compareTo).greatestOf(stories, 3);
     }
 }

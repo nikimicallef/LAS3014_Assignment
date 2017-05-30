@@ -12,4 +12,6 @@ public interface StoriesDaoRepository extends JpaRepository<Story, Long> {
     List<Story> findAllByDateCreatedIsAfterAndDeletedIsFalse(final Timestamp createdAfter);
 
     List<Story> findAllByTitleContainingAndDateCreatedIsAfterAndDeletedIsFalse(final String keyword, final Timestamp createdAfter);
+
+    List<Story> findAllByDateCreatedIsAfterAndDeletedIsFalseAndScoreGreaterThan(final Timestamp createdAfter, final Integer scoreGreaterThan);
 }

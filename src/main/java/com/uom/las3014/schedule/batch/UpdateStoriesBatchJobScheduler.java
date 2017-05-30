@@ -1,4 +1,4 @@
-package com.uom.las3014.schedule;
+package com.uom.las3014.schedule.batch;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
@@ -9,23 +9,24 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Scheduled;
 
+//TODO: Configure error handling and multi threaded
 @Configuration
-public class WeeklyTopStoriesPerTopicScheduler {
+public class UpdateStoriesBatchJobScheduler {
     @Autowired
     private JobLauncher jobLauncher;
 
     @Autowired
-    @Qualifier("WeeklyTopStoriesPerTopicJobBean")
-    private Job weeklyTopStoriesPerTopicJob;
+    @Qualifier("UpdateStoriesJobBean")
+    private Job updateStoriesJob;
 
-
-    //TODO: Set to run at 9 am
-    @Scheduled(fixedDelay = 999_000, initialDelay = 1_000)
-    public void performWeeklyTopStoriesPerTopicJob() throws Exception {
+    //TODO: Set to cron
+    @Scheduled(cron = "0 0 2 ? * *")
+//    @Scheduled(fixedDelay = 999_000, initialDelay = 1_000)
+    public void performUpdateWeeklyStoriesJob() throws Exception {
         final JobParameters param = new JobParametersBuilder()
                 .addString("JobID", String.valueOf(System.currentTimeMillis()))
                 .toJobParameters();
 
-        jobLauncher.run(weeklyTopStoriesPerTopicJob, param);
+        jobLauncher.run(updateStoriesJob, param);
     }
 }

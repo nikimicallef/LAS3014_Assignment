@@ -15,4 +15,6 @@ public interface StoriesService {
     ResponseEntity<TopicsTopStoryResponse> getTopStoryForTopics(String sessionToken);
 
     void saveAllStories(Iterable<? extends Story> stories);
+
+    List<Story> getTop3UndeletedStoriesAfterTimestamp(final Timestamp dateAfter);
 }

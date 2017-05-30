@@ -1,8 +1,8 @@
 package com.uom.las3014.batching.steps;
 
-import com.uom.las3014.batching.processors.WeeklyTopStoriesPerTopicProcessor;
+import com.uom.las3014.batching.processors.WeeklyTopStoriesDigestPerTopicProcessor;
 import com.uom.las3014.batching.readers.GetAllTopicsReader;
-import com.uom.las3014.batching.writers.WeeklyTopStoriesPerTopicWriter;
+import com.uom.las3014.batching.writers.WeeklyTopStoriesDigestPerTopicWriter;
 import com.uom.las3014.dao.Digest;
 import com.uom.las3014.dao.Topic;
 import org.springframework.batch.core.Step;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class WeeklyTopStoriesPerTopicStep {
+public class WeeklyTopStoriesDigestPerTopicStep {
     @Autowired
     private StepBuilderFactory stepBuilderFactory;
 
@@ -22,18 +22,18 @@ public class WeeklyTopStoriesPerTopicStep {
     private GetAllTopicsReader getAllTopicsReader;
 
     @Autowired
-    private WeeklyTopStoriesPerTopicProcessor weeklyTopStoriesPerTopicProcessor;
+    private WeeklyTopStoriesDigestPerTopicProcessor weeklyTopStoriesDigestPerTopicProcessor;
 
     @Autowired
-    private WeeklyTopStoriesPerTopicWriter weeklyTopStoriesPerTopicWriter;
+    private WeeklyTopStoriesDigestPerTopicWriter weeklyTopStoriesDigestPerTopicWriter;
 
-    @Bean(name = "WeeklyTopStoriesPerTopicStepBean")
+    @Bean(name = "WeeklyTopStoriesDigestPerTopicStepBean")
     public Step weeklyTopStoriesPerTopicStepMethod() {
-        return stepBuilderFactory.get("WeeklyTopStoriesPerTopicStep")
+        return stepBuilderFactory.get("WeeklyTopStoriesDigestPerTopicStep")
                 .<Topic, List<Digest>>chunk(100)
                 .reader(getAllTopicsReader)
-                .processor(weeklyTopStoriesPerTopicProcessor)
-                .writer(weeklyTopStoriesPerTopicWriter)
+                .processor(weeklyTopStoriesDigestPerTopicProcessor)
+                .writer(weeklyTopStoriesDigestPerTopicWriter)
                 .build();
     }
 }

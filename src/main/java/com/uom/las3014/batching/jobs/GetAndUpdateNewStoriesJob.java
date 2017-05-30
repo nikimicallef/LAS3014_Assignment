@@ -10,16 +10,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class WeeklyTopStoriesPerTopicJob {
+public class GetAndUpdateNewStoriesJob {
     @Autowired
     private JobBuilderFactory jobBuilderFactory;
 
-    @Bean(name = "WeeklyTopStoriesPerTopicJobBean")
+    @Bean(name = "GetAndUpdateNewStoriesJobBean")
     @Autowired
-    public Job newStoriesJobMethod(final @Qualifier("WeeklyTopStoriesPerTopicStepBean") Step weeklyTopStoriesPerTopicStep) {
-        return jobBuilderFactory.get("WeeklyTopStoriesPerTopicJobName")
+    public Job newStoriesJobMethod(final @Qualifier("GetAndUpdateNewStoriesStepBean") Step step) {
+        return jobBuilderFactory.get("GetAndUpdateNewStoriesJobName")
                 .incrementer(new RunIdIncrementer())
-                .flow(weeklyTopStoriesPerTopicStep)
+                .flow(step)
                 .end()
                 .build();
     }
