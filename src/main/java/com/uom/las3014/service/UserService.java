@@ -21,6 +21,8 @@ public interface UserService {
 
     Optional<User> getUserFromDbUsingSessionToken(final String sessionToken);
 
+    List<User> getAllUsers();
+
     void invalidateSessionToken(final User user);
 
     void invalidateInactiveSessionTokens();

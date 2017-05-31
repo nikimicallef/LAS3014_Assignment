@@ -1,10 +1,9 @@
 package com.uom.las3014.batching.processors;
 
 import com.google.common.collect.Ordering;
-import com.uom.las3014.dao.Digest;
-import com.uom.las3014.dao.Story;
-import com.uom.las3014.dao.Topic;
+import com.uom.las3014.dao.*;
 import com.uom.las3014.service.StoriesService;
+import com.uom.las3014.service.UserTopicMappingService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Component;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -24,6 +24,9 @@ import java.util.stream.Collectors;
 public class WeeklyTopStoriesDigestPerTopicProcessor implements ItemProcessor<Topic,List<Digest>> {
     @Autowired
     private StoriesService storiesService;
+
+    @Autowired
+    private UserTopicMappingService userTopicMappingService;
 
     private final Log logger = LogFactory.getLog(this.getClass());
 
@@ -38,6 +41,10 @@ public class WeeklyTopStoriesDigestPerTopicProcessor implements ItemProcessor<To
 
         topStories.forEach(story -> logger.debug(topic.getTopicName() +" has top story " + story.getStoryId() + " " + story.getTitle() + " " + story.getScore()));
 
-        return topStories.stream().map(story -> new Digest(new Date(dateTimeExecutedMillis), topic, story)).collect(Collectors.toList());
+        final List<UserTopicMapping> userTopicMapping = userTopicMappingService.findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfter(topic, new Timestamp(dateTimeExecutedMillis));
+
+        final Set<User> usersToMapWithDigest = userTopicMapping.stream().map(UserTopicMapping::getUser).collect(Collectors.toSet());
+
+        return topStories.stream().map(story -> new Digest(new Date(dateTimeExecutedMillis), topic, story, usersToMapWithDigest)).collect(Collectors.toList());
     }
 }

@@ -2,13 +2,15 @@ package com.uom.las3014.dao;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "digests")
 public class Digest {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long entryId;
+    private Long digestId;
     private Date dayOfWeek;
     @ManyToOne
     @JoinColumn(name = "topic_id")
@@ -16,21 +18,25 @@ public class Digest {
     @ManyToOne
     @JoinColumn(name = "story_id")
     private Story storyId;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "user_digest_mapping", joinColumns = @JoinColumn(name = "digest_id", referencedColumnName = "digestId"), inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "userId"))
+    private Set<User> usersAssignedToDigest;
 
     public Digest() {}
 
-    public Digest(Date dayOfWeek, Topic topicId, Story storyId) {
+    public Digest(Date dayOfWeek, Topic topicId, Story storyId, Set<User> usersAssignedToDigest) {
         this.dayOfWeek = dayOfWeek;
         this.topicId = topicId;
         this.storyId = storyId;
+        this.usersAssignedToDigest = usersAssignedToDigest;
     }
 
-    public Long getEntryId() {
-        return entryId;
+    public Long getDigestId() {
+        return digestId;
     }
 
-    public void setEntryId(Long entryId) {
-        this.entryId = entryId;
+    public void setDigestId(Long digestId) {
+        this.digestId = digestId;
     }
 
     public Date getDayOfWeek() {
@@ -55,5 +61,13 @@ public class Digest {
 
     public void setStoryId(Story storyId) {
         this.storyId = storyId;
+    }
+
+    public Set<User> getUsersAssignedToDigest() {
+        if(usersAssignedToDigest == null){
+            return new HashSet<>();
+        } else {
+            return usersAssignedToDigest;
+        }
     }
 }

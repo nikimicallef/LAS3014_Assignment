@@ -19,6 +19,8 @@ public class User {
     private Timestamp sessionTokenLastUsed;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserTopicMapping> userTopicMappings;
+    @ManyToMany(mappedBy = "usersAssignedToDigest")
+    private Set<Digest> digestsAssignedToUser;
 
     public User(){}
 
@@ -26,6 +28,7 @@ public class User {
         this.username = username;
         this.password = password;
         userTopicMappings = new HashSet<>();
+        digestsAssignedToUser = new HashSet<>();
     }
 
     public Long getUserId() {
@@ -82,6 +85,15 @@ public class User {
             return userTopicMappings;
         } else {
             return userTopicMappings;
+        }
+    }
+
+    public Set<Digest> getDigestsAssignedToUser() {
+        if(digestsAssignedToUser == null){
+            digestsAssignedToUser = new HashSet<>();
+            return digestsAssignedToUser;
+        } else {
+            return digestsAssignedToUser;
         }
     }
 

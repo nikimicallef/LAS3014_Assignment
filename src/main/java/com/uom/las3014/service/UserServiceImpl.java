@@ -120,6 +120,10 @@ public class UserServiceImpl implements UserService {
                 .body(new GenericMessageResponse("Topic changes applied."));
     }
 
+    public List<User> getAllUsers(){
+        return usersDaoRepository.findAll();
+    }
+
     public void invalidateSessionToken(final User user) {
         user.setSessionToken(null);
         user.setSessionTokenCreated(null);
