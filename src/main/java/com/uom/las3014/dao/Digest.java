@@ -1,7 +1,7 @@
 package com.uom.las3014.dao;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.sql.Date;
 
 @Entity
 @Table(name = "digests")
@@ -9,7 +9,7 @@ public class Digest {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long entryId;
-    private Timestamp week_timestamp;
+    private Date dayOfWeek;
     @ManyToOne
     @JoinColumn(name = "topic_id")
     private Topic topicId;
@@ -19,8 +19,8 @@ public class Digest {
 
     public Digest() {}
 
-    public Digest(Timestamp week_timestamp, Topic topicId, Story storyId) {
-        this.week_timestamp = week_timestamp;
+    public Digest(Date dayOfWeek, Topic topicId, Story storyId) {
+        this.dayOfWeek = dayOfWeek;
         this.topicId = topicId;
         this.storyId = storyId;
     }
@@ -33,12 +33,12 @@ public class Digest {
         this.entryId = entryId;
     }
 
-    public Timestamp getWeek_timestamp() {
-        return week_timestamp;
+    public Date getDayOfWeek() {
+        return dayOfWeek;
     }
 
-    public void setWeek_timestamp(Timestamp week_timestamp) {
-        this.week_timestamp = week_timestamp;
+    public void setDayOfWeek(Date dayOfWeek) {
+        this.dayOfWeek = dayOfWeek;
     }
 
     public Topic getTopicId() {

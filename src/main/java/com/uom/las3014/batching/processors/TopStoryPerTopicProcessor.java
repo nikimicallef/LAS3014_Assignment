@@ -36,6 +36,9 @@ public class TopStoryPerTopicProcessor implements ItemProcessor<Topic, Topic> {
         if(topStory != null) {
             logger.debug(topic.getTopicName() + " has top story " + topStory.getScore() + " and ID " + topStory.getStoryId());
             topic.setTopStoryId(topStory);
+        } else {
+            logger.debug(topic.getTopicName() + " has no top story");
+            topic.setTopStoryId(null);
         }
 
         return topic;

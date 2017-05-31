@@ -16,12 +16,12 @@ public class CreateDigestsJob {
 
     @Bean(name = "CreateDigestsJobBean")
     @Autowired
-    public Job newStoriesJobMethod(final @Qualifier("WeeklyTopStoriesDigestPerTopicStepBean") Step weeklyTopStoriesDigestPerTopicBean,
-                                   final @Qualifier("WeeklyTopStoriesDigestBean") Step weeklyTopStoriesDigestBean) {
+    public Job newStoriesJobMethod(final @Qualifier("WeeklyTopStoriesDigestPerTopicStepBean") Step weeklyTopStoriesDigestPerTopicStepBean,
+                                   final @Qualifier("WeeklyTopStoriesDigestStepBean") Step weeklyTopStoriesDigestStepBean) {
         return jobBuilderFactory.get("CreateDigestsJobName")
                                 .incrementer(new RunIdIncrementer())
-                                .flow(weeklyTopStoriesDigestPerTopicBean)
-                                .next(weeklyTopStoriesDigestBean)
+                                .flow(weeklyTopStoriesDigestPerTopicStepBean)
+                                .next(weeklyTopStoriesDigestStepBean)
                                 .end()
                                 .build();
     }

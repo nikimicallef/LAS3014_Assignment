@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -37,6 +38,6 @@ public class WeeklyTopStoriesDigestPerTopicProcessor implements ItemProcessor<To
 
         topStories.forEach(story -> logger.debug(topic.getTopicName() +" has top story " + story.getStoryId() + " " + story.getTitle() + " " + story.getScore()));
 
-        return topStories.stream().map(story -> new Digest(new Timestamp(dateTimeExecutedMillis), topic, story)).collect(Collectors.toList());
+        return topStories.stream().map(story -> new Digest(new Date(dateTimeExecutedMillis), topic, story)).collect(Collectors.toList());
     }
 }

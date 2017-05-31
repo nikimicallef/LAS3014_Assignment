@@ -7,7 +7,7 @@ import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.sql.Timestamp;
+import java.sql.Date;
 
 @Component
 @StepScope
@@ -18,6 +18,6 @@ public class WeeklyTopStoriesDigestProcessor implements ItemProcessor<Story, Dig
 
     @Override
     public Digest process(Story story) throws Exception {
-        return new Digest(new Timestamp(dateTimeExecutedMillis), null, story);
+        return new Digest(new Date(dateTimeExecutedMillis), null, story);
     }
 }

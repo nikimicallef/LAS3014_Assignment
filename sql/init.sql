@@ -56,7 +56,7 @@ CREATE TABLE `user_topic_mapping` (
 
 CREATE TABLE `digests` (
   `entry_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `week_timestamp` DATETIME,
+  `day_of_week` DATE,
   `topic_id` BIGINT UNSIGNED,
   `story_id` BIGINT UNSIGNED,
   PRIMARY KEY (`entry_id`),

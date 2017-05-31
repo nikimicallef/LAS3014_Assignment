@@ -20,12 +20,12 @@ public class WeeklyTopStoriesDigestStep {
     private WeeklyTopStoriesDigestReader weeklyTopStoriesDigestReader;
 
     @Autowired
-    private WeeklyTopStoriesDigestWriter weeklyTopStoriesDigestWriter;
-
-    @Autowired
     private WeeklyTopStoriesDigestProcessor weeklyTopStoriesDigestProcessor;
 
-    @Bean(name = "WeeklyTopStoriesDigestBean")
+    @Autowired
+    private WeeklyTopStoriesDigestWriter weeklyTopStoriesDigestWriter;
+
+    @Bean(name = "WeeklyTopStoriesDigestStepBean")
     public Step weeklyTopStoriesPerTopicStepMethod() {
         return stepBuilderFactory.get("WeeklyTopStoriesDigestStep")
                 .<Story, Digest>chunk(3)
