@@ -72,4 +72,9 @@ public class StoriesServiceImpl implements StoriesService{
 
         return Ordering.from(Story::compareTo).greatestOf(stories, 3);
     }
+
+    @Override
+    public void deleteByDateCreatedBeforeAndDigestsEmpty(Timestamp timestamp) {
+        storiesDaoRepository.deleteByDateCreatedBeforeAndDigestsEmpty(timestamp);
+    }
 }

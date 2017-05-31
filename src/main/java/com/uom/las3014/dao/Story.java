@@ -1,9 +1,9 @@
 package com.uom.las3014.dao;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "Stories")
@@ -15,6 +15,8 @@ public class Story {
     private String url;
     private Timestamp dateCreated;
     private boolean deleted;
+    @OneToMany(mappedBy = "storyId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<Digest> digests;
 
     public Story(){}
 
@@ -25,6 +27,7 @@ public class Story {
         this.url = url;
         this.dateCreated = dateCreated;
         this.deleted = false;
+        digests = new HashSet<>();
     }
 
     public Long getStoryId() {
@@ -73,6 +76,14 @@ public class Story {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public Set<Digest> getDigests() {
+        if (this.digests == null){
+            return new HashSet<>();
+        } else {
+            return digests;
+        }
     }
 
     @Override

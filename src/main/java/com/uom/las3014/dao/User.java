@@ -17,7 +17,9 @@ public class User {
     private String sessionToken;
     private Timestamp sessionTokenCreated;
     private Timestamp sessionTokenLastUsed;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    //TODO: Orphan removal?
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<UserTopicMapping> userTopicMappings;
     @ManyToMany(mappedBy = "usersAssignedToDigest")
     private Set<Digest> digestsAssignedToUser;

@@ -17,4 +17,6 @@ public interface StoriesService {
     void saveAllStories(Iterable<? extends Story> stories);
 
     List<Story> getTop3UndeletedStoriesAfterTimestamp(final Timestamp dateAfter);
+
+    void deleteByDateCreatedBeforeAndDigestsEmpty(Timestamp timestamp);
 }
