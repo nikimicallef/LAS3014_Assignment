@@ -17,11 +17,11 @@ public class UpdateStoriesJob {
     @Bean(name = "UpdateStoriesJobBean")
     @Autowired
     public Job newStoriesJobMethod(final @Qualifier("UpdateStoriesStepBean") Step updateStoriesStep,
-                                   final @Qualifier("TopStoryPerTopicStepBean") Step topStoriesPerTopic) {
+                                   final @Qualifier("TopStoryPerTopicStepBean") Step topStoriesPerTopicStep) {
         return jobBuilderFactory.get("UpdateStoriesJobName")
                 .incrementer(new RunIdIncrementer())
                 .flow(updateStoriesStep)
-                .next(topStoriesPerTopic)
+                .next(topStoriesPerTopicStep)
                 .end()
                 .build();
     }

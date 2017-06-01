@@ -2,10 +2,10 @@ CREATE SCHEMA `las3014`;
 
 DROP TABLE IF EXISTS `user_topic_mapping`;
 DROP TABLE IF EXISTS `user_digest_mapping`;
+DROP TABLE IF EXISTS `digests`;
 DROP TABLE IF EXISTS `users`;
 DROP TABLE IF EXISTS `topics`;
 DROP TABLE IF EXISTS `stories`;
-DROP TABLE IF EXISTS `digests`;
 DROP TABLE IF EXISTS `BATCH_STEP_EXECUTION_CONTEXT`;
 DROP TABLE IF EXISTS `BATCH_JOB_EXECUTION_CONTEXT`;
 DROP TABLE IF EXISTS `BATCH_STEP_EXECUTION`;
@@ -61,7 +61,7 @@ CREATE TABLE `digests` (
   `day_of_week` DATE,
   `topic_id` BIGINT UNSIGNED,
   `story_id` BIGINT UNSIGNED,
-  PRIMARY KEY (`digest`),
+  PRIMARY KEY (`digest_id`),
   CONSTRAINT `fk_digests_topicid` FOREIGN KEY (`topic_id`) REFERENCES `topics` (`topic_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_digests_storyid` FOREIGN KEY (`story_id`) REFERENCES `stories` (`story_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB;

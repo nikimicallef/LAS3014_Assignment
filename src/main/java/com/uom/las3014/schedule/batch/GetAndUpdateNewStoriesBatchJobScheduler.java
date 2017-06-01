@@ -28,7 +28,9 @@ public class GetAndUpdateNewStoriesBatchJobScheduler {
     @Scheduled(cron = "0 0 * * * *")
 //    @Scheduled(fixedDelay = 999_000, initialDelay = 1_000)
     public void performNewStoriesJob() throws Exception {
-        final JobParameters param = new JobParametersBuilder().addString("JobID", String.valueOf(System.currentTimeMillis())).toJobParameters();
+        final JobParameters param = new JobParametersBuilder()
+                .addString("JobID", String.valueOf(System.currentTimeMillis()))
+                .toJobParameters();
 
         jobLauncher.run(newStoriesJob, param);
     }
