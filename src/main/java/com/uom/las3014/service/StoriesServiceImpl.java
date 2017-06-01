@@ -1,9 +1,9 @@
 package com.uom.las3014.service;
 
 import com.google.common.collect.Ordering;
-import com.uom.las3014.api.response.TopStoryResponse;
-import com.uom.las3014.api.response.TopicTopStoryResponse;
 import com.uom.las3014.api.response.TopicsTopStoryResponse;
+import com.uom.las3014.api.response.TopicsTopStoryResponse.TopicTopStoryResponse;
+import com.uom.las3014.api.response.TopicsTopStoryResponse.TopicTopStoryResponse.TopStoryResponse;
 import com.uom.las3014.dao.Story;
 import com.uom.las3014.dao.User;
 import com.uom.las3014.dao.springdata.StoriesDaoRepository;
@@ -16,9 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -45,20 +45,27 @@ public class StoriesServiceImpl implements StoriesService{
 
         final User retrievedUser = user.orElseThrow(InvalidCredentialsException::new);
 
-        final List<TopicTopStoryResponse> topicTopStoryResponses = retrievedUser.getUserTopics().stream().map(userTopicMapping -> {
+        final TopicsTopStoryResponse topicsTopStoryResponse = new TopicsTopStoryResponse(LocalDate.now());
+
+        retrievedUser.getUserTopics().forEach(userTopicMapping -> {
+            final TopicTopStoryResponse topicTopStoryResponse = topicsTopStoryResponse.new TopicTopStoryResponse(userTopicMapping.getTopic().getTopicName());
+
             if(userTopicMapping.getTopic().getTopStoryId() != null) {
                 final String topStoryTitle = userTopicMapping.getTopic().getTopStoryId().getTitle();
                 final String topStoryUrl = userTopicMapping.getTopic().getTopStoryId().getUrl();
-                final TopStoryResponse topStoryResponse = new TopStoryResponse(topStoryTitle, topStoryUrl);
-                return new TopicTopStoryResponse(userTopicMapping.getTopic().getTopicName(), topStoryResponse);
-            } else {
-                return new TopicTopStoryResponse(userTopicMapping.getTopic().getTopicName(), null);
+                final Integer topStoryScore = userTopicMapping.getTopic().getTopStoryId().getScore();
+
+                final TopStoryResponse topStoryResponse = topicTopStoryResponse.new TopStoryResponse(topStoryTitle, topStoryUrl, topStoryScore);
+
+                topicTopStoryResponse.getTopStories().add(topStoryResponse);
             }
-        }).collect(Collectors.toList());
+
+            topicsTopStoryResponse.getTopics().add(topicTopStoryResponse);
+        });
 
         return ResponseEntity.status(HttpStatus.OK)
         .contentType(MediaType.APPLICATION_JSON)
-        .body(new TopicsTopStoryResponse(topicTopStoryResponses));
+        .body(topicsTopStoryResponse);
     }
 
     @Override
