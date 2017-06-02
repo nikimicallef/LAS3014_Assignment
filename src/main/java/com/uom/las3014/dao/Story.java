@@ -15,7 +15,7 @@ public class Story {
     private String url;
     private Timestamp dateCreated;
     private boolean deleted;
-    @OneToMany(mappedBy = "storyId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "storyId", cascade = CascadeType.ALL)
     private Set<Digest> digests;
 
     public Story(){}

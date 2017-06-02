@@ -31,12 +31,12 @@ public class AuthSessionTokenAop {
 
         final Optional<User> user = userService.getUserFromDbUsingSessionToken(sessionToken);
 
-        final User retrievedUser = user.orElseThrow(InvalidCredentialsException::new);
+        final User retrievedUser = user.orElseThrow(() -> new InvalidCredentialsException("Invalid Credentials."));
 
         if (!retrievedUser.hasActiveSessionToken()){
             userService.invalidateSessionToken(retrievedUser);
 
-            throw new InvalidCredentialsException();
+            throw new InvalidCredentialsException("Invalid Credentials.");
         }
 
         userService.updateSessionTokenLastUsed(retrievedUser);

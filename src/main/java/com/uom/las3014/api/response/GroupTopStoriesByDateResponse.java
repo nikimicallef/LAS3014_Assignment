@@ -9,12 +9,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 @JsonPropertyOrder({ "effective_date", "topic" })
-public class TopicsTopStoryResponse {
+public class GroupTopStoriesByDateResponse {
     @JsonProperty("effective_date")
     private String effectiveDate;
-    private List<TopicTopStoryResponse> topics;
+    private List<TopStoriesForTopicResponse> topics;
 
-    public TopicsTopStoryResponse(final LocalDate effectiveDate) {
+    public GroupTopStoriesByDateResponse() {
+    }
+
+    public GroupTopStoriesByDateResponse(final LocalDate effectiveDate) {
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy");
         this.effectiveDate = effectiveDate.format(formatter);
         topics = new ArrayList<>();
@@ -24,7 +27,7 @@ public class TopicsTopStoryResponse {
         return effectiveDate;
     }
 
-    public List<TopicTopStoryResponse> getTopics() {
+    public List<TopStoriesForTopicResponse> getTopics() {
         if(topics == null){
             return new ArrayList<>();
         } else {
@@ -32,12 +35,12 @@ public class TopicsTopStoryResponse {
         }
     }
 
-    public class TopicTopStoryResponse {
+    public class TopStoriesForTopicResponse {
         private String topic;
         @JsonProperty("top_stories")
         private List<TopStoryResponse> topStories;
 
-        public TopicTopStoryResponse(final String topic) {
+        public TopStoriesForTopicResponse(final String topic) {
             this.topic = topic;
             this.topStories = new ArrayList<>();
         }

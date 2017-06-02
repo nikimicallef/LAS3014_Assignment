@@ -70,4 +70,24 @@ public class Digest {
             return usersAssignedToDigest;
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Digest digest = (Digest) o;
+
+        if (!dayOfWeek.equals(digest.dayOfWeek)) return false;
+        if (topicId != null ? !topicId.getTopicId().equals(digest.topicId.getTopicId()) : digest.topicId != null) return false;
+        return storyId.equals(digest.storyId);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = dayOfWeek.hashCode();
+        result = 31 * result + (topicId != null ? topicId.getTopicId().intValue() : 0);
+        result = 31 * result + storyId.getStoryId().intValue();
+        return result;
+    }
 }

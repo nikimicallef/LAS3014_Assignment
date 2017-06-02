@@ -11,7 +11,12 @@ public class UserAlreadyExistsException extends RuntimeException {
         super(cause);
     }
 
+    public UserAlreadyExistsException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
+
     public UserAlreadyExistsException(final String message, final Throwable cause) {
         super(message, cause);
     }
+
 }

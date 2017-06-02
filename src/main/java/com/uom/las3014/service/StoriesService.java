@@ -1,6 +1,6 @@
 package com.uom.las3014.service;
 
-import com.uom.las3014.api.response.TopicsTopStoryResponse;
+import com.uom.las3014.api.response.GroupTopStoriesByDateResponse;
 import com.uom.las3014.dao.Story;
 import org.springframework.http.ResponseEntity;
 
@@ -12,7 +12,7 @@ public interface StoriesService {
 
     List<Story> getUndeletedStoriesContainingKeywordAndAfterTimestamp(String keyword, Timestamp createdAfter);
 
-    ResponseEntity<TopicsTopStoryResponse> getTopStoryForTopics(String sessionToken);
+    ResponseEntity<GroupTopStoriesByDateResponse> getTopStoryForTopics(String sessionToken);
 
     void saveAllStories(Iterable<? extends Story> stories);
 

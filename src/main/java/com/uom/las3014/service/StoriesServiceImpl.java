@@ -1,9 +1,9 @@
 package com.uom.las3014.service;
 
 import com.google.common.collect.Ordering;
-import com.uom.las3014.api.response.TopicsTopStoryResponse;
-import com.uom.las3014.api.response.TopicsTopStoryResponse.TopicTopStoryResponse;
-import com.uom.las3014.api.response.TopicsTopStoryResponse.TopicTopStoryResponse.TopStoryResponse;
+import com.uom.las3014.api.response.GroupTopStoriesByDateResponse;
+import com.uom.las3014.api.response.GroupTopStoriesByDateResponse.TopStoriesForTopicResponse;
+import com.uom.las3014.api.response.GroupTopStoriesByDateResponse.TopStoriesForTopicResponse.TopStoryResponse;
 import com.uom.las3014.dao.Story;
 import com.uom.las3014.dao.User;
 import com.uom.las3014.dao.springdata.StoriesDaoRepository;
@@ -40,32 +40,32 @@ public class StoriesServiceImpl implements StoriesService{
     }
 
     @Override
-    public ResponseEntity<TopicsTopStoryResponse> getTopStoryForTopics(final String sessionToken){
+    public ResponseEntity<GroupTopStoriesByDateResponse> getTopStoryForTopics(final String sessionToken){
         final Optional<User> user = userService.getUserFromDbUsingSessionToken(sessionToken);
 
-        final User retrievedUser = user.orElseThrow(InvalidCredentialsException::new);
+        final User retrievedUser = user.orElseThrow(() -> new InvalidCredentialsException("Invalid Credentials."));
 
-        final TopicsTopStoryResponse topicsTopStoryResponse = new TopicsTopStoryResponse(LocalDate.now());
+        final GroupTopStoriesByDateResponse groupTopStoriesByDateResponse = new GroupTopStoriesByDateResponse(LocalDate.now());
 
         retrievedUser.getUserTopics().forEach(userTopicMapping -> {
-            final TopicTopStoryResponse topicTopStoryResponse = topicsTopStoryResponse.new TopicTopStoryResponse(userTopicMapping.getTopic().getTopicName());
+            final TopStoriesForTopicResponse topStoriesForTopicResponse = groupTopStoriesByDateResponse.new TopStoriesForTopicResponse(userTopicMapping.getTopic().getTopicName());
 
             if(userTopicMapping.getTopic().getTopStoryId() != null) {
                 final String topStoryTitle = userTopicMapping.getTopic().getTopStoryId().getTitle();
                 final String topStoryUrl = userTopicMapping.getTopic().getTopStoryId().getUrl();
                 final Integer topStoryScore = userTopicMapping.getTopic().getTopStoryId().getScore();
 
-                final TopStoryResponse topStoryResponse = topicTopStoryResponse.new TopStoryResponse(topStoryTitle, topStoryUrl, topStoryScore);
+                final TopStoryResponse topStoryResponse = topStoriesForTopicResponse.new TopStoryResponse(topStoryTitle, topStoryUrl, topStoryScore);
 
-                topicTopStoryResponse.getTopStories().add(topStoryResponse);
+                topStoriesForTopicResponse.getTopStories().add(topStoryResponse);
             }
 
-            topicsTopStoryResponse.getTopics().add(topicTopStoryResponse);
+            groupTopStoriesByDateResponse.getTopics().add(topStoriesForTopicResponse);
         });
 
         return ResponseEntity.status(HttpStatus.OK)
         .contentType(MediaType.APPLICATION_JSON)
-        .body(topicsTopStoryResponse);
+        .body(groupTopStoriesByDateResponse);
     }
 
     @Override

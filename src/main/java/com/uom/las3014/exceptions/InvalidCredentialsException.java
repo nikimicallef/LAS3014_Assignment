@@ -1,8 +1,5 @@
 package com.uom.las3014.exceptions;
 
-/**
- * Created by niki on 06/05/17.
- */
 public class InvalidCredentialsException extends RuntimeException {
     public InvalidCredentialsException() {}
 
@@ -12,6 +9,10 @@ public class InvalidCredentialsException extends RuntimeException {
 
     public InvalidCredentialsException(final Throwable cause) {
         super(cause);
+    }
+
+    public InvalidCredentialsException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
     }
 
     public InvalidCredentialsException(final String message, final Throwable cause) {

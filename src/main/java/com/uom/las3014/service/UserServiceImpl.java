@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<GenericMessageResponse> createNewUser(final UserCreateRequestBody userCreateRequestBody){
         //TODO: Convert this to AOP. But we need this once so is AOP useful here??
         if (userExistsInDbByUsername(userCreateRequestBody.getUsername())) {
-            throw new UserAlreadyExistsException();
+            throw new UserAlreadyExistsException("User already exists.");
         } else {
             final Set<Topic> interestedTopics = userCreateRequestBody
                                                     .getInterestedTopics().stream()
@@ -62,10 +62,10 @@ public class UserServiceImpl implements UserService {
         //TODO: Convert this to AOP. But we need this once so is AOP useful here??
         final Optional<User> user = getUserFromDb(userLoginRequestBody.getUsername());
 
-        final User retrievedUser = user.orElseThrow(InvalidCredentialsException::new);
+        final User retrievedUser = user.orElseThrow(() -> new InvalidCredentialsException("Invalid Credentials."));
 
         if (!validateUserPassword(userLoginRequestBody.getPassword(), retrievedUser.getPassword())) {
-            throw new InvalidCredentialsException();
+            throw new InvalidCredentialsException("Invalid credentials.");
         } else {
             return ResponseEntity.status(HttpStatus.OK)
                     .contentType(MediaType.APPLICATION_JSON)
@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
         //TODO: Get user from pointcut
         final Optional<User> user = getUserFromDbUsingSessionToken(sessionToken);
 
-        final User retrievedUser = user.orElseThrow(InvalidCredentialsException::new);
+        final User retrievedUser = user.orElseThrow(() -> new InvalidCredentialsException("Invalid Credentials."));
 
         invalidateSessionToken(retrievedUser);
 
@@ -90,7 +90,7 @@ public class UserServiceImpl implements UserService {
         //TODO: Get user from pointcut
         final Optional<User> user = getUserFromDbUsingSessionToken(sessionToken);
 
-        final User retrievedUser = user.orElseThrow(InvalidCredentialsException::new);
+        final User retrievedUser = user.orElseThrow(() -> new InvalidCredentialsException("Invalid Credentials."));
 
         if(additions != null){
             additions.stream()
