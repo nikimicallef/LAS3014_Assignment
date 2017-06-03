@@ -6,17 +6,18 @@ import org.springframework.batch.item.ItemReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 @Component
 @StepScope
-public class GetAndUpdateNewStoriesReader implements ItemReader<String> {
+public class GetAndUpdateTopStoriesReader implements ItemReader<String> {
     private Iterator<String> newStoryIds;
 
     @Autowired
-    public GetAndUpdateNewStoriesReader(final HackernewsRequester hackernewsRequester) {
+    public GetAndUpdateTopStoriesReader(final HackernewsRequester hackernewsRequester) throws IOException {
         final List<String> newStories = hackernewsRequester.getNewStories().orElse(new ArrayList<>());
 
         newStoryIds = newStories.iterator();

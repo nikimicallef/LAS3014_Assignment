@@ -10,17 +10,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class GetAndUpdateNewStoriesJob {
+public class GetAndUpdateTopStoriesJob {
     @Autowired
     private JobBuilderFactory jobBuilderFactory;
 
-    @Bean(name = "GetAndUpdateNewStoriesJobBean")
+    @Bean(name = "GetAndUpdateTopStoriesJobBean")
     @Autowired
-    public Job newStoriesJobMethod(final @Qualifier("GetAndUpdateNewStoriesStepBean") Step getAndUpdateNewStoriesStep,
+    public Job newStoriesJobMethod(final @Qualifier("GetAndUpdateTopStoriesStepBean") Step getAndUpdateTopStoriesStep,
                                    final @Qualifier("TopStoryPerTopicStepBean") Step topStoriesPerTopicStep) {
-        return jobBuilderFactory.get("GetAndUpdateNewStoriesJobName")
+        return jobBuilderFactory.get("GetAndUpdateTopStoriesJobName")
                 .incrementer(new RunIdIncrementer())
-                .flow(getAndUpdateNewStoriesStep)
+                .flow(getAndUpdateTopStoriesStep)
                 .next(topStoriesPerTopicStep)
                 .end()
                 .build();

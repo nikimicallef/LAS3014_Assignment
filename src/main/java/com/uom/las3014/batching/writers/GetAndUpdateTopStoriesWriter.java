@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class GetAndUpdateNewStoriesWriter implements ItemWriter<Story> {
+public class GetAndUpdateTopStoriesWriter implements ItemWriter<Story> {
     private final Log logger = LogFactory.getLog(this.getClass());
 
     @Autowired

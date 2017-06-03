@@ -20,16 +20,12 @@ public class HackernewsRequester {
     @Value("${com.uom.las3014.hackernews.base.url}")
     private String baseUrl;
 
-    public Optional<JsonObject> getItem(final Long itemNo){
+    public Optional<JsonObject> getItem(final Long itemNo) throws IOException {
         final HttpURLConnection httpUrlConnection;
 
-        try {
-            final URL url = new URL(baseUrl + "item/" + itemNo + ".json");
-            httpUrlConnection = (HttpURLConnection) url.openConnection();
-            httpUrlConnection.setRequestMethod("GET");
-        } catch (IOException e){
-            throw new IllegalArgumentException();
-        }
+        final URL url = new URL(baseUrl + "item/" + itemNo + ".json");
+        httpUrlConnection = (HttpURLConnection) url.openConnection();
+        httpUrlConnection.setRequestMethod("GET");
 
         final String responseBody = getResponseFromHackernews(httpUrlConnection);
 
@@ -41,16 +37,12 @@ public class HackernewsRequester {
         }
     }
 
-    public Optional<List<String>> getNewStories() {
+    public Optional<List<String>> getNewStories() throws IOException {
         final HttpURLConnection httpUrlConnection;
 
-        try {
-            final URL url = new URL(baseUrl + "newstories.json");
-            httpUrlConnection = (HttpURLConnection) url.openConnection();
-            httpUrlConnection.setRequestMethod("GET");
-        } catch (IOException e) {
-            throw new IllegalArgumentException();
-        }
+        final URL url = new URL(baseUrl + "newstories.json");
+        httpUrlConnection = (HttpURLConnection) url.openConnection();
+        httpUrlConnection.setRequestMethod("GET");
 
         final String responseBody = getResponseFromHackernews(httpUrlConnection);
 
@@ -62,16 +54,13 @@ public class HackernewsRequester {
     }
 
     private String getResponseFromHackernews(HttpURLConnection httpUrlConnection) {
-        int counter = 1;
-        String responseBody = null;
-        do{
-            try {
-                final BufferedReader br = new BufferedReader(new InputStreamReader((httpUrlConnection.getInputStream())));
-                responseBody = br.lines().collect(Collectors.joining());
-            } catch (IOException e){
-                counter++;
-            }
-        }while(responseBody == null && counter < 5);
-        return responseBody;
+        //Required since sometimes the GET story for a specific valid ID will still get a connect exception.
+        //In that case just return null
+        try {
+            final BufferedReader br = new BufferedReader(new InputStreamReader((httpUrlConnection.getInputStream())));
+            return br.lines().collect(Collectors.joining());
+        } catch (IOException e) {
+            return null;
+        }
     }
 }

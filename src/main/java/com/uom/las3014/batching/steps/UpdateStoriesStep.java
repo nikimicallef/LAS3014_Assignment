@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+
 @Component
 public class UpdateStoriesStep {
 
@@ -32,6 +34,9 @@ public class UpdateStoriesStep {
                 .reader(updateStoriesReader)
                 .processor(updateStoriesProcessor)
                 .writer(updateStoriesWriter)
+                .faultTolerant()
+                .retry(IOException.class)
+                .retryLimit(3)
                 .build();
     }
 }

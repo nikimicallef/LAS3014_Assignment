@@ -13,14 +13,14 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 //TODO: Configure error handling and multi threaded
 @Configuration
-public class GetAndUpdateNewStoriesBatchJobScheduler {
+public class GetAndUpdateTopStoriesBatchJobScheduler {
     private final Log logger = LogFactory.getLog(this.getClass());
 
     @Autowired
     private JobLauncher jobLauncher;
 
     @Autowired
-    @Qualifier("GetAndUpdateNewStoriesJobBean")
+    @Qualifier("GetAndUpdateTopStoriesJobBean")
     private Job newStoriesJob;
 
     //TODO: Configure this hourly
