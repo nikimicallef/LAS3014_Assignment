@@ -8,18 +8,17 @@ import com.uom.las3014.dao.User;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface UserService {
     ResponseEntity<GenericMessageResponse> createNewUser(final UserCreateRequestBody userCreateRequestBody);
 
     ResponseEntity<SessionTokenAndMessageResponse> loginAndGenerateToken(final UserLoginRequestBody userLoginRequestBody);
 
-    ResponseEntity<GenericMessageResponse> logout(final String sessionToken);
+    ResponseEntity<GenericMessageResponse> logout(final User user);
 
-    ResponseEntity<GenericMessageResponse> changeInterestedTopics(final String sessionToken, final List<String> additions, final List<String> removals);
+    ResponseEntity<GenericMessageResponse> changeInterestedTopics(final User user, final List<String> additions, final List<String> removals);
 
-    Optional<User> getUserFromDbUsingSessionToken(final String sessionToken);
+    User getUserFromDbUsingSessionToken(final String sessionToken);
 
     List<User> getAllUsers();
 

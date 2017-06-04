@@ -4,11 +4,14 @@ import com.google.common.collect.Ordering;
 import com.uom.las3014.api.response.GroupTopStoriesByDateResponse;
 import com.uom.las3014.api.response.GroupTopStoriesByDateResponse.TopStoriesForTopicResponse;
 import com.uom.las3014.api.response.GroupTopStoriesByDateResponse.TopStoriesForTopicResponse.TopStoryResponse;
+import com.uom.las3014.cache.MyCacheManager;
 import com.uom.las3014.dao.Story;
 import com.uom.las3014.dao.User;
 import com.uom.las3014.dao.springdata.StoriesDaoRepository;
-import com.uom.las3014.exceptions.InvalidCredentialsException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,16 +21,14 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
 public class StoriesServiceImpl implements StoriesService{
-    @Autowired
-    private StoriesDaoRepository storiesDaoRepository;
+    private final Log logger = LogFactory.getLog(this.getClass());
 
     @Autowired
-    private UserService userService;
+    private StoriesDaoRepository storiesDaoRepository;
 
     @Override
     public List<Story> getUndeletedTopicsAfterTimestamp(final Timestamp createdAfter) {
@@ -40,14 +41,11 @@ public class StoriesServiceImpl implements StoriesService{
     }
 
     @Override
-    public ResponseEntity<GroupTopStoriesByDateResponse> getTopStoryForTopics(final String sessionToken){
-        final Optional<User> user = userService.getUserFromDbUsingSessionToken(sessionToken);
-
-        final User retrievedUser = user.orElseThrow(() -> new InvalidCredentialsException("Invalid Credentials."));
-
+    @Cacheable(MyCacheManager.TOPIC_CACHE)
+    public ResponseEntity<GroupTopStoriesByDateResponse> getTopStoryForTopics(final User user){
         final GroupTopStoriesByDateResponse groupTopStoriesByDateResponse = new GroupTopStoriesByDateResponse(LocalDate.now());
 
-        retrievedUser.getUserTopics().forEach(userTopicMapping -> {
+        user.getUserTopics().forEach(userTopicMapping -> {
             final TopStoriesForTopicResponse topStoriesForTopicResponse = groupTopStoriesByDateResponse.new TopStoriesForTopicResponse(userTopicMapping.getTopic().getTopicName());
 
             if(userTopicMapping.getTopic().getTopStoryId() != null) {

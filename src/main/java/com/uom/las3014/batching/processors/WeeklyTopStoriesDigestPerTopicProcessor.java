@@ -35,7 +35,8 @@ public class WeeklyTopStoriesDigestPerTopicProcessor implements ItemProcessor<To
 
     @Override
     public List<Digest> process(Topic topic) throws Exception {
-        final List<Story> stories = storiesService.getUndeletedStoriesContainingKeywordAndAfterTimestamp(topic.getTopicName(), new Timestamp(dateTimeExecutedMillis - TimeUnit.DAYS.toMillis(7)));
+        final List<Story> stories = storiesService.getUndeletedStoriesContainingKeywordAndAfterTimestamp(topic.getTopicName(),
+                new Timestamp(dateTimeExecutedMillis - TimeUnit.DAYS.toMillis(7)));
 
         final List<Story> topStories = Ordering.from(Story::compareTo).greatestOf(stories, 3);
 

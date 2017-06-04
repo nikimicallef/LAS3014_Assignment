@@ -1,7 +1,7 @@
 package com.uom.las3014.batching.steps;
 
 import com.uom.las3014.batching.processors.WeeklyTopStoriesDigestPerTopicProcessor;
-import com.uom.las3014.batching.readers.GetAllTopicsReader;
+import com.uom.las3014.batching.readers.generic.GetAllTopicsReader;
 import com.uom.las3014.batching.writers.WeeklyTopStoriesDigestPerTopicWriter;
 import com.uom.las3014.dao.Digest;
 import com.uom.las3014.dao.Topic;

@@ -1,5 +1,6 @@
 package com.uom.las3014.service;
 
+import com.uom.las3014.cache.MyCacheManager;
 import com.uom.las3014.dao.Story;
 import com.uom.las3014.dao.Topic;
 import com.uom.las3014.dao.springdata.TopicsDaoRepository;
@@ -24,7 +25,7 @@ public class TopicServiceImpl implements TopicService{
     @Autowired
     private StoriesService storiesService;
 
-    @Cacheable("topicPojo")
+    @Cacheable(MyCacheManager.TOPIC_CACHE)
     public Topic createNewTopicIfNotExists(final String topicName){
         //TODO: Change with CREATE-IF-NOT-EXISTS instead of 2 queries.
         final Optional<Topic> existingTopic = topicsDaoRepository.findTopicsByTopicName(topicName);

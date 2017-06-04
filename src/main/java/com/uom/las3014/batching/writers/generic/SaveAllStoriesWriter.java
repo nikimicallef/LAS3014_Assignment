@@ -1,9 +1,7 @@
-package com.uom.las3014.batching.writers;
+package com.uom.las3014.batching.writers.generic;
 
 import com.uom.las3014.dao.Story;
 import com.uom.las3014.service.StoriesService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -11,9 +9,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class UpdateStoriesWriter implements ItemWriter<Story> {
-    private final Log logger = LogFactory.getLog(this.getClass());
-
+public class SaveAllStoriesWriter implements ItemWriter<Story> {
     @Autowired
     private StoriesService storiesService;
 

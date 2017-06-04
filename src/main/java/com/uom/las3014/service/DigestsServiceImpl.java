@@ -4,26 +4,30 @@ import com.uom.las3014.api.response.GroupTopStoriesByDateResponse;
 import com.uom.las3014.api.response.GroupTopStoriesByDateResponse.TopStoriesForTopicResponse;
 import com.uom.las3014.api.response.GroupTopStoriesByDateResponse.TopStoriesForTopicResponse.TopStoryResponse;
 import com.uom.las3014.api.response.MultipleTopStoriesPerDateResponse;
+import com.uom.las3014.cache.MyCacheManager;
 import com.uom.las3014.dao.Digest;
 import com.uom.las3014.dao.Topic;
 import com.uom.las3014.dao.User;
 import com.uom.las3014.dao.UserTopicMapping;
 import com.uom.las3014.dao.springdata.DigestDaoRepository;
-import com.uom.las3014.exceptions.InvalidCredentialsException;
 import com.uom.las3014.exceptions.InvalidDateException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import java.sql.*;
+import java.sql.Timestamp;
 import java.util.*;
-import java.util.Date;
 import java.util.stream.Collectors;
 
 @Component
 public class DigestsServiceImpl implements DigestsService {
+    private final Log logger = LogFactory.getLog(this.getClass());
+
     @Autowired
     private DigestDaoRepository digestDaoRepository;
 
@@ -40,13 +44,9 @@ public class DigestsServiceImpl implements DigestsService {
         digestDaoRepository.deleteDigestByDayOfWeekBefore(timestamp);
     }
 
-    //TODO: Test what happens if you have no weekly digest
     @Override
-    public ResponseEntity<GroupTopStoriesByDateResponse> getLatestWeeklyDigest(final String sessionToken) {
-        final Optional<User> userOpt = userService.getUserFromDbUsingSessionToken(sessionToken);
-
-        final User user = userOpt.orElseThrow(() -> new InvalidCredentialsException("Invalid Credentials."));
-
+    @Cacheable(MyCacheManager.DIGESTS_CACHE)
+    public ResponseEntity<GroupTopStoriesByDateResponse> getLatestWeeklyDigest(final User user) {
         final Set<Digest> digests = digestDaoRepository.findLatestDigestsForUser(user);
 
         final GroupTopStoriesByDateResponse groupTopStoriesByDateResponse;
@@ -63,12 +63,9 @@ public class DigestsServiceImpl implements DigestsService {
                 .body(groupTopStoriesByDateResponse);
     }
 
+    //This method has not been cached since the cache will grow quickly since a small deviation in one of the dates will create a new entry.
     @Override
-    public ResponseEntity<MultipleTopStoriesPerDateResponse> getGroupOfWeeklyDigests(String sessionToken, Date dateFrom, Date dateTo){
-        final Optional<User> userOpt = userService.getUserFromDbUsingSessionToken(sessionToken);
-
-        final User user = userOpt.orElseThrow(() -> new InvalidCredentialsException("Invalid Credentials."));
-
+    public ResponseEntity<MultipleTopStoriesPerDateResponse> getGroupOfWeeklyDigests(User user, Date dateFrom, Date dateTo){
         if(dateFrom.after(dateTo)){
             throw new InvalidDateException("To date must be after the from date.");
         }

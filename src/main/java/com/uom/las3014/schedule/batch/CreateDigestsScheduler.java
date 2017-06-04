@@ -1,5 +1,9 @@
 package com.uom.las3014.schedule.batch;
 
+import com.uom.las3014.batching.jobs.CreateDigestsJob;
+import com.uom.las3014.cache.MyCacheManager;
+import com.uom.las3014.dao.Digest;
+import com.uom.las3014.dao.Story;
 import com.uom.las3014.service.DigestsService;
 import com.uom.las3014.service.StoriesService;
 import org.springframework.batch.core.Job;
@@ -8,6 +12,7 @@ import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Scheduled;
 
@@ -16,6 +21,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
+/**
+ * A scheduled task which does the below
+ * a) Runs the {@link CreateDigestsJob}
+ * b) Deletes all {@link Digest} which are older that one year. This will also cascade rows in the UserDigestMapping table.
+ * c) Deletes all {@link Story} which are older than a week and have no associated digests.
+ */
 @Configuration
 public class CreateDigestsScheduler {
     @Autowired
@@ -32,7 +43,8 @@ public class CreateDigestsScheduler {
     private StoriesService storiesService;
 
     //TODO: Set to run at 9 am
-    @Scheduled(fixedDelay = 999_000, initialDelay = 1_000)
+    @CacheEvict(value = MyCacheManager.DIGESTS_CACHE, allEntries = true)
+    @Scheduled(fixedDelay = 999_000, initialDelay = 540_000)
     public void performWeeklyTopStoriesPerTopicJob() throws Exception {
         final LocalDateTime dateTimeExecuted = LocalDateTime.of(LocalDate.now().getYear(),
                 LocalDate.now().getMonth(),
@@ -53,7 +65,7 @@ public class CreateDigestsScheduler {
 //        digestsService.deleteDigestByDayOfWeekBefore(new Timestamp(dateTimeExecuted.minusWeeks(1).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()));
         digestsService.deleteDigestByDayOfWeekBefore(new Timestamp(dateTimeExecuted.minusYears(1).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()));
 
-        //TODO: Delete digests older than a WEEK not a day
+        //TODO: Delete stories older than a WEEK not a day
 //        storiesService.deleteByDateCreatedBeforeAndDigestsEmpty(new Timestamp(dateTimeExecuted.minusDays(1).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()));
         storiesService.deleteByDateCreatedBeforeAndDigestsEmpty(new Timestamp(dateTimeExecuted.minusWeeks(1).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()));
     }

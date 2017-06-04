@@ -73,32 +73,22 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    public ResponseEntity<GenericMessageResponse> logout(final String sessionToken){
-        //TODO: Get user from pointcut
-        final Optional<User> user = getUserFromDbUsingSessionToken(sessionToken);
-
-        final User retrievedUser = user.orElseThrow(() -> new InvalidCredentialsException("Invalid Credentials."));
-
-        invalidateSessionToken(retrievedUser);
+    public ResponseEntity<GenericMessageResponse> logout(final User user){
+        invalidateSessionToken(user);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(new GenericMessageResponse("Logged out successfully."));
     }
 
-    public ResponseEntity<GenericMessageResponse> changeInterestedTopics(final String sessionToken, final List<String> additions, final List<String> removals){
-        //TODO: Get user from pointcut
-        final Optional<User> user = getUserFromDbUsingSessionToken(sessionToken);
-
-        final User retrievedUser = user.orElseThrow(() -> new InvalidCredentialsException("Invalid Credentials."));
-
+    public ResponseEntity<GenericMessageResponse> changeInterestedTopics(final User user, final List<String> additions, final List<String> removals){
         if(additions != null){
             additions.stream()
                     .map(String::toLowerCase)
                     .map(String::trim)
                     .map(topicService::createNewTopicIfNotExists)
-                    .forEach(topic -> retrievedUser.getUserTopics()
-                            .add(new UserTopicMapping(retrievedUser, topic, new Timestamp(System.currentTimeMillis()))));
+                    .forEach(topic -> user.getUserTopics()
+                            .add(new UserTopicMapping(user, topic, new Timestamp(System.currentTimeMillis()))));
         }
 
         if(removals != null) {
@@ -107,7 +97,7 @@ public class UserServiceImpl implements UserService {
                     .map(String::trim)
                     .collect(Collectors.toSet());
 
-            retrievedUser.getUserTopics().stream()
+            user.getUserTopics().stream()
                     .filter(userTopicMapping -> topicNamesToRemove.contains(userTopicMapping.getTopic().getTopicName()))
                     .forEach(item -> {
                         item.setEnabled(false);
@@ -134,8 +124,10 @@ public class UserServiceImpl implements UserService {
         return usersDaoRepository.countUsersByUsername(username) > 0;
     }
 
-    public Optional<User> getUserFromDbUsingSessionToken(final String sessionToken){
-        return usersDaoRepository.findUsersBySessionToken(sessionToken);
+    public User getUserFromDbUsingSessionToken(final String sessionToken){
+        final Optional<User> userOpt = usersDaoRepository.findUsersBySessionToken(sessionToken);
+
+        return userOpt.orElseThrow(() -> new InvalidCredentialsException("Invalid Credentials."));
     }
 
     private GenericMessageResponse createAndSaveNewUser(final String username, final String password, final Set<Topic> interestedTopics) {

@@ -1,7 +1,7 @@
 package com.uom.las3014.batching.steps;
 
 import com.uom.las3014.batching.processors.TopStoryPerTopicProcessor;
-import com.uom.las3014.batching.readers.GetAllTopicsReader;
+import com.uom.las3014.batching.readers.generic.GetAllTopicsReader;
 import com.uom.las3014.batching.writers.TopStoryPerTopicWriter;
 import com.uom.las3014.dao.Topic;
 import org.springframework.batch.core.Step;

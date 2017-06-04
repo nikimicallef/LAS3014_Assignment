@@ -11,8 +11,6 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 @Component
 @Aspect
 public class AuthSessionTokenAop {
@@ -29,9 +27,7 @@ public class AuthSessionTokenAop {
     public void sessionTokenBefore(final String sessionToken){
         logger.debug("Entered sessionTokenBefore AOP method for provided session token " + sessionToken);
 
-        final Optional<User> user = userService.getUserFromDbUsingSessionToken(sessionToken);
-
-        final User retrievedUser = user.orElseThrow(() -> new InvalidCredentialsException("Invalid Credentials."));
+        final User retrievedUser = userService.getUserFromDbUsingSessionToken(sessionToken);
 
         if (!retrievedUser.hasActiveSessionToken()){
             userService.invalidateSessionToken(retrievedUser);

@@ -1,7 +1,7 @@
 package com.uom.las3014.batching.steps;
 
-import com.uom.las3014.batching.processors.UpdateStoriesProcessor;
-import com.uom.las3014.batching.readers.UpdateStoriesReader;
+import com.uom.las3014.batching.processors.GetNewStoriesProcessor;
+import com.uom.las3014.batching.readers.GetNewStoriesReader;
 import com.uom.las3014.batching.writers.generic.SaveAllStoriesWriter;
 import com.uom.las3014.dao.Story;
 import org.springframework.batch.core.Step;
@@ -13,26 +13,26 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 @Component
-public class UpdateStoriesStep {
+public class GetNewStoriesStep {
 
     @Autowired
     private StepBuilderFactory stepBuilderFactory;
 
     @Autowired
-    private UpdateStoriesReader updateStoriesReader;
+    private GetNewStoriesReader getNewStoriesReader;
 
     @Autowired
-    private UpdateStoriesProcessor updateStoriesProcessor;
+    private GetNewStoriesProcessor getNewStoriesProcessor;
 
     @Autowired
     private SaveAllStoriesWriter saveAllStoriesWriter;
 
-    @Bean(name = "UpdateStoriesStepBean")
-    public Step updateStoriesStepMethod() {
-        return stepBuilderFactory.get("UpdateStoriesStep")
-                .<Story, Story>chunk(100)
-                .reader(updateStoriesReader)
-                .processor(updateStoriesProcessor)
+    @Bean(name = "GetNewStoriesStepBean")
+    public Step newStoriesStepMethod() {
+        return stepBuilderFactory.get("GetNewStoriesStep")
+                .<String, Story>chunk(100)
+                .reader(getNewStoriesReader)
+                .processor(getNewStoriesProcessor)
                 .writer(saveAllStoriesWriter)
                 .faultTolerant()
                 .retry(IOException.class)

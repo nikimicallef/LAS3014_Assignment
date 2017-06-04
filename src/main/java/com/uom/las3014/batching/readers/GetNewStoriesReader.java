@@ -13,11 +13,11 @@ import java.util.List;
 
 @Component
 @StepScope
-public class GetAndUpdateTopStoriesReader implements ItemReader<String> {
+public class GetNewStoriesReader implements ItemReader<String> {
     private Iterator<String> newStoryIds;
 
     @Autowired
-    public GetAndUpdateTopStoriesReader(final HackernewsRequester hackernewsRequester) throws IOException {
+    public GetNewStoriesReader(final HackernewsRequester hackernewsRequester) throws IOException {
         final List<String> newStories = hackernewsRequester.getNewStories().orElse(new ArrayList<>());
 
         newStoryIds = newStories.iterator();

@@ -2,6 +2,7 @@ package com.uom.las3014.service;
 
 import com.uom.las3014.api.response.GroupTopStoriesByDateResponse;
 import com.uom.las3014.dao.Story;
+import com.uom.las3014.dao.User;
 import org.springframework.http.ResponseEntity;
 
 import java.sql.Timestamp;
@@ -12,7 +13,7 @@ public interface StoriesService {
 
     List<Story> getUndeletedStoriesContainingKeywordAndAfterTimestamp(String keyword, Timestamp createdAfter);
 
-    ResponseEntity<GroupTopStoriesByDateResponse> getTopStoryForTopics(String sessionToken);
+    ResponseEntity<GroupTopStoriesByDateResponse> getTopStoryForTopics(User user);
 
     void saveAllStories(Iterable<? extends Story> stories);
 

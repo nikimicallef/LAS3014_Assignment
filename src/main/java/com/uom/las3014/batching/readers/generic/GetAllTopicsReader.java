@@ -1,4 +1,4 @@
-package com.uom.las3014.batching.readers;
+package com.uom.las3014.batching.readers.generic;
 
 import com.uom.las3014.dao.Topic;
 import com.uom.las3014.service.TopicService;
