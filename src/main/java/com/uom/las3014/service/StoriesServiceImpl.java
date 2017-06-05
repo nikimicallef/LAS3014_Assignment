@@ -25,8 +25,6 @@ import java.util.List;
 @Service
 @Transactional
 public class StoriesServiceImpl implements StoriesService{
-    private final Log logger = LogFactory.getLog(this.getClass());
-
     @Autowired
     private StoriesDaoRepository storiesDaoRepository;
 
@@ -62,8 +60,8 @@ public class StoriesServiceImpl implements StoriesService{
         });
 
         return ResponseEntity.status(HttpStatus.OK)
-        .contentType(MediaType.APPLICATION_JSON)
-        .body(groupTopStoriesByDateResponse);
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(groupTopStoriesByDateResponse);
     }
 
     @Override

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
@@ -26,6 +27,8 @@ public class TopicServiceImpl implements TopicService{
     private StoriesService storiesService;
 
     @Cacheable(MyCacheManager.TOPIC_CACHE)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Override
     public Topic createNewTopicIfNotExists(final String topicName){
         //TODO: Change with CREATE-IF-NOT-EXISTS instead of 2 queries.
         final Optional<Topic> existingTopic = topicsDaoRepository.findTopicsByTopicName(topicName);

@@ -26,13 +26,8 @@ import java.util.stream.Collectors;
 
 @Component
 public class DigestsServiceImpl implements DigestsService {
-    private final Log logger = LogFactory.getLog(this.getClass());
-
     @Autowired
     private DigestDaoRepository digestDaoRepository;
-
-    @Autowired
-    private UserService userService;
 
     @Override
     public void saveAll(Iterable<? extends Digest> digests) {
@@ -41,7 +36,7 @@ public class DigestsServiceImpl implements DigestsService {
 
     @Override
     public void deleteDigestByDayOfWeekBefore(Timestamp timestamp) {
-        digestDaoRepository.deleteDigestByDayOfWeekBefore(timestamp);
+        digestDaoRepository.deleteDigestByDayOfWeekBefore(new java.sql.Date(timestamp.getTime()));
     }
 
     @Override

@@ -55,4 +55,19 @@ public class Topic {
             return userTopicMappings;
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Topic topic = (Topic) o;
+
+        return topicName.equals(topic.topicName);
+    }
+
+    @Override
+    public int hashCode() {
+        return topicName.hashCode();
+    }
 }

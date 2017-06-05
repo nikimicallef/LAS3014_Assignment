@@ -7,12 +7,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.Set;
 
 @Repository
 public interface DigestDaoRepository extends JpaRepository<Digest, Long> {
-    void deleteDigestByDayOfWeekBefore(final Timestamp timestamp);
+    void deleteDigestByDayOfWeekBefore(final Date timestamp);
 
     @Query("select d from Digest d where d.dayOfWeek = (select MAX(d.dayOfWeek) from Digest d) and ?1 member d.usersAssignedToDigest")
     Set<Digest> findLatestDigestsForUser(final User user);

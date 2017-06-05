@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private TopicServiceImpl topicService;
+    private TopicService topicService;
 
     private final Log logger = LogFactory.getLog(this.getClass());
 

@@ -35,6 +35,21 @@ public class GroupTopStoriesByDateResponse {
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GroupTopStoriesByDateResponse that = (GroupTopStoriesByDateResponse) o;
+
+        return effectiveDate != null ? effectiveDate.equals(that.effectiveDate) : that.effectiveDate == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return effectiveDate != null ? effectiveDate.hashCode() : 0;
+    }
+
     public class TopStoriesForTopicResponse {
         private String topic;
         @JsonProperty("top_stories")
@@ -61,6 +76,21 @@ public class GroupTopStoriesByDateResponse {
             }
         }
 
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            TopStoriesForTopicResponse that = (TopStoriesForTopicResponse) o;
+
+            return topic != null ? topic.equals(that.topic) : that.topic == null;
+        }
+
+        @Override
+        public int hashCode() {
+            return topic != null ? topic.hashCode() : 0;
+        }
+
         public class TopStoryResponse {
             private String title;
             private String url;
@@ -82,6 +112,26 @@ public class GroupTopStoriesByDateResponse {
 
             public Integer getScore() {
                 return score;
+            }
+
+            @Override
+            public boolean equals(Object o) {
+                if (this == o) return true;
+                if (o == null || getClass() != o.getClass()) return false;
+
+                TopStoryResponse that = (TopStoryResponse) o;
+
+                if (title != null ? !title.equals(that.title) : that.title != null) return false;
+                if (url != null ? !url.equals(that.url) : that.url != null) return false;
+                return score != null ? score.equals(that.score) : that.score == null;
+            }
+
+            @Override
+            public int hashCode() {
+                int result = title != null ? title.hashCode() : 0;
+                result = 31 * result + (url != null ? url.hashCode() : 0);
+                result = 31 * result + (score != null ? score.hashCode() : 0);
+                return result;
             }
         }
     }
