@@ -49,7 +49,7 @@ public class UserTopicMappingServiceImplUnitTests {
 
 
         assertEquals(1, userTopicMappingList.size());
-        verify(userTopicMappingDaoRepositoryMock, times(1)).findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfter(eq(topic), any(Timestamp.class));
+        verify(userTopicMappingDaoRepositoryMock).findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfter(eq(topic), any(Timestamp.class));
     }
 
     @Test
@@ -61,6 +61,6 @@ public class UserTopicMappingServiceImplUnitTests {
         final List<UserTopicMapping> userTopicMappingList = userTopicMappingService.findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfter(topic, new Timestamp(System.currentTimeMillis()));
 
         assertEquals(0, userTopicMappingList.size());
-        verify(userTopicMappingDaoRepositoryMock, times(1)).findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfter(eq(topic), any(Timestamp.class));
+        verify(userTopicMappingDaoRepositoryMock).findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfter(eq(topic), any(Timestamp.class));
     }
 }

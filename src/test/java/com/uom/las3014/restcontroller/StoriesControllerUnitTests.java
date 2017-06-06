@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.util.Date;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -63,61 +64,61 @@ public class StoriesControllerUnitTests {
 
     @Test(expected = InvalidCredentialsException.class)
     public void getTopStory_userWithSessionTokenDoesNotExist_invalidCredentialsException(){
-        when(userService.getUserFromDbUsingSessionToken(any(String.class))).thenThrow(new InvalidCredentialsException());
+        when(userService.getUserFromDbUsingSessionToken(anyString())).thenThrow(new InvalidCredentialsException());
 
         final ResponseEntity<GroupTopStoriesByDateResponse> topStory = storiesController.getTopStory(SESSION_TOKEN);
 
-        verify(userService, times(1)).getUserFromDbUsingSessionToken(any(String.class));
+        verify(userService).getUserFromDbUsingSessionToken(anyString());
         verify(storiesServiceMock, times(0)).getTopStoryForTopics(any(User.class));
     }
 
     @Test
     public void getTopStory_userWithSessionTokenExists_responseOk(){
-        when(userService.getUserFromDbUsingSessionToken(any(String.class))).thenReturn(user);
+        when(userService.getUserFromDbUsingSessionToken(anyString())).thenReturn(user);
 
         final ResponseEntity<GroupTopStoriesByDateResponse> topStory = storiesController.getTopStory(SESSION_TOKEN);
 
-        verify(userService, times(1)).getUserFromDbUsingSessionToken(any(String.class));
-        verify(storiesServiceMock, times(1)).getTopStoryForTopics(any(User.class));
+        verify(userService).getUserFromDbUsingSessionToken(anyString());
+        verify(storiesServiceMock).getTopStoryForTopics(any(User.class));
     }
 
     @Test(expected = InvalidCredentialsException.class)
     public void getLatestDigest_userWithSessionTokenDoesNotExist_invalidCredentialsException(){
-        when(userService.getUserFromDbUsingSessionToken(any(String.class))).thenThrow(new InvalidCredentialsException());
+        when(userService.getUserFromDbUsingSessionToken(anyString())).thenThrow(new InvalidCredentialsException());
 
         final ResponseEntity<GroupTopStoriesByDateResponse> latestDigest = storiesController.getLatestDigest(SESSION_TOKEN);
 
-        verify(userService, times(1)).getUserFromDbUsingSessionToken(any(String.class));
+        verify(userService).getUserFromDbUsingSessionToken(anyString());
         verify(digestsServiceMock, times(0)).getLatestWeeklyDigest(any(User.class));
     }
 
     @Test
     public void getLatestDigest_userWithSessionTokenExists_returnOk(){
-        when(userService.getUserFromDbUsingSessionToken(any(String.class))).thenReturn(user);
+        when(userService.getUserFromDbUsingSessionToken(anyString())).thenReturn(user);
 
         final ResponseEntity<GroupTopStoriesByDateResponse> latestDigest = storiesController.getLatestDigest(SESSION_TOKEN);
 
-        verify(userService, times(1)).getUserFromDbUsingSessionToken(any(String.class));
-        verify(digestsServiceMock, times(1)).getLatestWeeklyDigest(any(User.class));
+        verify(userService).getUserFromDbUsingSessionToken(anyString());
+        verify(digestsServiceMock).getLatestWeeklyDigest(any(User.class));
     }
 
     @Test(expected = InvalidCredentialsException.class)
     public void getDigestsGroup_userWithSessionTokenDoesNotExist_invalidCredentialsException(){
-        when(userService.getUserFromDbUsingSessionToken(any(String.class))).thenThrow(new InvalidCredentialsException());
+        when(userService.getUserFromDbUsingSessionToken(anyString())).thenThrow(new InvalidCredentialsException());
 
         final ResponseEntity<MultipleTopStoriesPerDateResponse> digestsGroup = storiesController.getDigestsGroup(SESSION_TOKEN, new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()));
 
-        verify(userService, times(1)).getUserFromDbUsingSessionToken(any(String.class));
+        verify(userService).getUserFromDbUsingSessionToken(anyString());
         verify(digestsServiceMock, times(0)).getGroupOfWeeklyDigests(any(User.class), any(Date.class), any(Date.class));
     }
 
     @Test
     public void getDigestsGroup_userWithSessionTokenExists_responseOk(){
-        when(userService.getUserFromDbUsingSessionToken(any(String.class))).thenReturn(user);
+        when(userService.getUserFromDbUsingSessionToken(anyString())).thenReturn(user);
 
         final ResponseEntity<MultipleTopStoriesPerDateResponse> digestsGroup = storiesController.getDigestsGroup(SESSION_TOKEN, new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()));
 
-        verify(userService, times(1)).getUserFromDbUsingSessionToken(any(String.class));
-        verify(digestsServiceMock, times(1)).getGroupOfWeeklyDigests(any(User.class), any(Date.class), any(Date.class));
+        verify(userService).getUserFromDbUsingSessionToken(anyString());
+        verify(digestsServiceMock).getGroupOfWeeklyDigests(any(User.class), any(Date.class), any(Date.class));
     }
 }

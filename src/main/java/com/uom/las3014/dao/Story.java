@@ -86,18 +86,6 @@ public class Story {
         }
     }
 
-    @Override
-    public String toString() {
-        return "Story{" +
-                "storyId=" + storyId +
-                ", score=" + score +
-                ", title='" + title + '\'' +
-                ", url='" + url + '\'' +
-                ", dateCreated=" + dateCreated +
-                ", deleted=" + deleted +
-                '}';
-    }
-
     public int compareTo(final Story story){
         return this.getScore().compareTo(story.getScore());
     }

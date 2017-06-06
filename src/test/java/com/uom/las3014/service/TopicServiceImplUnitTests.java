@@ -51,7 +51,7 @@ public class TopicServiceImplUnitTests {
 
         assertEquals(topic, newTopic);
 
-        verify(topicsDaoRepository, times(1)).findTopicsByTopicName(TOPIC1);
+        verify(topicsDaoRepository).findTopicsByTopicName(TOPIC1);
     }
 
     @Test
@@ -68,9 +68,9 @@ public class TopicServiceImplUnitTests {
         final Topic newTopic = topicService.createNewTopicIfNotExists(TOPIC1);
 
         assertEquals(topStory, newTopic.getTopStoryId());
-        verify(topicsDaoRepository, times(1)).findTopicsByTopicName(TOPIC1);
-        verify(topicsDaoRepository, times(1)).save(any(Topic.class));
-        verify(storiesService, times(1))
+        verify(topicsDaoRepository).findTopicsByTopicName(TOPIC1);
+        verify(topicsDaoRepository).save(any(Topic.class));
+        verify(storiesService)
                 .getUndeletedStoriesContainingKeywordAndAfterTimestamp(eq(topic.getTopicName()), any(Timestamp.class));
     }
 
@@ -89,9 +89,9 @@ public class TopicServiceImplUnitTests {
         final Topic newTopic = topicService.createNewTopicIfNotExists(TOPIC1);
 
         assertEquals(topStory2, newTopic.getTopStoryId());
-        verify(topicsDaoRepository, times(1)).findTopicsByTopicName(TOPIC1);
-        verify(topicsDaoRepository, times(1)).save(any(Topic.class));
-        verify(storiesService, times(1))
+        verify(topicsDaoRepository).findTopicsByTopicName(TOPIC1);
+        verify(topicsDaoRepository).save(any(Topic.class));
+        verify(storiesService)
                 .getUndeletedStoriesContainingKeywordAndAfterTimestamp(eq(topic.getTopicName()), any(Timestamp.class));
     }
 
@@ -107,9 +107,9 @@ public class TopicServiceImplUnitTests {
         final Topic newTopic = topicService.createNewTopicIfNotExists(TOPIC1);
 
         assertNull(newTopic.getTopStoryId());
-        verify(topicsDaoRepository, times(1)).findTopicsByTopicName(TOPIC1);
-        verify(topicsDaoRepository, times(1)).save(any(Topic.class));
-        verify(storiesService, times(1))
+        verify(topicsDaoRepository).findTopicsByTopicName(TOPIC1);
+        verify(topicsDaoRepository).save(any(Topic.class));
+        verify(storiesService)
                 .getUndeletedStoriesContainingKeywordAndAfterTimestamp(eq(topic.getTopicName()), any(Timestamp.class));
     }
 
@@ -120,7 +120,7 @@ public class TopicServiceImplUnitTests {
         final List<Topic> allTopics = topicService.getAllTopics();
 
         assertEquals(0, allTopics.size());
-        verify(topicsDaoRepository, times(1)).findAll();
+        verify(topicsDaoRepository).findAll();
     }
 
     @Test
@@ -130,7 +130,7 @@ public class TopicServiceImplUnitTests {
         final List<Topic> allTopics = topicService.getAllTopics();
 
         assertEquals(1, allTopics.size());
-        verify(topicsDaoRepository, times(1)).findAll();
+        verify(topicsDaoRepository).findAll();
     }
 
     @Test
@@ -139,7 +139,7 @@ public class TopicServiceImplUnitTests {
 
         topicService.saveAllTopics(new ArrayList<>());
 
-        verify(topicsDaoRepository, times(1)).save(Matchers.<Iterable<Topic>>any());
+        verify(topicsDaoRepository).save(Matchers.<Iterable<Topic>>any());
     }
 
     @Test
@@ -150,6 +150,6 @@ public class TopicServiceImplUnitTests {
 
         topicService.saveAllTopics(topics);
 
-        verify(topicsDaoRepository, times(1)).save(Matchers.<Iterable<Topic>>any());
+        verify(topicsDaoRepository).save(Matchers.<Iterable<Topic>>any());
     }
 }

@@ -27,7 +27,9 @@ public class TopStoryPerTopicProcessor implements ItemProcessor<Topic, Topic> {
 
     @Override
     public Topic process(Topic topic) throws Exception {
-        final List<Story> topStoryContainingKeyword = storiesService.getUndeletedStoriesContainingKeywordAndAfterTimestamp(topic.getTopicName(), new Timestamp(System.currentTimeMillis() - TimeUnit.HOURS.toMillis(24)));
+        final List<Story> topStoryContainingKeyword = storiesService
+                .getUndeletedStoriesContainingKeywordAndAfterTimestamp(topic.getTopicName(),
+                                                                        new Timestamp(System.currentTimeMillis() - TimeUnit.HOURS.toMillis(24)));
 
         final Optional<Story> topStoryOpt = topStoryContainingKeyword.stream().max(Comparator.comparing(Story::getScore));
 

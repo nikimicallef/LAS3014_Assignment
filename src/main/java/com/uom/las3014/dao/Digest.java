@@ -80,7 +80,7 @@ public class Digest {
 
         if (!dayOfWeek.equals(digest.dayOfWeek)) return false;
         if (topicId != null ? !topicId.getTopicName().equals(digest.topicId.getTopicName()) : digest.topicId.getTopicName() != null) return false;
-        return storyId != null ? storyId.getStoryId().equals(digest.storyId.getStoryId()) : digest.storyId.getStoryId() == null;
+        return storyId != null ? storyId.getStoryId().equals(digest.storyId.getStoryId()) : digest.storyId == null;
     }
 
     @Override

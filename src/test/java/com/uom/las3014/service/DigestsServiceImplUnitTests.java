@@ -68,7 +68,7 @@ public class DigestsServiceImplUnitTests {
 
         digestsService.saveAll(new ArrayList<>());
 
-        verify(digestDaoRepository, times(1)).save(Matchers.<Iterable<Digest>>any());
+        verify(digestDaoRepository).save(Matchers.<Iterable<Digest>>any());
     }
 
     @Test
@@ -79,7 +79,7 @@ public class DigestsServiceImplUnitTests {
 
         digestsService.saveAll(digests);
 
-        verify(digestDaoRepository, times(1)).save(Matchers.<Iterable<Digest>>any());
+        verify(digestDaoRepository).save(Matchers.<Iterable<Digest>>any());
     }
 
     @Test
@@ -88,7 +88,7 @@ public class DigestsServiceImplUnitTests {
 
         digestsService.deleteDigestByDayOfWeekBefore(new Timestamp(System.currentTimeMillis()));
 
-        verify(digestDaoRepository, times(1)).deleteDigestByDayOfWeekBefore(any(Date.class));
+        verify(digestDaoRepository).deleteDigestByDayOfWeekBefore(any(Date.class));
     }
 
     @Test
@@ -100,7 +100,7 @@ public class DigestsServiceImplUnitTests {
         assertEquals(200, latestWeeklyDigest.getStatusCodeValue());
         assertNull(latestWeeklyDigest.getBody().getEffectiveDate());
         assertEquals(0, latestWeeklyDigest.getBody().getTopics().size());
-        verify(digestDaoRepository, times(1)).findLatestDigestsForUser(user);
+        verify(digestDaoRepository).findLatestDigestsForUser(user);
     }
 
     @Test
@@ -127,7 +127,7 @@ public class DigestsServiceImplUnitTests {
         assertEquals(200, latestWeeklyDigest.getStatusCodeValue());
         assertNotNull(latestWeeklyDigest.getBody().getEffectiveDate());
         assertEquals(groupTopStoriesByDateResponse, latestWeeklyDigest.getBody());
-        verify(digestDaoRepository, times(1)).findLatestDigestsForUser(user);
+        verify(digestDaoRepository).findLatestDigestsForUser(user);
     }
 
     @Test
@@ -159,7 +159,7 @@ public class DigestsServiceImplUnitTests {
         assertEquals(200, latestWeeklyDigest.getStatusCodeValue());
         assertNotNull(latestWeeklyDigest.getBody().getEffectiveDate());
         assertEquals(groupTopStoriesByDateResponse, latestWeeklyDigest.getBody());
-        verify(digestDaoRepository, times(1)).findLatestDigestsForUser(user);
+        verify(digestDaoRepository).findLatestDigestsForUser(user);
     }
 
     @Test
@@ -191,7 +191,7 @@ public class DigestsServiceImplUnitTests {
         assertEquals(200, latestWeeklyDigest.getStatusCodeValue());
         assertNotNull(latestWeeklyDigest.getBody().getEffectiveDate());
         assertEquals(groupTopStoriesByDateResponse, latestWeeklyDigest.getBody());
-        verify(digestDaoRepository, times(1)).findLatestDigestsForUser(user);
+        verify(digestDaoRepository).findLatestDigestsForUser(user);
     }
 
     @Test(expected = InvalidDateException.class)
@@ -227,6 +227,6 @@ public class DigestsServiceImplUnitTests {
 
         assertEquals(200, latestWeeklyDigest.getStatusCodeValue());
         assertEquals(digestsGroup.getTopStoriesByDateResponses().get(0), latestWeeklyDigest.getBody().getTopStoriesByDateResponses().get(0));
-        verify(digestDaoRepository, times(1)).findGroupOfDigestsBetweenDatesForUser(dateFrom, dateTo, user);
+        verify(digestDaoRepository).findGroupOfDigestsBetweenDatesForUser(dateFrom, dateTo, user);
     }
 }

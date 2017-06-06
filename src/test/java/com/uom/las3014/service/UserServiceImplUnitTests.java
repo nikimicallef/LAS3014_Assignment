@@ -79,7 +79,7 @@ public class UserServiceImplUnitTests {
 
         userService.createNewUser(userCreateRequestBody);
 
-        verify(usersDaoRepositoryMock, times(1)).countUsersByUsername(userCreateRequestBody.getUsername());
+        verify(usersDaoRepositoryMock).countUsersByUsername(userCreateRequestBody.getUsername());
     }
 
     @Test
@@ -93,10 +93,10 @@ public class UserServiceImplUnitTests {
 
         assertEquals("Created successfully. Login to get your token and use your newly created account.", newUserResponse.getBody().getMessage());
         assertEquals(200, newUserResponse.getStatusCodeValue());
-        verify(usersDaoRepositoryMock, times(1)).countUsersByUsername(userCreateRequestBody.getUsername());
+        verify(usersDaoRepositoryMock).countUsersByUsername(userCreateRequestBody.getUsername());
         verify(topicServiceMock, times(0)).createNewTopicIfNotExists(anyString());
-        verify(passwordEncoderMock, times(1)).encode(userCreateRequestBody.getPassword());
-        verify(usersDaoRepositoryMock, times(1)).save(any(User.class));
+        verify(passwordEncoderMock).encode(userCreateRequestBody.getPassword());
+        verify(usersDaoRepositoryMock).save(any(User.class));
     }
 
     @Test
@@ -110,10 +110,10 @@ public class UserServiceImplUnitTests {
 
         assertEquals("Created successfully. Login to get your token and use your newly created account.", newUserResponse.getBody().getMessage());
         assertEquals(200, newUserResponse.getStatusCodeValue());
-        verify(usersDaoRepositoryMock, times(1)).countUsersByUsername(userCreateRequestBody.getUsername());
+        verify(usersDaoRepositoryMock).countUsersByUsername(userCreateRequestBody.getUsername());
         verify(topicServiceMock, times(2)).createNewTopicIfNotExists(anyString());
-        verify(passwordEncoderMock, times(1)).encode(userCreateRequestBody.getPassword());
-        verify(usersDaoRepositoryMock, times(1)).save(any(User.class));
+        verify(passwordEncoderMock).encode(userCreateRequestBody.getPassword());
+        verify(usersDaoRepositoryMock).save(any(User.class));
     }
 
     @Test(expected = InvalidCredentialsException.class)
@@ -121,26 +121,26 @@ public class UserServiceImplUnitTests {
         when(usersDaoRepositoryMock.findUsersByUsername(USERNAME)).thenReturn(Optional.empty());
 
         userService.loginAndGenerateToken(userLoginRequestBody);
-        verify(usersDaoRepositoryMock, times(1)).findUsersByUsername(userLoginRequestBody.getUsername());
+        verify(usersDaoRepositoryMock).findUsersByUsername(userLoginRequestBody.getUsername());
     }
 
     @Test(expected = InvalidCredentialsException.class)
     public void loginAndGenerateToken_passwordIncorrect_invalidCredentialsException(){
         when(usersDaoRepositoryMock.findUsersByUsername(USERNAME)).thenReturn(Optional.of(user));
 
-        when(passwordEncoderMock.matches(eq(user.getPassword()), any(String.class))).thenReturn(false);
+        when(passwordEncoderMock.matches(eq(user.getPassword()), anyString())).thenReturn(false);
 
         final ResponseEntity<SessionTokenAndMessageResponse> response = userService.loginAndGenerateToken(userLoginRequestBody);
 
-        verify(usersDaoRepositoryMock, times(1)).findUsersByUsername(userLoginRequestBody.getUsername());
-        verify(passwordEncoderMock, times(1)).matches(eq(user.getPassword()), any(String.class));
+        verify(usersDaoRepositoryMock).findUsersByUsername(userLoginRequestBody.getUsername());
+        verify(passwordEncoderMock).matches(eq(user.getPassword()), anyString());
     }
 
     @Test
     public void loginAndGenerateToken_sessionTokenNull_loginOk(){
         when(usersDaoRepositoryMock.findUsersByUsername(USERNAME)).thenReturn(Optional.of(user));
 
-        when(passwordEncoderMock.matches(eq(user.getPassword()), any(String.class))).thenReturn(true);
+        when(passwordEncoderMock.matches(eq(user.getPassword()), anyString())).thenReturn(true);
 
         final ResponseEntity<SessionTokenAndMessageResponse> response = userService.loginAndGenerateToken(userLoginRequestBody);
 
@@ -149,8 +149,8 @@ public class UserServiceImplUnitTests {
         assertNotNull(response.getBody().getSessionToken());
         assertNotNull(user.getSessionToken());
         assertNotNull(user.getSessionTokenCreated());
-        verify(usersDaoRepositoryMock, times(1)).findUsersByUsername(userLoginRequestBody.getUsername());
-        verify(passwordEncoderMock, times(1)).matches(eq(user.getPassword()), any(String.class));
+        verify(usersDaoRepositoryMock).findUsersByUsername(userLoginRequestBody.getUsername());
+        verify(passwordEncoderMock).matches(eq(user.getPassword()), anyString());
     }
 
     @Test
@@ -162,7 +162,7 @@ public class UserServiceImplUnitTests {
 
         when(usersDaoRepositoryMock.findUsersByUsername(USERNAME)).thenReturn(Optional.of(user));
 
-        when(passwordEncoderMock.matches(eq(user.getPassword()), any(String.class))).thenReturn(true);
+        when(passwordEncoderMock.matches(eq(user.getPassword()), anyString())).thenReturn(true);
 
         final ResponseEntity<SessionTokenAndMessageResponse> response = userService.loginAndGenerateToken(userLoginRequestBody);
 
@@ -172,8 +172,8 @@ public class UserServiceImplUnitTests {
         assertEquals(USER_SESSION_TOKEN, user.getSessionToken());
         assertEquals(sessionTokenCreated, user.getSessionTokenCreated());
         assertNotNull(user.getSessionTokenLastUsed());
-        verify(usersDaoRepositoryMock, times(1)).findUsersByUsername(userLoginRequestBody.getUsername());
-        verify(passwordEncoderMock, times(1)).matches(eq(user.getPassword()), any(String.class));
+        verify(usersDaoRepositoryMock).findUsersByUsername(userLoginRequestBody.getUsername());
+        verify(passwordEncoderMock).matches(eq(user.getPassword()), anyString());
     }
 
     @Test
@@ -186,7 +186,7 @@ public class UserServiceImplUnitTests {
 
         when(usersDaoRepositoryMock.findUsersByUsername(USERNAME)).thenReturn(Optional.of(user));
 
-        when(passwordEncoderMock.matches(eq(user.getPassword()), any(String.class))).thenReturn(true);
+        when(passwordEncoderMock.matches(eq(user.getPassword()), anyString())).thenReturn(true);
 
         final ResponseEntity<SessionTokenAndMessageResponse> response = userService.loginAndGenerateToken(userLoginRequestBody);
 
@@ -196,8 +196,8 @@ public class UserServiceImplUnitTests {
         assertEquals(USER_SESSION_TOKEN, user.getSessionToken());
         assertEquals(sessionTokenCreated, user.getSessionTokenCreated());
         assertNotNull(user.getSessionTokenLastUsed());
-        verify(usersDaoRepositoryMock, times(1)).findUsersByUsername(userLoginRequestBody.getUsername());
-        verify(passwordEncoderMock, times(1)).matches(eq(user.getPassword()), any(String.class));
+        verify(usersDaoRepositoryMock).findUsersByUsername(userLoginRequestBody.getUsername());
+        verify(passwordEncoderMock).matches(eq(user.getPassword()), anyString());
     }
 
     @Test
@@ -211,7 +211,7 @@ public class UserServiceImplUnitTests {
 
         when(usersDaoRepositoryMock.findUsersByUsername(USERNAME)).thenReturn(Optional.of(user));
 
-        when(passwordEncoderMock.matches(eq(user.getPassword()), any(String.class))).thenReturn(true);
+        when(passwordEncoderMock.matches(eq(user.getPassword()), anyString())).thenReturn(true);
 
         final ResponseEntity<SessionTokenAndMessageResponse> response = userService.loginAndGenerateToken(userLoginRequestBody);
 
@@ -220,8 +220,8 @@ public class UserServiceImplUnitTests {
         assertNotEquals(USER_SESSION_TOKEN, response.getBody().getSessionToken());
         assertNotEquals(USER_SESSION_TOKEN, user.getSessionToken());
         assertNotEquals(sessionTokenCreated, user.getSessionTokenCreated());
-        verify(usersDaoRepositoryMock, times(1)).findUsersByUsername(userLoginRequestBody.getUsername());
-        verify(passwordEncoderMock, times(1)).matches(eq(user.getPassword()), any(String.class));
+        verify(usersDaoRepositoryMock).findUsersByUsername(userLoginRequestBody.getUsername());
+        verify(passwordEncoderMock).matches(eq(user.getPassword()), anyString());
     }
 
     @Test
@@ -284,7 +284,7 @@ public class UserServiceImplUnitTests {
             }
         }
 
-        verify(topicServiceMock, times(1)).createNewTopicIfNotExists(anyString());
+        verify(topicServiceMock).createNewTopicIfNotExists(anyString());
     }
 
     @Test
@@ -350,7 +350,7 @@ public class UserServiceImplUnitTests {
 
         userService.getAllUsers();
 
-        verify(usersDaoRepositoryMock, times(1)).findAll();
+        verify(usersDaoRepositoryMock).findAll();
     }
 
     @Test(expected = InvalidCredentialsException.class)
@@ -359,7 +359,7 @@ public class UserServiceImplUnitTests {
 
         userService.getUserFromDbUsingSessionToken(USER_SESSION_TOKEN);
 
-        verify(usersDaoRepositoryMock, times(1)).findUsersBySessionToken(USER_SESSION_TOKEN);
+        verify(usersDaoRepositoryMock).findUsersBySessionToken(USER_SESSION_TOKEN);
     }
 
     @Test
@@ -370,7 +370,7 @@ public class UserServiceImplUnitTests {
 
         assertEquals(userFromDbUsingSessionToken.getUsername(), USERNAME);
         assertEquals(userFromDbUsingSessionToken.getPassword(), PASSWORD);
-        verify(usersDaoRepositoryMock, times(1)).findUsersBySessionToken(USER_SESSION_TOKEN);
+        verify(usersDaoRepositoryMock).findUsersBySessionToken(USER_SESSION_TOKEN);
     }
 
     @Test
@@ -379,7 +379,7 @@ public class UserServiceImplUnitTests {
 
         userService.invalidateInactiveSessionTokens();
 
-        verify(usersDaoRepositoryMock, times(1)).streamUsersBySessionTokenNotNull();
+        verify(usersDaoRepositoryMock).streamUsersBySessionTokenNotNull();
     }
 
     @Test
@@ -397,7 +397,7 @@ public class UserServiceImplUnitTests {
         assertNotNull(user.getSessionToken());
         assertNotNull(user.getSessionTokenCreated());
         assertNotNull(user.getSessionTokenLastUsed());
-        verify(usersDaoRepositoryMock, times(1)).streamUsersBySessionTokenNotNull();
+        verify(usersDaoRepositoryMock).streamUsersBySessionTokenNotNull();
     }
 
     @Test
@@ -415,7 +415,7 @@ public class UserServiceImplUnitTests {
         assertNull(user.getSessionToken());
         assertNull(user.getSessionTokenCreated());
         assertNull(user.getSessionTokenLastUsed());
-        verify(usersDaoRepositoryMock, times(1)).streamUsersBySessionTokenNotNull();
+        verify(usersDaoRepositoryMock).streamUsersBySessionTokenNotNull();
     }
 
     @Test

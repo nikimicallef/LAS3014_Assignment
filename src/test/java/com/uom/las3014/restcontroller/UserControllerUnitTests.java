@@ -67,14 +67,14 @@ public class UserControllerUnitTests {
     public void createNewUser_createdOk(){
         userController.createNewUser(any(UserCreateRequestBody.class));
 
-        verify(userServiceMock, times(1)).createNewUser(any(UserCreateRequestBody.class));
+        verify(userServiceMock).createNewUser(any(UserCreateRequestBody.class));
     }
 
     @Test
     public void loginAndGenerateToken_loginOk(){
         userController.loginAndGenerateToken(any(UserLoginRequestBody.class));
 
-        verify(userServiceMock, times(1)).loginAndGenerateToken(any(UserLoginRequestBody.class));
+        verify(userServiceMock).loginAndGenerateToken(any(UserLoginRequestBody.class));
     }
 
     @Test
@@ -83,8 +83,8 @@ public class UserControllerUnitTests {
 
         userController.logoutUser(SESSION_TOKEN);
 
-        verify(userServiceMock, times(1)).getUserFromDbUsingSessionToken(any(String.class));
-        verify(userServiceMock, times(1)).logout(any(User.class));
+        verify(userServiceMock).getUserFromDbUsingSessionToken(anyString());
+        verify(userServiceMock).logout(any(User.class));
     }
 
     @Test(expected = InvalidCredentialsException.class)
@@ -93,7 +93,7 @@ public class UserControllerUnitTests {
 
         userController.logoutUser(SESSION_TOKEN);
 
-        verify(userServiceMock, times(1)).getUserFromDbUsingSessionToken(any(String.class));
+        verify(userServiceMock).getUserFromDbUsingSessionToken(anyString());
         verify(userServiceMock, times(0)).logout(any(User.class));
     }
 
@@ -103,8 +103,8 @@ public class UserControllerUnitTests {
 
         userController.changeInterestedTopics(SESSION_TOKEN, userTopicsRequestBody);
 
-        verify(userServiceMock, times(1)).getUserFromDbUsingSessionToken(any(String.class));
-        verify(userServiceMock, times(1)).changeInterestedTopics(any(User.class), Matchers.<List<String>>any(), Matchers.<List<String>>any());
+        verify(userServiceMock).getUserFromDbUsingSessionToken(anyString());
+        verify(userServiceMock).changeInterestedTopics(any(User.class), Matchers.<List<String>>any(), Matchers.<List<String>>any());
     }
 
     @Test(expected = InvalidCredentialsException.class)
@@ -113,7 +113,7 @@ public class UserControllerUnitTests {
 
         userController.changeInterestedTopics(SESSION_TOKEN, userTopicsRequestBody);
 
-        verify(userServiceMock, times(1)).getUserFromDbUsingSessionToken(any(String.class));
+        verify(userServiceMock).getUserFromDbUsingSessionToken(anyString());
         verify(userServiceMock, times(0)).changeInterestedTopics(any(User.class), Matchers.<List<String>>any(), Matchers.<List<String>>any());
     }
 }

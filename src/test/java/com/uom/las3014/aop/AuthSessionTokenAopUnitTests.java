@@ -37,11 +37,11 @@ public class AuthSessionTokenAopUnitTests {
 
     @Test(expected = InvalidCredentialsException.class)
     public void sessionTokenBefore_userDoesNotExist_invalidCredentialsException(){
-        when(userServiceMock.getUserFromDbUsingSessionToken(any(String.class))).thenThrow(new InvalidCredentialsException());
+        when(userServiceMock.getUserFromDbUsingSessionToken(anyString())).thenThrow(new InvalidCredentialsException());
 
         authSessionTokenAop.sessionTokenBefore(SESSION_TOKEN);
 
-        verify(userServiceMock, times(1)).getUserFromDbUsingSessionToken(any(String.class));
+        verify(userServiceMock).getUserFromDbUsingSessionToken(anyString());
     }
 
     @Test(expected = InvalidCredentialsException.class)
@@ -49,14 +49,14 @@ public class AuthSessionTokenAopUnitTests {
         user.setSessionTokenCreated(new Timestamp(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(1)));
         user.setSessionTokenLastUsed(new Timestamp(System.currentTimeMillis() - TimeUnit.HOURS.toMillis(1)));
 
-        when(userServiceMock.getUserFromDbUsingSessionToken(any(String.class))).thenReturn(user);
+        when(userServiceMock.getUserFromDbUsingSessionToken(anyString())).thenReturn(user);
 
         authSessionTokenAop.sessionTokenBefore(SESSION_TOKEN);
 
         assertNull(user.getSessionToken());
         assertNull(user.getSessionTokenCreated());
         assertNull(user.getSessionTokenLastUsed());
-        verify(userServiceMock, times(1)).getUserFromDbUsingSessionToken(any(String.class));
+        verify(userServiceMock).getUserFromDbUsingSessionToken(anyString());
     }
 
     @Test
@@ -67,7 +67,7 @@ public class AuthSessionTokenAopUnitTests {
         user.setSessionTokenCreated(oldSessionTokenCreated);
         user.setSessionTokenLastUsed(oldSessionTokenLastUsed);
 
-        when(userServiceMock.getUserFromDbUsingSessionToken(any(String.class))).thenReturn(user);
+        when(userServiceMock.getUserFromDbUsingSessionToken(anyString())).thenReturn(user);
 
         Mockito.doAnswer((InvocationOnMock invocation) -> {
                 user.setSessionTokenLastUsed(new Timestamp(System.currentTimeMillis()));
@@ -79,7 +79,7 @@ public class AuthSessionTokenAopUnitTests {
         assertEquals(SESSION_TOKEN, user.getSessionToken());
         assertEquals(oldSessionTokenCreated, user.getSessionTokenCreated());
         assertTrue(user.getSessionTokenLastUsed().getTime() > oldSessionTokenLastUsed.getTime());
-        verify(userServiceMock, times(1)).getUserFromDbUsingSessionToken(any(String.class));
-        verify(userServiceMock, times(1)).updateSessionTokenLastUsed(user);
+        verify(userServiceMock).getUserFromDbUsingSessionToken(anyString());
+        verify(userServiceMock).updateSessionTokenLastUsed(user);
     }
 }

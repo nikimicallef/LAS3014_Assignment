@@ -18,10 +18,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.*;
@@ -69,7 +66,7 @@ public class StoriesServiceImplUnitTests {
         final List<Story> stories = storiesService.getUndeletedTopicsAfterTimestamp(new Timestamp(System.currentTimeMillis()));
 
         assertEquals(0, stories.size());
-        verify(storiesDaoRepository, times(1)).findAllByDateCreatedIsAfterAndDeletedIsFalse(any(Timestamp.class));
+        verify(storiesDaoRepository).findAllByDateCreatedIsAfterAndDeletedIsFalse(any(Timestamp.class));
     }
 
     @Test
@@ -81,30 +78,30 @@ public class StoriesServiceImplUnitTests {
 
         assertEquals(1, stories.size());
         assertEquals(story1, stories.get(0));
-        verify(storiesDaoRepository, times(1)).findAllByDateCreatedIsAfterAndDeletedIsFalse(any(Timestamp.class));
+        verify(storiesDaoRepository).findAllByDateCreatedIsAfterAndDeletedIsFalse(any(Timestamp.class));
     }
 
     @Test
     public void getUndeletedStoriesContainingKeywordAndAfterTimestamp_noStories_emptyList(){
-        when(storiesDaoRepository.findAllByTitleContainingAndDateCreatedIsAfterAndDeletedIsFalse(any(String.class), any(Timestamp.class)))
+        when(storiesDaoRepository.findAllByTitleContainingAndDateCreatedIsAfterAndDeletedIsFalse(anyString(), any(Timestamp.class)))
                 .thenReturn(new ArrayList<>());
 
         final List<Story> stories = storiesService.getUndeletedStoriesContainingKeywordAndAfterTimestamp(STORY1_TITLE, new Timestamp(System.currentTimeMillis()));
 
         assertEquals(0, stories.size());
-        verify(storiesDaoRepository, times(1)).findAllByTitleContainingAndDateCreatedIsAfterAndDeletedIsFalse(any(String.class), any(Timestamp.class));
+        verify(storiesDaoRepository).findAllByTitleContainingAndDateCreatedIsAfterAndDeletedIsFalse(anyString(), any(Timestamp.class));
     }
 
     @Test
     public void getUndeletedStoriesContainingKeywordAndAfterTimestamp_storiesExist_entriesInList(){
-        when(storiesDaoRepository.findAllByTitleContainingAndDateCreatedIsAfterAndDeletedIsFalse(any(String.class), any(Timestamp.class)))
+        when(storiesDaoRepository.findAllByTitleContainingAndDateCreatedIsAfterAndDeletedIsFalse(anyString(), any(Timestamp.class)))
                 .thenReturn(Collections.singletonList(story1));
 
         final List<Story> stories = storiesService.getUndeletedStoriesContainingKeywordAndAfterTimestamp(STORY1_TITLE, new Timestamp(System.currentTimeMillis()));
 
         assertEquals(1, stories.size());
         assertEquals(story1, stories.get(0));
-        verify(storiesDaoRepository, times(1)).findAllByTitleContainingAndDateCreatedIsAfterAndDeletedIsFalse(any(String.class), any(Timestamp.class));
+        verify(storiesDaoRepository).findAllByTitleContainingAndDateCreatedIsAfterAndDeletedIsFalse(anyString(), any(Timestamp.class));
     }
 
     @Test
@@ -139,7 +136,7 @@ public class StoriesServiceImplUnitTests {
 
         assertEquals(200, topStoryForTopics.getStatusCodeValue());
         assertNotNull(topStoryForTopics.getBody().getEffectiveDate());
-        assertEquals(groupTopStoriesByDateResponse.getTopics(), topStoryForTopics.getBody().getTopics());
+        assertEquals(new HashSet<>(groupTopStoriesByDateResponse.getTopics()), new HashSet<>(topStoryForTopics.getBody().getTopics()));
     }
 
     @Test
@@ -173,7 +170,7 @@ public class StoriesServiceImplUnitTests {
 
         assertEquals(200, topStoryForTopics.getStatusCodeValue());
         assertNotNull(topStoryForTopics.getBody().getEffectiveDate());
-        assertEquals(groupTopStoriesByDateResponse.getTopics(), topStoryForTopics.getBody().getTopics());
+        assertEquals(new HashSet<>(groupTopStoriesByDateResponse.getTopics()), new HashSet<>(topStoryForTopics.getBody().getTopics()));
     }
 
     @Test
@@ -212,7 +209,7 @@ public class StoriesServiceImplUnitTests {
 
         storiesService.saveAllStories(new ArrayList<>());
 
-        verify(storiesDaoRepository, times(1)).save(Matchers.<Iterable<Story>>any());
+        verify(storiesDaoRepository).save(Matchers.<Iterable<Story>>any());
     }
 
     @Test
@@ -223,7 +220,7 @@ public class StoriesServiceImplUnitTests {
 
         storiesService.saveAllStories(stories);
 
-        verify(storiesDaoRepository, times(1)).save(Matchers.<Iterable<Story>>any());
+        verify(storiesDaoRepository).save(Matchers.<Iterable<Story>>any());
     }
 
     @Test
@@ -234,7 +231,7 @@ public class StoriesServiceImplUnitTests {
         final List<Story> returedStories = storiesService.getTop3UndeletedStoriesAfterTimestamp(new Timestamp(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(1)));
 
         assertEquals(0, returedStories.size());
-        verify(storiesDaoRepository, times(1)).findAllByDateCreatedIsAfterAndDeletedIsFalseAndScoreGreaterThan(any(Timestamp.class), any(Integer.class));
+        verify(storiesDaoRepository).findAllByDateCreatedIsAfterAndDeletedIsFalseAndScoreGreaterThan(any(Timestamp.class), any(Integer.class));
     }
 
     @Test
@@ -246,7 +243,7 @@ public class StoriesServiceImplUnitTests {
 
         assertEquals(1, returnedStories.size());
         assertEquals(story1, returnedStories.get(0));
-        verify(storiesDaoRepository, times(1)).findAllByDateCreatedIsAfterAndDeletedIsFalseAndScoreGreaterThan(any(Timestamp.class), any(Integer.class));
+        verify(storiesDaoRepository).findAllByDateCreatedIsAfterAndDeletedIsFalseAndScoreGreaterThan(any(Timestamp.class), any(Integer.class));
     }
 
     @Test
@@ -264,7 +261,7 @@ public class StoriesServiceImplUnitTests {
         assertEquals(story1, returnedStories.get(2));
         assertTrue(returnedStories.get(0).getScore() >= returnedStories.get(1).getScore()
                 && returnedStories.get(1).getScore() >= returnedStories.get(2).getScore());
-        verify(storiesDaoRepository, times(1)).findAllByDateCreatedIsAfterAndDeletedIsFalseAndScoreGreaterThan(any(Timestamp.class), any(Integer.class));
+        verify(storiesDaoRepository).findAllByDateCreatedIsAfterAndDeletedIsFalseAndScoreGreaterThan(any(Timestamp.class), any(Integer.class));
     }
 
     @Test
@@ -284,7 +281,7 @@ public class StoriesServiceImplUnitTests {
         assertEquals(story4, returnedStories.get(2));
         assertTrue(returnedStories.get(0).getScore() >= returnedStories.get(1).getScore()
                 && returnedStories.get(1).getScore() >= returnedStories.get(2).getScore());
-        verify(storiesDaoRepository, times(1)).findAllByDateCreatedIsAfterAndDeletedIsFalseAndScoreGreaterThan(any(Timestamp.class), any(Integer.class));
+        verify(storiesDaoRepository).findAllByDateCreatedIsAfterAndDeletedIsFalseAndScoreGreaterThan(any(Timestamp.class), any(Integer.class));
     }
 
     @Test
@@ -293,6 +290,6 @@ public class StoriesServiceImplUnitTests {
 
         storiesService.deleteByDateCreatedBeforeAndDigestsEmpty(new Timestamp(System.currentTimeMillis()));
 
-        verify(storiesDaoRepository, times(1)).deleteByDateCreatedBeforeAndDigestsEmpty(any(Timestamp.class));
+        verify(storiesDaoRepository).deleteByDateCreatedBeforeAndDigestsEmpty(any(Timestamp.class));
     }
 }

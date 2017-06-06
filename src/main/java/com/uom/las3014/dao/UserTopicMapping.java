@@ -85,15 +85,17 @@ public class UserTopicMapping implements Serializable{
         UserTopicMapping that = (UserTopicMapping) o;
 
         if (isEnabled != that.isEnabled) return false;
-        if (!user.getUsername().equals(that.user.getUsername())) return false;
-        return topic.getTopicName().equals(that.topic.getTopicName());
+        if (user != null ? !user.getUsername().equals(that.user.getUsername()) : that.user != null) return false;
+        if (topic != null ? !topic.getTopicName().equals(that.topic.getTopicName()) : that.topic != null) return false;
+        return interestedFrom != null ? interestedFrom.equals(that.interestedFrom) : that.interestedFrom == null;
     }
 
     @Override
     public int hashCode() {
-        int result = user.getUsername().hashCode();
-        result = 31 * result + topic.getTopicName().hashCode();
+        int result = user != null ? user.getUsername().hashCode() : 0;
+        result = 31 * result + (topic != null ? topic.getTopicName().hashCode() : 0);
         result = 31 * result + (isEnabled ? 1 : 0);
+        result = 31 * result + (interestedFrom != null ? interestedFrom.hashCode() : 0);
         return result;
     }
 }

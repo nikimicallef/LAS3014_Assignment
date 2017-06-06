@@ -23,11 +23,11 @@ public class GetAndUpdateTopStoriesJob {
 
     @Bean(name = "GetAndUpdateTopStoriesJobBean")
     @Autowired
-    public Job newStoriesJobMethod(final @Qualifier("GetNewStoriesStepBean") Step getAndUpdateTopStoriesStep,
+    public Job newStoriesJobMethod(final @Qualifier("GetNewStoriesStepBean") Step getNewStoriesStep,
                                    final @Qualifier("TopStoryPerTopicStepBean") Step topStoriesPerTopicStep) {
         return jobBuilderFactory.get("GetAndUpdateTopStoriesJobName")
                 .incrementer(new RunIdIncrementer())
-                .flow(getAndUpdateTopStoriesStep)
+                .flow(getNewStoriesStep)
                 .next(topStoriesPerTopicStep)
                 .end()
                 .build();

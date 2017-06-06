@@ -35,7 +35,7 @@ public class WeeklyTopStoriesDigestPerTopicProcessor implements ItemProcessor<To
     @Override
     public List<Digest> process(Topic topic) throws Exception {
         final List<Story> stories = storiesService.getUndeletedStoriesContainingKeywordAndAfterTimestamp(topic.getTopicName(),
-                new Timestamp(dateTimeExecutedMillis - TimeUnit.DAYS.toMillis(7)));
+                                                        new Timestamp(dateTimeExecutedMillis - TimeUnit.DAYS.toMillis(7)));
 
         final List<UserTopicMapping> userTopicMapping = userTopicMappingService.findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfter(topic, new Timestamp(dateTimeExecutedMillis));
 
