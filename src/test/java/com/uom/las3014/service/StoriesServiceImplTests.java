@@ -132,15 +132,14 @@ public class StoriesServiceImplTests {
         final TopStoriesForTopicResponse topic1Response = groupTopStoriesByDateResponse.new TopStoriesForTopicResponse(TOPIC1_NAME);
         final TopStoriesForTopicResponse topic2Response = groupTopStoriesByDateResponse.new TopStoriesForTopicResponse(TOPIC2_NAME);
 
-        groupTopStoriesByDateResponse.getTopics().add(topic2Response);
         groupTopStoriesByDateResponse.getTopics().add(topic1Response);
+        groupTopStoriesByDateResponse.getTopics().add(topic2Response);
 
         final ResponseEntity<GroupTopStoriesByDateResponse> topStoryForTopics = storiesService.getTopStoryForTopics(user);
 
         assertEquals(200, topStoryForTopics.getStatusCodeValue());
         assertNotNull(topStoryForTopics.getBody().getEffectiveDate());
         assertEquals(groupTopStoriesByDateResponse.getTopics(), topStoryForTopics.getBody().getTopics());
-        assertEquals(0, topStoryForTopics.getBody().getTopics().get(1).getTopStories().size());;
     }
 
     @Test
@@ -167,7 +166,37 @@ public class StoriesServiceImplTests {
         final TopStoryResponse topic2StoryResponse = topic2Response.new TopStoryResponse(topic2.getTopStoryId().getTitle(), topic2.getTopStoryId().getUrl(), topic1.getTopStoryId().getScore());
         topic2Response.getTopStories().add(topic2StoryResponse);
 
+        groupTopStoriesByDateResponse.getTopics().add(topic1Response);
         groupTopStoriesByDateResponse.getTopics().add(topic2Response);
+
+        final ResponseEntity<GroupTopStoriesByDateResponse> topStoryForTopics = storiesService.getTopStoryForTopics(user);
+
+        assertEquals(200, topStoryForTopics.getStatusCodeValue());
+        assertNotNull(topStoryForTopics.getBody().getEffectiveDate());
+        assertEquals(groupTopStoriesByDateResponse.getTopics(), topStoryForTopics.getBody().getTopics());
+    }
+
+    @Test
+    public void getTopStoryForTopics_oneInterestedTopicWithTopStoriesAndIneDisabledInterestedTopic_completeResponse(){
+        topic1 = new Topic(TOPIC1_NAME);
+        topic1.setTopStoryId(story1);
+        topic2 = new Topic(TOPIC2_NAME);
+        topic2.setTopStoryId(story2);
+
+        final UserTopicMapping userTopicMapping1 = new UserTopicMapping(user, topic1, new Timestamp(System.currentTimeMillis()));
+        final UserTopicMapping userTopicMapping2 = new UserTopicMapping(user, topic2, new Timestamp(System.currentTimeMillis()));
+        userTopicMapping2.setEnabled(false);
+
+        user.getUserTopics().add(userTopicMapping1);
+        user.getUserTopics().add(userTopicMapping2);
+
+        final GroupTopStoriesByDateResponse groupTopStoriesByDateResponse = new GroupTopStoriesByDateResponse(LocalDate.now());
+
+        final TopStoriesForTopicResponse topic1Response = groupTopStoriesByDateResponse.new TopStoriesForTopicResponse(TOPIC1_NAME);
+
+        final TopStoryResponse topic1StoryResponse = topic1Response.new TopStoryResponse(topic1.getTopStoryId().getTitle(), topic1.getTopStoryId().getUrl(), topic1.getTopStoryId().getScore());
+        topic1Response.getTopStories().add(topic1StoryResponse);
+
         groupTopStoriesByDateResponse.getTopics().add(topic1Response);
 
         final ResponseEntity<GroupTopStoriesByDateResponse> topStoryForTopics = storiesService.getTopStoryForTopics(user);
@@ -175,7 +204,6 @@ public class StoriesServiceImplTests {
         assertEquals(200, topStoryForTopics.getStatusCodeValue());
         assertNotNull(topStoryForTopics.getBody().getEffectiveDate());
         assertEquals(groupTopStoriesByDateResponse.getTopics(), topStoryForTopics.getBody().getTopics());
-        assertEquals(1, topStoryForTopics.getBody().getTopics().get(1).getTopStories().size());;
     }
 
     @Test

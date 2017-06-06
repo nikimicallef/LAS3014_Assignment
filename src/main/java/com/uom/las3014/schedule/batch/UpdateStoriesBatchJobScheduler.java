@@ -23,7 +23,7 @@ public class UpdateStoriesBatchJobScheduler {
 
     //TODO: Set to cron
     @Scheduled(cron = "0 0 2 ? * *")
-    @CacheEvict(value = MyCacheManager.TOPIC_CACHE, allEntries = true)
+    @CacheEvict(value = {MyCacheManager.TOPIC_CACHE, MyCacheManager.TOP_STORY_CACHE}, allEntries = true)
 //    @Scheduled(fixedDelay = 999_000, initialDelay = 300_000)
     public void performUpdateWeeklyStoriesJob() throws Exception {
         final JobParameters param = new JobParametersBuilder()

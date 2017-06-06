@@ -7,9 +7,8 @@ import com.uom.las3014.api.response.GroupTopStoriesByDateResponse.TopStoriesForT
 import com.uom.las3014.cache.MyCacheManager;
 import com.uom.las3014.dao.Story;
 import com.uom.las3014.dao.User;
+import com.uom.las3014.dao.UserTopicMapping;
 import com.uom.las3014.dao.springdata.StoriesDaoRepository;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
@@ -39,25 +38,27 @@ public class StoriesServiceImpl implements StoriesService{
     }
 
     @Override
-    @Cacheable(MyCacheManager.TOPIC_CACHE)
+    @Cacheable(MyCacheManager.TOP_STORY_CACHE)
     public ResponseEntity<GroupTopStoriesByDateResponse> getTopStoryForTopics(final User user){
         final GroupTopStoriesByDateResponse groupTopStoriesByDateResponse = new GroupTopStoriesByDateResponse(LocalDate.now());
 
-        user.getUserTopics().forEach(userTopicMapping -> {
-            final TopStoriesForTopicResponse topStoriesForTopicResponse = groupTopStoriesByDateResponse.new TopStoriesForTopicResponse(userTopicMapping.getTopic().getTopicName());
+        user.getUserTopics().stream()
+                .filter(UserTopicMapping::isEnabled)
+                .forEach(userTopicMapping -> {
+                    final TopStoriesForTopicResponse topStoriesForTopicResponse = groupTopStoriesByDateResponse.new TopStoriesForTopicResponse(userTopicMapping.getTopic().getTopicName());
 
-            if(userTopicMapping.getTopic().getTopStoryId() != null) {
-                final String topStoryTitle = userTopicMapping.getTopic().getTopStoryId().getTitle();
-                final String topStoryUrl = userTopicMapping.getTopic().getTopStoryId().getUrl();
-                final Integer topStoryScore = userTopicMapping.getTopic().getTopStoryId().getScore();
+                    if(userTopicMapping.getTopic().getTopStoryId() != null) {
+                        final String topStoryTitle = userTopicMapping.getTopic().getTopStoryId().getTitle();
+                        final String topStoryUrl = userTopicMapping.getTopic().getTopStoryId().getUrl();
+                        final Integer topStoryScore = userTopicMapping.getTopic().getTopStoryId().getScore();
 
-                final TopStoryResponse topStoryResponse = topStoriesForTopicResponse.new TopStoryResponse(topStoryTitle, topStoryUrl, topStoryScore);
+                        final TopStoryResponse topStoryResponse = topStoriesForTopicResponse.new TopStoryResponse(topStoryTitle, topStoryUrl, topStoryScore);
 
-                topStoriesForTopicResponse.getTopStories().add(topStoryResponse);
-            }
+                        topStoriesForTopicResponse.getTopStories().add(topStoryResponse);
+                    }
 
-            groupTopStoriesByDateResponse.getTopics().add(topStoriesForTopicResponse);
-        });
+                    groupTopStoriesByDateResponse.getTopics().add(topStoriesForTopicResponse);
+                });
 
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)

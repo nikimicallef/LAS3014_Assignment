@@ -13,6 +13,7 @@ import java.util.Arrays;
 public class MyCacheManager {
     public final static String TOPIC_CACHE = "TopicCache";
     public final static String DIGESTS_CACHE = "DigestsCache";
+    public final static String TOP_STORY_CACHE = "TopStoryCache";
 
     @Bean
     public CacheManager cacheManager() {
@@ -21,7 +22,9 @@ public class MyCacheManager {
                 .build());
         final GuavaCache digestsCache = new GuavaCache(DIGESTS_CACHE, CacheBuilder.newBuilder()
                 .build());
-        simpleCacheManager.setCaches(Arrays.asList(topicCache, digestsCache));
+        final GuavaCache topStoryCache = new GuavaCache(TOP_STORY_CACHE, CacheBuilder.newBuilder()
+                .build());
+        simpleCacheManager.setCaches(Arrays.asList(topicCache, digestsCache, topStoryCache));
         return simpleCacheManager;
     }
 }

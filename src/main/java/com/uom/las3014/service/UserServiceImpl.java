@@ -4,6 +4,7 @@ import com.uom.las3014.api.request.UserCreateRequestBody;
 import com.uom.las3014.api.request.UserLoginRequestBody;
 import com.uom.las3014.api.response.GenericMessageResponse;
 import com.uom.las3014.api.response.SessionTokenAndMessageResponse;
+import com.uom.las3014.cache.MyCacheManager;
 import com.uom.las3014.dao.Topic;
 import com.uom.las3014.dao.User;
 import com.uom.las3014.dao.UserTopicMapping;
@@ -13,6 +14,7 @@ import com.uom.las3014.exceptions.UserAlreadyExistsException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -81,6 +83,7 @@ public class UserServiceImpl implements UserService {
                 .body(new GenericMessageResponse("Logged out successfully."));
     }
 
+    @CacheEvict(value = MyCacheManager.TOP_STORY_CACHE, key = "#user")
     public ResponseEntity<GenericMessageResponse> changeInterestedTopics(final User user, final List<String> additions, final List<String> removals){
         if(additions != null){
             additions.stream()

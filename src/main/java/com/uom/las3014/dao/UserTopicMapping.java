@@ -84,6 +84,7 @@ public class UserTopicMapping implements Serializable{
 
         UserTopicMapping that = (UserTopicMapping) o;
 
+        if (isEnabled != that.isEnabled) return false;
         if (!user.getUsername().equals(that.user.getUsername())) return false;
         return topic.getTopicName().equals(that.topic.getTopicName());
     }
@@ -92,6 +93,7 @@ public class UserTopicMapping implements Serializable{
     public int hashCode() {
         int result = user.getUsername().hashCode();
         result = 31 * result + topic.getTopicName().hashCode();
+        result = 31 * result + (isEnabled ? 1 : 0);
         return result;
     }
 }

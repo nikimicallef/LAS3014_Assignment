@@ -27,7 +27,7 @@ public class GetAndUpdateTopStoriesBatchJobScheduler {
     //TODO: What happens to job if DB goes down or HN goesdown?
 //    @Scheduled(fixedDelay = 999_000, initialDelay = 180_000)
     @Scheduled(cron = "0 0 * * * *")
-    @CacheEvict(value = MyCacheManager.TOPIC_CACHE, allEntries = true)
+    @CacheEvict(value ={MyCacheManager.TOPIC_CACHE, MyCacheManager.TOP_STORY_CACHE}, allEntries = true)
     public void performNewStoriesJob() throws Exception {
         final JobParameters param = new JobParametersBuilder()
                 .addString("JobID", String.valueOf(System.currentTimeMillis()))

@@ -132,31 +132,21 @@ public class DigestsServiceImpl implements DigestsService {
 
             final TopStoriesForTopicResponse topStoriesForTopicResponse = groupTopStoriesByDateResponse.new TopStoriesForTopicResponse(topicName);
 
-            digestsPerTopic.get(topic).forEach(digest -> {
-                final String storyTitle = digest.getStoryId().getTitle();
-                final String storyUrl = digest.getStoryId().getUrl();
-                final Integer storyScore = digest.getStoryId().getScore();
+            digestsPerTopic.get(topic).stream()
+                    .filter(digest -> digest.getStoryId() != null)
+                    .forEach(digest -> {
+                        final String storyTitle = digest.getStoryId().getTitle();
+                        final String storyUrl = digest.getStoryId().getUrl();
+                        final Integer storyScore = digest.getStoryId().getScore();
 
-                final TopStoryResponse topStoryResponse = topStoriesForTopicResponse.new TopStoryResponse(storyTitle, storyUrl, storyScore);
+                        final TopStoryResponse topStoryResponse = topStoriesForTopicResponse.new TopStoryResponse(storyTitle, storyUrl, storyScore);
 
-                topStoriesForTopicResponse.getTopStories().add(topStoryResponse);
-            });
+                        topStoriesForTopicResponse.getTopStories().add(topStoryResponse);
+                    });
 
             groupTopStoriesByDateResponse.getTopics().add(topStoriesForTopicResponse);
         });
 
-        addEntriesForTopicsWithoutDigests(userTopicMappings, digestsPerTopic, groupTopStoriesByDateResponse);
-
         return groupTopStoriesByDateResponse;
-    }
-
-    private void addEntriesForTopicsWithoutDigests(final Set<UserTopicMapping> userTopicMappings,
-                                                   final Map<Topic, Set<Digest>> digestsPerTopic,
-                                                   final GroupTopStoriesByDateResponse groupTopStoriesByDateResponse) {
-        userTopicMappings.stream()
-                .filter(userTopicMapping -> !digestsPerTopic.keySet().contains(userTopicMapping.getTopic()))
-                .forEach(userTopicMapping -> {
-                    groupTopStoriesByDateResponse.getTopics().add(groupTopStoriesByDateResponse.new TopStoriesForTopicResponse(userTopicMapping.getTopic().getTopicName()));
-                });
     }
 }
