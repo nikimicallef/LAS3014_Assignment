@@ -27,7 +27,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
-public class DigestsServiceImplTests {
+public class DigestsServiceImplUnitTests {
     private static final Date DIGEST_DAY_OF_WEEK = new Date(System.currentTimeMillis());
     private static final String TOPIC_NAME = "TestTopic1";
     private static final Long STORY1_ID = 123L;

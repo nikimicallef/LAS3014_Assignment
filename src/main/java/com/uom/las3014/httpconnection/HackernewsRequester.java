@@ -57,7 +57,7 @@ public class HackernewsRequester {
         //Required since sometimes the GET story for a specific valid ID will still get a connect exception.
         //In that case just return null
         try {
-            final BufferedReader br = new BufferedReader(new InputStreamReader((httpUrlConnection.getInputStream())));
+            final BufferedReader br = new BufferedReader(new InputStreamReader(httpUrlConnection.getInputStream()));
             return br.lines().collect(Collectors.joining());
         } catch (IOException e) {
             return null;

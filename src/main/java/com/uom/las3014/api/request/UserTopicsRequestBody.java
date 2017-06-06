@@ -10,11 +10,6 @@ public class UserTopicsRequestBody {
     public UserTopicsRequestBody() {
     }
 
-    public UserTopicsRequestBody(List<String> additions, List<String> removals) {
-        this.additions = additions;
-        this.removals = removals;
-    }
-
     public List<String> getAdditions() {
         return additions;
     }

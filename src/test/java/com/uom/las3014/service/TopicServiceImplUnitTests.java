@@ -18,7 +18,7 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
-public class TopicServiceImplTests {
+public class TopicServiceImplUnitTests {
     private static final String TOPIC1 = "TestTopic1";
     private static final Long STORY_ID = 123L;
     private static final Integer STORY_SCORE = 10;

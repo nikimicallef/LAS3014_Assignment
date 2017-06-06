@@ -20,7 +20,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
-public class UserTopicMappingServiceImplTests {
+public class UserTopicMappingServiceImplUnitTests {
     private static final String USERNAME = "TestUser";
     private static final String PASSWORD = "TestPassword";
     private final static String TOPIC1_NAME = "TestTopic1";
