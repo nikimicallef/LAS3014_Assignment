@@ -15,7 +15,6 @@ import java.sql.Timestamp;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 public class AuthSessionTokenAopUnitTests {

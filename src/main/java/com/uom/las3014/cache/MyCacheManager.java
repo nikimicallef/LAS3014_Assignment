@@ -9,6 +9,9 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.Arrays;
 
+/**
+ * Defines a number oc caches for different purposes
+ */
 @Configuration
 public class MyCacheManager {
     public final static String TOPIC_CACHE = "TopicCache";
@@ -18,12 +21,9 @@ public class MyCacheManager {
     @Bean
     public CacheManager cacheManager() {
         final SimpleCacheManager simpleCacheManager = new SimpleCacheManager();
-        final GuavaCache topicCache = new GuavaCache(TOPIC_CACHE, CacheBuilder.newBuilder()
-                .build());
-        final GuavaCache digestsCache = new GuavaCache(DIGESTS_CACHE, CacheBuilder.newBuilder()
-                .build());
-        final GuavaCache topStoryCache = new GuavaCache(TOP_STORY_CACHE, CacheBuilder.newBuilder()
-                .build());
+        final GuavaCache topicCache = new GuavaCache(TOPIC_CACHE, CacheBuilder.newBuilder().build());
+        final GuavaCache digestsCache = new GuavaCache(DIGESTS_CACHE, CacheBuilder.newBuilder().build());
+        final GuavaCache topStoryCache = new GuavaCache(TOP_STORY_CACHE, CacheBuilder.newBuilder().build());
         simpleCacheManager.setCaches(Arrays.asList(topicCache, digestsCache, topStoryCache));
         return simpleCacheManager;
     }

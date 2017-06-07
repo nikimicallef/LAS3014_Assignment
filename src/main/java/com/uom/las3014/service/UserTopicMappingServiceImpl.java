@@ -17,8 +17,18 @@ public class UserTopicMappingServiceImpl implements UserTopicMappingService {
     @Autowired
     private UserTopicMappingDaoRepository userTopicMappingDaoRepository;
 
+    /**
+     * @param topic {@link Topic} to retrieved
+     * @param interestedToIsAfter {@link UserTopicMapping#getInterestedTo()} is after this timestamp
+     * @param interestedFromBefore {@link UserTopicMapping#getInterestedTo()} is before this timestamp
+     * @return {@link UserTopicMapping} which satisfy this criteria
+     */
     @Override
-    public List<UserTopicMapping> findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfterAndInterestedFromBefore(final Topic topic, final Timestamp interestedToIsAfter, final Timestamp interestedFromBefore) {
-        return userTopicMappingDaoRepository.findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfterAndInterestedFromBefore(topic, interestedToIsAfter, interestedFromBefore);
+    public List<UserTopicMapping> findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfterAndInterestedFromBefore(final Topic topic,
+                                                                                                                    final Timestamp interestedToIsAfter,
+                                                                                                                    final Timestamp interestedFromBefore) {
+        return userTopicMappingDaoRepository.findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfterAndInterestedFromBefore(topic,
+                                                                                                                               interestedToIsAfter,
+                                                                                                                               interestedFromBefore);
     }
 }

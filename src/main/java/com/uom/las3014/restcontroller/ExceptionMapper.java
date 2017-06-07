@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+/**
+ * Gracefully returns the user an error if an error occurs whilst processing
+ */
 @ControllerAdvice
 public class ExceptionMapper extends ResponseEntityExceptionHandler {
 

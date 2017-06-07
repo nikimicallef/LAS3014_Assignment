@@ -6,6 +6,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * {@link Entity} for the users table
+ */
 @Entity
 @Table(name = "users")
 public class User {
@@ -32,7 +35,7 @@ public class User {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(final Long userId) {
         this.userId = userId;
     }
 
@@ -40,7 +43,7 @@ public class User {
         return username;
     }
 
-    public void setUsername(String username) {
+    public void setUsername(final String username) {
         this.username = username;
     }
 
@@ -48,7 +51,7 @@ public class User {
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(final String password) {
         this.password = password;
     }
 
@@ -56,7 +59,7 @@ public class User {
         return sessionToken;
     }
 
-    public void setSessionToken(String sessionToken) {
+    public void setSessionToken(final String sessionToken) {
         this.sessionToken = sessionToken;
     }
 
@@ -72,7 +75,7 @@ public class User {
         return sessionTokenLastUsed;
     }
 
-    public void setSessionTokenLastUsed(Timestamp sessionTokenLastUsed) {
+    public void setSessionTokenLastUsed(final Timestamp sessionTokenLastUsed) {
         this.sessionTokenLastUsed = sessionTokenLastUsed;
     }
 
@@ -88,8 +91,6 @@ public class User {
     public boolean hasActiveSessionToken(){
         final Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
-        //TODO: 30 minutes not 30 seconds
-
         return sessionToken != null
                 && ((sessionTokenCreated != null
                         && ChronoUnit.MINUTES.between(sessionTokenCreated.toLocalDateTime(), timestamp.toLocalDateTime()) <= 30)
@@ -98,7 +99,7 @@ public class User {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 

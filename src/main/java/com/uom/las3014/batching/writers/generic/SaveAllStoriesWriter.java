@@ -8,13 +8,16 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * Generic {@link ItemWriter} which saves {@link Story}
+ */
 @Component
 public class SaveAllStoriesWriter implements ItemWriter<Story> {
     @Autowired
     private StoriesService storiesService;
 
     @Override
-    public void write(List<? extends Story> list) throws Exception {
+    public void write(final List<? extends Story> list) throws Exception {
         storiesService.saveAllStories(list);
     }
 }

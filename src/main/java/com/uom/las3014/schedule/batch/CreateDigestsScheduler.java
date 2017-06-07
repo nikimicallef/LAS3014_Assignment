@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 /**
- * A scheduled task which does the below
+ * A {@link Scheduled} task which does the below
  * a) Runs the {@link CreateDigestsJob}
  * b) Deletes all {@link Digest} which are older that one year. This will also cascade rows in the UserDigestMapping table.
  * c) Deletes all {@link Story} which are older than a week and have no associated digests.
@@ -48,26 +48,39 @@ public class CreateDigestsScheduler {
     @Scheduled(cron = "0 0 9 * * *")
     public void performDigestsJob() throws Exception {
         final LocalDateTime dateTimeExecuted = LocalDateTime.of(LocalDate.now().getYear(),
-                LocalDate.now().getMonth(),
-                LocalDate.now().getDayOfMonth(),
-                9,
-                0,
-                0,
-                0);
+                                                                LocalDate.now().getMonth(),
+                                                                LocalDate.now().getDayOfMonth(),
+                                                                9,
+                                                                0,
+                                                                0,
+                                                                0);
+
+        final long dateTimeExecutedMillis = dateTimeExecuted.atZone(ZoneId.systemDefault())
+                                                            .toInstant()
+                                                            .toEpochMilli();
+        final String currentTime = String.valueOf(System.currentTimeMillis());
 
         final JobParameters param = new JobParametersBuilder()
-                .addString("JobID", String.valueOf(System.currentTimeMillis()))
-                .addLong("dateTimeExecutedMillis", dateTimeExecuted.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli())
-                .toJobParameters();
+                                        .addString("JobID", currentTime)
+                                        .addLong("dateTimeExecutedMillis", dateTimeExecutedMillis)
+                                        .toJobParameters();
 
         jobLauncher.run(createDigestsJob, param);
 
         //TODO: Delete digests older than a YEAR not a week
 //        digestsService.deleteDigestByDayOfWeekBefore(new Timestamp(dateTimeExecuted.minusWeeks(1).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()));
-        digestsService.deleteDigestByDayOfWeekBefore(new Timestamp(dateTimeExecuted.minusYears(1).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()));
+        final Timestamp yearBeforeDateTimeExecuted = new Timestamp(dateTimeExecuted.minusYears(1)
+                                                                                   .atZone(ZoneId.systemDefault())
+                                                                                   .toInstant()
+                                                                                   .toEpochMilli());
+        digestsService.deleteDigestByDayOfWeekBefore(yearBeforeDateTimeExecuted);
 
         //TODO: Delete stories older than a WEEK not a day
 //        storiesService.deleteByDateCreatedBeforeAndDigestsEmpty(new Timestamp(dateTimeExecuted.minusDays(1).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()));
-        storiesService.deleteByDateCreatedBeforeAndDigestsEmpty(new Timestamp(dateTimeExecuted.minusWeeks(1).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()));
+        final Timestamp weekBeforeDateTimeExecuted = new Timestamp(dateTimeExecuted.minusWeeks(1)
+                                                                                   .atZone(ZoneId.systemDefault())
+                                                                                   .toInstant()
+                                                                                   .toEpochMilli());
+        storiesService.deleteByDateCreatedBeforeAndDigestsEmpty(weekBeforeDateTimeExecuted);
     }
 }

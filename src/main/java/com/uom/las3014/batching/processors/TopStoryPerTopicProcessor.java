@@ -10,14 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Specific {@link ItemProcessor} which given a {@link Topic} finds the top {@link Story} from the last 24 hours and sets
+ *     {@link Topic#topStoryId} to the identified {@link Story}
+ */
 @Component
 public class TopStoryPerTopicProcessor implements ItemProcessor<Topic, Topic> {
     @Autowired
@@ -26,10 +27,10 @@ public class TopStoryPerTopicProcessor implements ItemProcessor<Topic, Topic> {
     private final Log logger = LogFactory.getLog(this.getClass());
 
     @Override
-    public Topic process(Topic topic) throws Exception {
+    public Topic process(final Topic topic) throws Exception {
+        final Timestamp createdAfter = new Timestamp(System.currentTimeMillis() - TimeUnit.HOURS.toMillis(24));
         final List<Story> topStoryContainingKeyword = storiesService
-                .getUndeletedStoriesContainingKeywordAndAfterTimestamp(topic.getTopicName(),
-                                                                        new Timestamp(System.currentTimeMillis() - TimeUnit.HOURS.toMillis(24)));
+                .getUndeletedStoriesContainingKeywordAndAfterTimestamp(topic.getTopicName(), createdAfter);
 
         final Optional<Story> topStoryOpt = topStoryContainingKeyword.stream().max(Comparator.comparing(Story::getScore));
 

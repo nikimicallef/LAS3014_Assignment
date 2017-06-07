@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+/**
+ * Services the /user endpoint. Deals with {@link User}
+ */
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -40,7 +43,8 @@ public class UserController {
 
     @AuthBySessionToken
     @RequestMapping(value = "/topics", method = RequestMethod.PUT)
-    public ResponseEntity<GenericMessageResponse> changeInterestedTopics(final @RequestHeader(name = "X-SessionToken") String sessionToken, final @RequestBody @Valid UserTopicsRequestBody userTopicsRequestBody) {
+    public ResponseEntity<GenericMessageResponse> changeInterestedTopics(final @RequestHeader(name = "X-SessionToken") String sessionToken,
+                                                                         final @RequestBody @Valid UserTopicsRequestBody userTopicsRequestBody) {
         final User user = userService.getUserFromDbUsingSessionToken(sessionToken);
         //TODO: Get user from pointcut
         return userService.changeInterestedTopics(user, userTopicsRequestBody.getAdditions(), userTopicsRequestBody.getRemovals());

@@ -9,6 +9,10 @@ import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Specific {@link ItemProcessor} which queries the {@link HackernewsRequester} for a specific {@link Story} and the
+ *     {@link Story#deleted} and/or {@link Story#score} is updated
+ */
 @Component
 public class UpdateStoriesProcessor implements ItemProcessor<Story, Story>{
     private final Log logger = LogFactory.getLog(this.getClass());
@@ -18,7 +22,7 @@ public class UpdateStoriesProcessor implements ItemProcessor<Story, Story>{
 
     //TODO: Error handling. What if url or title is too long? What if we get no response from HN etc.
     @Override
-    public Story process(Story story) throws Exception {
+    public Story process(final Story story) throws Exception {
         final JsonObject updatedStory = hackernewsRequester.getItem(story.getStoryId()).orElse(null);
 
         logger.debug(story.getStoryId() + " <-- ID of story attemping to be updated");

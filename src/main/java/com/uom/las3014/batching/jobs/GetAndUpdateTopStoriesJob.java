@@ -2,6 +2,7 @@ package com.uom.las3014.batching.jobs;
 
 import com.uom.las3014.dao.Story;
 import com.uom.las3014.dao.Topic;
+import com.uom.las3014.httpconnection.HackernewsRequester;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -12,8 +13,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Batch job which does the following processes
- * a) Calls the HackerNews API to get the IDs of the latest 500 {@link Story} and they are persisted.
+ * {@link Job} which does the following processes
+ * a) Calls the {@link HackernewsRequester} to get the IDs of the latest 500 {@link Story} and they are persisted.
  * b) Find the top {@link Story} per {@link Topic} posted within the last 24 hours.
  */
 @Configuration
@@ -26,10 +27,10 @@ public class GetAndUpdateTopStoriesJob {
     public Job newStoriesJobMethod(final @Qualifier("GetNewStoriesStepBean") Step getNewStoriesStep,
                                    final @Qualifier("TopStoryPerTopicStepBean") Step topStoriesPerTopicStep) {
         return jobBuilderFactory.get("GetAndUpdateTopStoriesJobName")
-                .incrementer(new RunIdIncrementer())
-                .flow(getNewStoriesStep)
-                .next(topStoriesPerTopicStep)
-                .end()
-                .build();
+                                .incrementer(new RunIdIncrementer())
+                                .flow(getNewStoriesStep)
+                                .next(topStoriesPerTopicStep)
+                                .end()
+                                .build();
     }
 }

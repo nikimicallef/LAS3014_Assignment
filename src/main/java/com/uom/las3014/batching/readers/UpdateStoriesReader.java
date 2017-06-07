@@ -11,14 +11,19 @@ import java.sql.Timestamp;
 import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Specific {@link ItemReader} which gets aòò {@link Story} where {@link Story#deleted} is false and {@link Story#dateCreated}
+ *     is 7 days behind. Defined as {@link StepScope} so it is created at each step execution
+ */
 @Component
 @StepScope
 public class UpdateStoriesReader implements ItemReader<Story> {
     private Iterator<Story> storiesToUpdate;
 
     @Autowired
-    public UpdateStoriesReader(StoriesService storiesService) {
-        this.storiesToUpdate = storiesService.getUndeletedTopicsAfterTimestamp(new Timestamp(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(7))).iterator();
+    public UpdateStoriesReader(final StoriesService storiesService) {
+        final Timestamp createdAfter = new Timestamp(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(7));
+        this.storiesToUpdate = storiesService.getUndeletedTopicsAfterTimestamp(createdAfter).iterator();
     }
 
     @Override

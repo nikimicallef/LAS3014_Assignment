@@ -8,13 +8,16 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * Specific {@link ItemWriter} which saves all {@link Digest}
+ */
 @Component
 public class WeeklyTopStoriesDigestWriter implements ItemWriter<Digest> {
     @Autowired
     private DigestsService digestsService;
 
     @Override
-    public void write(List<? extends Digest> list) throws Exception {
+    public void write(final List<? extends Digest> list) throws Exception {
         digestsService.saveAll(list);
     }
 }

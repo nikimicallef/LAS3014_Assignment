@@ -4,6 +4,9 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+/**
+ * {@link Entity} for the user_topic_mapping table
+ */
 @Entity
 @Table(name = "user_topic_mapping")
 public class UserTopicMapping implements Serializable{
@@ -22,7 +25,7 @@ public class UserTopicMapping implements Serializable{
 
     public UserTopicMapping() {}
 
-    public UserTopicMapping(User user, Topic topic, Timestamp interestedFrom) {
+    public UserTopicMapping(final User user, final Topic topic, final Timestamp interestedFrom) {
         this.user = user;
         this.topic = topic;
         this.interestedFrom = interestedFrom;
@@ -33,7 +36,7 @@ public class UserTopicMapping implements Serializable{
         return mappingId;
     }
 
-    public void setMappingId(Long mappingId) {
+    public void setMappingId(final Long mappingId) {
         this.mappingId = mappingId;
     }
 
@@ -41,7 +44,7 @@ public class UserTopicMapping implements Serializable{
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(final User user) {
         this.user = user;
     }
 
@@ -49,7 +52,7 @@ public class UserTopicMapping implements Serializable{
         return topic;
     }
 
-    public void setTopic(Topic topic) {
+    public void setTopic(final Topic topic) {
         this.topic = topic;
     }
 
@@ -57,7 +60,7 @@ public class UserTopicMapping implements Serializable{
         return isEnabled;
     }
 
-    public void setEnabled(boolean enabled) {
+    public void setEnabled(final boolean enabled) {
         isEnabled = enabled;
     }
 
@@ -65,7 +68,7 @@ public class UserTopicMapping implements Serializable{
         return interestedFrom;
     }
 
-    public void setInterestedFrom(Timestamp interestedFrom) {
+    public void setInterestedFrom(final Timestamp interestedFrom) {
         this.interestedFrom = interestedFrom;
     }
 
@@ -73,12 +76,12 @@ public class UserTopicMapping implements Serializable{
         return interestedTo;
     }
 
-    public void setInterestedTo(Timestamp interestedTo) {
+    public void setInterestedTo(final Timestamp interestedTo) {
         this.interestedTo = interestedTo;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 

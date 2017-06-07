@@ -4,6 +4,9 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * {@link Entity} for the topic table
+ */
 @Entity
 @Table(name = "Topics")
 public class Topic {
@@ -27,7 +30,7 @@ public class Topic {
         return topicId;
     }
 
-    public void setTopicId(Long topicId) {
+    public void setTopicId(final Long topicId) {
         this.topicId = topicId;
     }
 
@@ -35,7 +38,7 @@ public class Topic {
         return topicName;
     }
 
-    public void setTopicName(String topicName) {
+    public void setTopicName(final String topicName) {
         this.topicName = topicName;
     }
 
@@ -43,7 +46,7 @@ public class Topic {
         return topStoryId;
     }
 
-    public void setTopStoryId(Story topStoryId) {
+    public void setTopStoryId(final Story topStoryId) {
         this.topStoryId = topStoryId;
     }
 
@@ -57,7 +60,7 @@ public class Topic {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 

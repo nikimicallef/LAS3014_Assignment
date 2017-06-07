@@ -10,7 +10,9 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.batch.core.*;
+import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
@@ -57,7 +59,7 @@ public class CreateDigestsSchedulerUnitTests {
 
     @Test
     public void performWeeklyTopStoriesPerTopicJob_jobRunsOk() throws Exception {
-        createDigestsScheduler.performWeeklyTopStoriesPerTopicJob();
+        createDigestsScheduler.performDigestsJob();
 
         verify(jobLauncher)
                 .run(eq(createDigestsJob.newStoriesJobMethod(weeklyTopStoriesDigestPerTopicStep.weeklyTopStoriesPerTopicStepMethod(),

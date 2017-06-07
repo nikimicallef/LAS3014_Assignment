@@ -26,6 +26,11 @@ public class TopicServiceImpl implements TopicService{
     @Autowired
     private StoriesService storiesService;
 
+    /**
+     * {@inheritDoc}
+     * @param topicName Topic name
+     * @return New or existing {@link Topic}
+     */
     @Cacheable(MyCacheManager.TOPIC_CACHE)
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
@@ -44,16 +49,26 @@ public class TopicServiceImpl implements TopicService{
         }
     }
 
+    /**
+     * @return All {@link Topic} in database
+     */
     @Override
     public List<Topic> getAllTopics() {
         return topicsDaoRepository.findAll();
     }
 
+    /**
+     * @param topics All {@link Topic} to be saved
+     */
     @Override
     public void saveAllTopics(Iterable<? extends Topic> topics){
         topicsDaoRepository.save(topics);
     }
 
+    /**
+     * Sets the top {@link Story} for a {@link Topic}
+     * @param topic To be updated
+     */
     @Async
     private void setTopStoryForTopic(final Topic topic){
         final List<Story> topStoryContainingKeyword = storiesService.getUndeletedStoriesContainingKeywordAndAfterTimestamp(topic.getTopicName(), new Timestamp(System.currentTimeMillis() - TimeUnit.HOURS.toMillis(24)));

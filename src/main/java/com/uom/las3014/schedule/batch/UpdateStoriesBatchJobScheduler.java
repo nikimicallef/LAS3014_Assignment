@@ -1,5 +1,6 @@
 package com.uom.las3014.schedule.batch;
 
+import com.uom.las3014.batching.jobs.UpdateStoriesJob;
 import com.uom.las3014.cache.MyCacheManager;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
@@ -11,7 +12,9 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Scheduled;
 
-//TODO: Configure error handling and multi threaded
+/**
+ * A {@link Scheduled} task which runs the {@link UpdateStoriesJob}
+ */
 @Configuration
 public class UpdateStoriesBatchJobScheduler {
     @Autowired
@@ -28,8 +31,8 @@ public class UpdateStoriesBatchJobScheduler {
 //    @Scheduled(fixedDelay = 30_000, initialDelay = 120_000)
     public void performUpdateWeeklyStoriesJob() throws Exception {
         final JobParameters param = new JobParametersBuilder()
-                .addString("JobID", String.valueOf(System.currentTimeMillis()))
-                .toJobParameters();
+                                        .addString("JobID", String.valueOf(System.currentTimeMillis()))
+                                        .toJobParameters();
 
         jobLauncher.run(updateStoriesJob, param);
     }

@@ -5,6 +5,9 @@ import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * {@link Entity} for the digests table
+ */
 @Entity
 @Table(name = "digests")
 public class Digest {
@@ -24,7 +27,7 @@ public class Digest {
 
     public Digest() {}
 
-    public Digest(Date dayOfWeek, Topic topicId, Story storyId, Set<User> usersAssignedToDigest) {
+    public Digest(final Date dayOfWeek, final Topic topicId, final Story storyId, final Set<User> usersAssignedToDigest) {
         this.dayOfWeek = dayOfWeek;
         this.topicId = topicId;
         this.storyId = storyId;
@@ -35,7 +38,7 @@ public class Digest {
         return digestId;
     }
 
-    public void setDigestId(Long digestId) {
+    public void setDigestId(final Long digestId) {
         this.digestId = digestId;
     }
 
@@ -43,7 +46,7 @@ public class Digest {
         return dayOfWeek;
     }
 
-    public void setDayOfWeek(Date dayOfWeek) {
+    public void setDayOfWeek(final Date dayOfWeek) {
         this.dayOfWeek = dayOfWeek;
     }
 
@@ -51,7 +54,7 @@ public class Digest {
         return topicId;
     }
 
-    public void setTopicId(Topic topicId) {
+    public void setTopicId(final Topic topicId) {
         this.topicId = topicId;
     }
 
@@ -59,7 +62,7 @@ public class Digest {
         return storyId;
     }
 
-    public void setStoryId(Story storyId) {
+    public void setStoryId(final Story storyId) {
         this.storyId = storyId;
     }
 
@@ -72,7 +75,7 @@ public class Digest {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 

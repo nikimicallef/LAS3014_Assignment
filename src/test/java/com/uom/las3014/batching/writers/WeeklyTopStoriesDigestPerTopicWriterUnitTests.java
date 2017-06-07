@@ -1,10 +1,7 @@
 package com.uom.las3014.batching.writers;
 
-import com.uom.las3014.batching.writers.generic.SaveAllStoriesWriter;
 import com.uom.las3014.dao.Digest;
-import com.uom.las3014.dao.Story;
 import com.uom.las3014.service.DigestsService;
-import com.uom.las3014.service.StoriesService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -16,9 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 public class WeeklyTopStoriesDigestPerTopicWriterUnitTests {
     @Mock

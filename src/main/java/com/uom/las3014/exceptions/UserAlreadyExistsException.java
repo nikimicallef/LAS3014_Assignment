@@ -1,5 +1,10 @@
 package com.uom.las3014.exceptions;
 
+import com.uom.las3014.dao.User;
+
+/**
+ * Used when the provided {@link User#username} already exists when creating a new {@link User}
+ */
 public class UserAlreadyExistsException extends RuntimeException {
     public UserAlreadyExistsException() {}
 
@@ -11,7 +16,7 @@ public class UserAlreadyExistsException extends RuntimeException {
         super(cause);
     }
 
-    public UserAlreadyExistsException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public UserAlreadyExistsException(final String message, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 

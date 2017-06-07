@@ -11,6 +11,10 @@ import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
 
+/**
+ * Specific {@link ItemProcessor} which queries the {@link HackernewsRequester} with a {@link Story#storyId} and
+ *     creates a new {@link Story}
+ */
 @Component
 public class GetNewStoriesProcessor implements ItemProcessor<String, Story> {
     private final Log logger = LogFactory.getLog(this.getClass());
@@ -18,9 +22,8 @@ public class GetNewStoriesProcessor implements ItemProcessor<String, Story> {
     @Autowired
     private HackernewsRequester hackernewsRequester;
 
-    //TODO: Error handling. What if url or title is too long? What if we get no response from HN etc.
     @Override
-    public Story process(String storyId) throws Exception {
+    public Story process(final String storyId) throws Exception {
         final JsonObject responseJson = hackernewsRequester.getItem(Long.parseLong(storyId)).orElse(null);
 
         Story story = null;

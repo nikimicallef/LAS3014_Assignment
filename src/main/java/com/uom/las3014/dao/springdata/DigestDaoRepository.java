@@ -6,9 +6,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.Entity;
 import java.sql.Date;
 import java.util.Set;
 
+/**
+ * {@link JpaRepository} for the {@link Digest} {@link Entity}
+ */
 @Repository
 public interface DigestDaoRepository extends JpaRepository<Digest, Long> {
     void deleteDigestByDayOfWeekBefore(final Date timestamp);

@@ -9,6 +9,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.Iterator;
 
+/**
+ * Generic {@link ItemReader} which gets all {@link Topic}. Defined as {@link StepScope} so it is created for each step execution
+ */
 @Component
 @StepScope
 public class GetAllTopicsReader implements ItemReader<Topic>{

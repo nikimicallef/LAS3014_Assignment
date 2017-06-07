@@ -20,7 +20,8 @@ import java.util.Optional;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class HackernewsRequesterUnitTests {
     private static final String HACKERNEWS_BASE_URL = "https://localhost/";

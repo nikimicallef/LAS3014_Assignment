@@ -1,7 +1,6 @@
 package com.uom.las3014.batching.readers;
 
 import com.uom.las3014.dao.Story;
-import com.uom.las3014.httpconnection.HackernewsRequester;
 import com.uom.las3014.service.StoriesService;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,12 +11,10 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 

@@ -14,7 +14,8 @@ import java.util.Optional;
 
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class GetNewStoriesProcessorUnitTests {
     private static final String STORY_ID = "123";

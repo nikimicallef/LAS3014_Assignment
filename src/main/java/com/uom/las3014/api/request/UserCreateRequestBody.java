@@ -1,7 +1,5 @@
 package com.uom.las3014.api.request;
 
-import com.uom.las3014.restcontroller.UserController;
-
 import javax.validation.constraints.NotNull;
 import java.util.List;
 

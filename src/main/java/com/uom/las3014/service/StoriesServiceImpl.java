@@ -6,6 +6,7 @@ import com.uom.las3014.api.response.GroupTopStoriesByDateResponse.TopStoriesForT
 import com.uom.las3014.api.response.GroupTopStoriesByDateResponse.TopStoriesForTopicResponse.TopStoryResponse;
 import com.uom.las3014.cache.MyCacheManager;
 import com.uom.las3014.dao.Story;
+import com.uom.las3014.dao.Topic;
 import com.uom.las3014.dao.User;
 import com.uom.las3014.dao.UserTopicMapping;
 import com.uom.las3014.dao.springdata.StoriesDaoRepository;
@@ -27,16 +28,29 @@ public class StoriesServiceImpl implements StoriesService{
     @Autowired
     private StoriesDaoRepository storiesDaoRepository;
 
+    /**
+     * @param createdAfter Only {@link Story} with {@link Story#deleted} false and {@link Story#dateCreated} after are retrieved
+     * @return {@link Story} which satisfy the condition
+     */
     @Override
     public List<Story> getUndeletedTopicsAfterTimestamp(final Timestamp createdAfter) {
         return storiesDaoRepository.findAllByDateCreatedIsAfterAndDeletedIsFalse(createdAfter);
     }
 
+    /**
+     * @param keyword {@link Story#title} must contain keyword
+     * @param createdAfter Only {@link Story} with {@link Story#deleted} false and {@link Story#dateCreated} after are retrieved
+     * @return {@link Story} which satisfy the condition
+     */
     @Override
-    public List<Story> getUndeletedStoriesContainingKeywordAndAfterTimestamp(String keyword, Timestamp createdAfter) {
+    public List<Story> getUndeletedStoriesContainingKeywordAndAfterTimestamp(final String keyword, final Timestamp createdAfter) {
         return storiesDaoRepository.findAllByTitleContainingAndDateCreatedIsAfterAndDeletedIsFalse(keyword, createdAfter);
     }
 
+    /**
+     * @param user Consider only {@link Story} where the {@link User} is interested in a {@link Topic} which is in the {@link Story#title}
+     * @return {@link Story} which satisfy the condition
+     */
     @Override
     @Cacheable(MyCacheManager.TOP_STORY_CACHE)
     public ResponseEntity<GroupTopStoriesByDateResponse> getTopStoryForTopics(final User user){
@@ -65,11 +79,19 @@ public class StoriesServiceImpl implements StoriesService{
                 .body(groupTopStoriesByDateResponse);
     }
 
+    /**
+     * @param stories {@link Story} to save
+     */
     @Override
     public void saveAllStories(final Iterable<? extends Story> stories) {
         storiesDaoRepository.save(stories);
     }
 
+    /**
+     * @param dateAfter Top 3 {@link Story} with the highest {@link Story#score}, {@link Story#deleted} is false and
+     *                  {@link Story#dateCreated} is after dateAfter
+     * @return {@link Story} which satisfy the condition
+     */
     @Override
     public List<Story> getTop3UndeletedStoriesAfterTimestamp(final Timestamp dateAfter) {
         final List<Story> stories = storiesDaoRepository.findAllByDateCreatedIsAfterAndDeletedIsFalseAndScoreGreaterThan(dateAfter, 5);
@@ -77,8 +99,11 @@ public class StoriesServiceImpl implements StoriesService{
         return Ordering.from(Story::compareTo).greatestOf(stories, 3);
     }
 
+    /**
+     * @param createdBefore Delete all {@link Story} where the {@link Story#dateCreated} is after
+     */
     @Override
-    public void deleteByDateCreatedBeforeAndDigestsEmpty(Timestamp timestamp) {
-        storiesDaoRepository.deleteByDateCreatedBeforeAndDigestsEmpty(timestamp);
+    public void deleteByDateCreatedBeforeAndDigestsEmpty(final Timestamp createdBefore) {
+        storiesDaoRepository.deleteByDateCreatedBeforeAndDigestsEmpty(createdBefore);
     }
 }

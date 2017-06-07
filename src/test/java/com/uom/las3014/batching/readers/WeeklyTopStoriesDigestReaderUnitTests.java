@@ -1,8 +1,6 @@
 package com.uom.las3014.batching.readers;
 
-import com.uom.las3014.batching.readers.generic.GetAllTopicsReader;
 import com.uom.las3014.dao.Story;
-import com.uom.las3014.dao.Topic;
 import com.uom.las3014.service.StoriesService;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +15,6 @@ import java.util.Collections;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 

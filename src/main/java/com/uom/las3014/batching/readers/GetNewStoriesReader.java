@@ -1,5 +1,6 @@
 package com.uom.las3014.batching.readers;
 
+import com.uom.las3014.dao.Story;
 import com.uom.las3014.httpconnection.HackernewsRequester;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemReader;
@@ -11,6 +12,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Specific {@link ItemReader} which gets new {@link Story} from the {@link HackernewsRequester}. Defined as {@link StepScope} so it
+ *     is created for each step execution
+ */
 @Component
 @StepScope
 public class GetNewStoriesReader implements ItemReader<String> {

@@ -5,6 +5,9 @@ import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * {@link Entity} for the stories table
+ */
 @Entity
 @Table(name = "Stories")
 public class Story {
@@ -20,7 +23,7 @@ public class Story {
 
     public Story(){}
 
-    public Story(Long storyId, Integer score, String title, String url, Timestamp dateCreated) {
+    public Story(final Long storyId, final Integer score, final String title, final String url, final Timestamp dateCreated) {
         this.storyId = storyId;
         this.score = score;
         this.title = title;
@@ -34,7 +37,7 @@ public class Story {
         return storyId;
     }
 
-    public void setStoryId(Long storyId) {
+    public void setStoryId(final Long storyId) {
         this.storyId = storyId;
     }
 
@@ -42,7 +45,7 @@ public class Story {
         return score;
     }
 
-    public void setScore(Integer score) {
+    public void setScore(final Integer score) {
         this.score = score;
     }
 
@@ -50,7 +53,7 @@ public class Story {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(final String title) {
         this.title = title;
     }
 
@@ -58,7 +61,7 @@ public class Story {
         return url;
     }
 
-    public void setUrl(String url) {
+    public void setUrl(final String url) {
         this.url = url;
     }
 
@@ -66,7 +69,7 @@ public class Story {
         return dateCreated;
     }
 
-    public void setDateCreated(Timestamp dateCreated) {
+    public void setDateCreated(final Timestamp dateCreated) {
         this.dateCreated = dateCreated;
     }
 
@@ -74,7 +77,7 @@ public class Story {
         return deleted;
     }
 
-    public void setDeleted(boolean deleted) {
+    public void setDeleted(final boolean deleted) {
         this.deleted = deleted;
     }
 
@@ -103,7 +106,7 @@ public class Story {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
