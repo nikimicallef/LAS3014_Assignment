@@ -64,9 +64,6 @@ public class UserServiceImplUnitTests {
 
         userTopicsRequestBody = new UserTopicsRequestBody();
 
-        when(topicServiceMock.createNewTopicIfNotExists(TOPIC1_NAME.toLowerCase())).thenReturn(new Topic(TOPIC1_NAME));
-        when(topicServiceMock.createNewTopicIfNotExists(TOPIC2_NAME.toLowerCase())).thenReturn(new Topic(TOPIC2_NAME));
-
         user = new User(USERNAME, PASSWORD);
         user.setUserId(1L);
 
@@ -86,6 +83,8 @@ public class UserServiceImplUnitTests {
     public void createNewUser_userDoesntExistNoTopics_createdSuccessfully(){
         userCreateRequestBody.setInterestedTopics(new ArrayList<>());
 
+        when(topicServiceMock.createNewTopicIfNotExists(TOPIC1_NAME.toLowerCase())).thenReturn(new Topic(TOPIC1_NAME));
+        when(topicServiceMock.createNewTopicIfNotExists(TOPIC2_NAME.toLowerCase())).thenReturn(new Topic(TOPIC2_NAME));
         when(usersDaoRepositoryMock.countUsersByUsername(USERNAME)).thenReturn(0);
         when(usersDaoRepositoryMock.save(user)).thenReturn(user);
 
@@ -103,6 +102,8 @@ public class UserServiceImplUnitTests {
     public void createNewUser_userDoesntExist_createdSuccessfully(){
         userCreateRequestBody.setInterestedTopics(Arrays.asList(TOPIC1_NAME, TOPIC2_NAME));
 
+        when(topicServiceMock.createNewTopicIfNotExists(TOPIC1_NAME.toLowerCase())).thenReturn(new Topic(TOPIC1_NAME));
+        when(topicServiceMock.createNewTopicIfNotExists(TOPIC2_NAME.toLowerCase())).thenReturn(new Topic(TOPIC2_NAME));
         when(usersDaoRepositoryMock.countUsersByUsername(USERNAME)).thenReturn(0);
         when(usersDaoRepositoryMock.save(user)).thenReturn(user);
 
@@ -110,6 +111,26 @@ public class UserServiceImplUnitTests {
 
         assertEquals("Created successfully. Login to get your token and use your newly created account.", newUserResponse.getBody().getMessage());
         assertEquals(200, newUserResponse.getStatusCodeValue());
+        verify(usersDaoRepositoryMock).countUsersByUsername(userCreateRequestBody.getUsername());
+        verify(topicServiceMock, times(2)).createNewTopicIfNotExists(anyString());
+        verify(passwordEncoderMock).encode(userCreateRequestBody.getPassword());
+        verify(usersDaoRepositoryMock).save(any(User.class));
+    }
+
+    @Test
+    public void createNewUser_creatingTopicReturnsNull_createdSuccessfullyButWithoutTopics(){
+        userCreateRequestBody.setInterestedTopics(Arrays.asList(TOPIC1_NAME, TOPIC2_NAME));
+
+        when(topicServiceMock.createNewTopicIfNotExists(TOPIC1_NAME.toLowerCase())).thenThrow(new RuntimeException());
+        when(topicServiceMock.createNewTopicIfNotExists(TOPIC2_NAME.toLowerCase())).thenThrow(new RuntimeException());
+        when(usersDaoRepositoryMock.countUsersByUsername(USERNAME)).thenReturn(0);
+        when(usersDaoRepositoryMock.save(user)).thenReturn(user);
+
+        final ResponseEntity<GenericMessageResponse> newUserResponse = userService.createNewUser(userCreateRequestBody);
+
+        assertEquals("Created successfully but one or more topics can not be assigned to the user. Login to get your token and use your newly created account.",
+                     newUserResponse.getBody().getMessage());
+        assertEquals(202, newUserResponse.getStatusCodeValue());
         verify(usersDaoRepositoryMock).countUsersByUsername(userCreateRequestBody.getUsername());
         verify(topicServiceMock, times(2)).createNewTopicIfNotExists(anyString());
         verify(passwordEncoderMock).encode(userCreateRequestBody.getPassword());
@@ -244,9 +265,6 @@ public class UserServiceImplUnitTests {
     
     @Test
     public void changeInterestedTopics_noChanges_noTopicChangesApplied(){
-        userTopicsRequestBody.setAdditions(new ArrayList<>());
-        userTopicsRequestBody.setRemovals(new ArrayList<>());
-
         final ResponseEntity<GenericMessageResponse> response = userService.changeInterestedTopics(user,
                                                                                                    userTopicsRequestBody.getAdditions(),
                                                                                                    userTopicsRequestBody.getRemovals());
@@ -268,7 +286,6 @@ public class UserServiceImplUnitTests {
         user.getUserTopics().addAll(userTopics);
 
         userTopicsRequestBody.setAdditions(Collections.singletonList(testTopic3));
-        userTopicsRequestBody.setRemovals(new ArrayList<>());
 
         when(topicServiceMock.createNewTopicIfNotExists(testTopic3.toLowerCase())).thenReturn(new Topic(testTopic3));
 
@@ -280,13 +297,13 @@ public class UserServiceImplUnitTests {
         assertEquals("Topic changes applied.", response.getBody().getMessage());
         assertEquals(3, user.getUserTopics().size());
 
-        for(final UserTopicMapping userTopicMapping : user.getUserTopics()){
-            if(userTopicMapping.getTopic().getTopicName().equals(testTopic3)){
-                assertTrue(userTopicMapping.isEnabled());
-                assertNotNull(userTopicMapping.getInterestedFrom());
-                assertNull(userTopicMapping.getInterestedTo());
-            }
-        }
+        user.getUserTopics().stream()
+                            .filter(userTopic -> userTopic.getTopic().getTopicName().equals(testTopic3))
+                            .forEach(userTopicMapping -> {
+                                assertTrue(userTopicMapping.isEnabled());
+                                assertNotNull(userTopicMapping.getInterestedFrom());
+                                assertNull(userTopicMapping.getInterestedTo());
+                            });
 
         verify(topicServiceMock).createNewTopicIfNotExists(anyString());
     }
@@ -301,8 +318,6 @@ public class UserServiceImplUnitTests {
 
         user.getUserTopics().addAll(userTopics);
 
-
-        userTopicsRequestBody.setAdditions(new ArrayList<>());
         userTopicsRequestBody.setRemovals(Collections.singletonList(TOPIC2_NAME));
 
         final ResponseEntity<GenericMessageResponse> response = userService.changeInterestedTopics(user,
@@ -313,14 +328,35 @@ public class UserServiceImplUnitTests {
         assertEquals("Topic changes applied.", response.getBody().getMessage());
         assertEquals(2, user.getUserTopics().size());
 
-        for(final UserTopicMapping userTopicMapping : user.getUserTopics()){
-            if(userTopicMapping.getTopic().getTopicName().equals(TOPIC1_NAME)){
-                assertFalse(userTopicMapping.isEnabled());
-                assertNotNull(userTopicMapping.getInterestedTo());
-            }
-        }
+        user.getUserTopics().stream()
+                            .filter(userTopicMapping -> userTopicMapping.getTopic().getTopicName().equals(TOPIC1_NAME))
+                            .forEach(userTopicMapping -> {
+                                assertFalse(userTopicMapping.isEnabled());
+                                assertNotNull(userTopicMapping.getInterestedTo());
+                            });
 
         verify(topicServiceMock, times(0)).createNewTopicIfNotExists(anyString());
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void changeInterestedTopics_topicCreationFails_errorResponse(){
+        final String testTopic3= "TestTopic3";
+
+        final Set<UserTopicMapping> userTopics = new HashSet<>();
+        userTopics.add(new UserTopicMapping(user, new Topic(TOPIC1_NAME), new Timestamp(System.currentTimeMillis())));
+        userTopics.add(new UserTopicMapping(user, new Topic(TOPIC2_NAME), new Timestamp(System.currentTimeMillis())));
+
+        user.getUserTopics().addAll(userTopics);
+
+        userTopicsRequestBody.setAdditions(Collections.singletonList(testTopic3));
+
+        when(topicServiceMock.createNewTopicIfNotExists(testTopic3.toLowerCase())).thenThrow(new RuntimeException());
+
+        final ResponseEntity<GenericMessageResponse> response = userService.changeInterestedTopics(user,
+                                                                                                   userTopicsRequestBody.getAdditions(),
+                                                                                                   userTopicsRequestBody.getRemovals());
+
+        verify(topicServiceMock).createNewTopicIfNotExists(anyString());
     }
 
     @Test

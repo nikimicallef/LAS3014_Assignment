@@ -24,10 +24,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -57,14 +54,18 @@ public class UserServiceImpl implements UserService {
             final Set<Topic> interestedTopics = userCreateRequestBody
                                                     .getInterestedTopics().stream()
                                                     .map(String::toLowerCase)
-                                                    .map(topicService::createNewTopicIfNotExists)
+                                                    .map(topicName -> {
+                                                        try {
+                                                            return topicService.createNewTopicIfNotExists(topicName);
+                                                        } catch (final RuntimeException runtimeException) {
+                                                            return null;
+                                                        }
+                                                    })
                                                     .collect(Collectors.toSet());
 
-            return ResponseEntity.status(HttpStatus.OK)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(createAndSaveNewUser(userCreateRequestBody.getUsername(),
-                                               userCreateRequestBody.getPassword(),
-                                               interestedTopics));
+            return createAndSaveNewUser(userCreateRequestBody.getUsername(),
+                                        userCreateRequestBody.getPassword(),
+                                        interestedTopics);
         }
     }
 
@@ -178,19 +179,33 @@ public class UserServiceImpl implements UserService {
      * @param username {@link User#username}
      * @param password {@link User#password}
      * @param interestedTopics {@link UserTopicMapping}
-     * @return new {@link User}
+     * @return message response
      */
-    private GenericMessageResponse createAndSaveNewUser(final String username, final String password, final Set<Topic> interestedTopics) {
+    private ResponseEntity<GenericMessageResponse> createAndSaveNewUser(final String username, final String password, final Set<Topic> interestedTopics) {
         final User user = new User(username, passwordEncoder.encode(password));
 
-        interestedTopics.forEach(topic -> {
-            final Timestamp interestedFrom = new Timestamp(System.currentTimeMillis());
-            user.getUserTopics().add(new UserTopicMapping(user, topic, interestedFrom));
-        });
+        interestedTopics.stream()
+                        .filter(Objects::nonNull)
+                        .forEach(topic -> {
+                            final Timestamp interestedFrom = new Timestamp(System.currentTimeMillis());
+                            user.getUserTopics().add(new UserTopicMapping(user, topic, interestedFrom));
+                        });
 
         usersDaoRepository.save(user);
 
-        return new GenericMessageResponse("Created successfully. Login to get your token and use your newly created account.");
+        final HttpStatus responseCode;
+        final String responseMessage;
+        if(interestedTopics.contains(null)){
+            responseCode = HttpStatus.ACCEPTED;
+            responseMessage = "Created successfully but one or more topics can not be assigned to the user. Login to get your token and use your newly created account.";
+        } else {
+            responseCode = HttpStatus.OK;
+            responseMessage = "Created successfully. Login to get your token and use your newly created account.";
+        }
+
+        return ResponseEntity.status(responseCode)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new GenericMessageResponse(responseMessage));
     }
 
     /**
