@@ -20,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
@@ -48,6 +49,7 @@ public class UserServiceImpl implements UserService {
      * @param userCreateRequestBody Credentials of a new user
      * @return Response in model format
      */
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public ResponseEntity<GenericMessageResponse> createNewUser(final UserCreateRequestBody userCreateRequestBody){
         if (userExistsInDbByUsername(userCreateRequestBody.getUsername())) {
             throw new UserAlreadyExistsException("User already exists.");

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,7 +33,7 @@ public class TopicServiceImpl implements TopicService{
      * @return New or existing {@link Topic}
      */
     @Cacheable(MyCacheManager.TOPIC_CACHE)
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED, propagation = Propagation.REQUIRES_NEW)
     @Override
     public Topic createNewTopicIfNotExists(final String topicName){
         final Optional<Topic> existingTopic = topicsDaoRepository.findTopicsByTopicName(topicName);
