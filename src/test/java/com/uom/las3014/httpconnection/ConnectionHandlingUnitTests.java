@@ -27,6 +27,6 @@ public class ConnectionHandlingUnitTests {
 
     @Test(expected = IOException.class)
     public void createConnection_invalidUrl_ioException() throws IOException {
-        final HttpURLConnection actualConnection = connectionHandling.createConnection("testAdress");
+        final HttpURLConnection actualConnection = connectionHandling.createConnection("testAddress");
     }
 }

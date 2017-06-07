@@ -32,7 +32,8 @@ public class WeeklyTopStoriesDigestReaderUnitTests {
 
     @Test
     public void read_topicsReturnsEmptylist_returnsNull() throws Exception {
-        when(storiesServiceMock.getTop3UndeletedStoriesAfterTimestamp(any(Timestamp.class))).thenReturn(new ArrayList<>());
+        when(storiesServiceMock.getTop3UndeletedStoriesAfterTimestamp(any(Timestamp.class)))
+                                                                        .thenReturn(new ArrayList<>());
         weeklyTopStoriesDigestReader = new WeeklyTopStoriesDigestReader(storiesServiceMock);
         ReflectionTestUtils.setField(weeklyTopStoriesDigestReader, "dateTimeExecutedMillis", DATE_TIME_EXECUTED_MILLIS);
 
@@ -45,7 +46,8 @@ public class WeeklyTopStoriesDigestReaderUnitTests {
     @Test
     public void read_topicReturned_returnsTopicInList() throws Exception {
         final Story exampleStory = new Story();
-        when(storiesServiceMock.getTop3UndeletedStoriesAfterTimestamp(any(Timestamp.class))).thenReturn(Collections.singletonList(exampleStory));
+        when(storiesServiceMock.getTop3UndeletedStoriesAfterTimestamp(any(Timestamp.class)))
+                                                    .thenReturn(Collections.singletonList(exampleStory));
         weeklyTopStoriesDigestReader = new WeeklyTopStoriesDigestReader(storiesServiceMock);
         ReflectionTestUtils.setField(weeklyTopStoriesDigestReader, "dateTimeExecutedMillis", DATE_TIME_EXECUTED_MILLIS);
 

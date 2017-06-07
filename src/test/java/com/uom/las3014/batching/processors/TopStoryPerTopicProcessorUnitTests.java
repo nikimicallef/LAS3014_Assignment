@@ -39,7 +39,8 @@ public class TopStoryPerTopicProcessorUnitTests {
 
     @Test
     public void process_notTopStoryForKeyword_topStoryForTopicNull() throws Exception {
-        when(storiesService.getUndeletedStoriesContainingKeywordAndAfterTimestamp(anyString(), any(Timestamp.class))).thenReturn(new ArrayList<>());
+        when(storiesService.getUndeletedStoriesContainingKeywordAndAfterTimestamp(anyString(), any(Timestamp.class)))
+                                                                                        .thenReturn(new ArrayList<>());
 
         final Topic newTopic = topStoryPerTopicProcessor.process(topic);
 
@@ -49,7 +50,8 @@ public class TopStoryPerTopicProcessorUnitTests {
 
     @Test
     public void process_oneTopStoryForKeyword_topStoryForTopicNotNull() throws Exception {
-        when(storiesService.getUndeletedStoriesContainingKeywordAndAfterTimestamp(anyString(), any(Timestamp.class))).thenReturn(Collections.singletonList(story1));
+        when(storiesService.getUndeletedStoriesContainingKeywordAndAfterTimestamp(anyString(), any(Timestamp.class)))
+                                                                                        .thenReturn(Collections.singletonList(story1));
 
         final Topic newTopic = topStoryPerTopicProcessor.process(topic);
 
@@ -61,7 +63,8 @@ public class TopStoryPerTopicProcessorUnitTests {
     public void process_twoTopStoriesForKeyword_topStoryForTopicHasHighestScore() throws Exception {
         final Story story2 = new Story(124L, 15, "Title2", "url", new Timestamp(System.currentTimeMillis()));
 
-        when(storiesService.getUndeletedStoriesContainingKeywordAndAfterTimestamp(anyString(), any(Timestamp.class))).thenReturn(Arrays.asList(story1, story2));
+        when(storiesService.getUndeletedStoriesContainingKeywordAndAfterTimestamp(anyString(), any(Timestamp.class)))
+                                                                                        .thenReturn(Arrays.asList(story1, story2));
 
         final Topic newTopic = topStoryPerTopicProcessor.process(topic);
 

@@ -34,7 +34,8 @@ public class WeeklyTopStoriesDigestProcessorUnitTests {
         MockitoAnnotations.initMocks(this);
         ReflectionTestUtils.setField(weeklyTopStoriesDigestProcessor, "dateTimeExecutedMillis", DATE_TIME_EXECUTED_MILLIS);
 
-        story = new Story(123L, 10, "Title", "Url", new Timestamp(System.currentTimeMillis() - TimeUnit.HOURS.toMillis(1)));
+        final Timestamp dateCreated = new Timestamp(System.currentTimeMillis() - TimeUnit.HOURS.toMillis(1));
+        story = new Story(123L, 10, "Title", "Url", dateCreated);
     }
 
     @Test

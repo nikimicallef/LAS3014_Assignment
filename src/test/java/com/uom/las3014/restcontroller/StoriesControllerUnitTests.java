@@ -104,7 +104,9 @@ public class StoriesControllerUnitTests {
     public void getDigestsGroup_userWithSessionTokenDoesNotExist_invalidCredentialsException(){
         when(userService.getUserFromDbUsingSessionToken(anyString())).thenThrow(new InvalidCredentialsException());
 
-        final ResponseEntity<MultipleTopStoriesPerDateResponse> digestsGroup = storiesController.getDigestsGroup(SESSION_TOKEN, new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()));
+        final Date dateFrom = new Date(System.currentTimeMillis());
+        final Date dateTo = new Date(System.currentTimeMillis());
+        final ResponseEntity<MultipleTopStoriesPerDateResponse> digestsGroup = storiesController.getDigestsGroup(SESSION_TOKEN, dateFrom, dateTo);
 
         verify(userService).getUserFromDbUsingSessionToken(anyString());
         verify(digestsServiceMock, times(0)).getGroupOfWeeklyDigests(any(User.class), any(Date.class), any(Date.class));
@@ -114,7 +116,9 @@ public class StoriesControllerUnitTests {
     public void getDigestsGroup_userWithSessionTokenExists_responseOk(){
         when(userService.getUserFromDbUsingSessionToken(anyString())).thenReturn(user);
 
-        final ResponseEntity<MultipleTopStoriesPerDateResponse> digestsGroup = storiesController.getDigestsGroup(SESSION_TOKEN, new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()));
+        final Date dateFrom = new Date(System.currentTimeMillis());
+        final Date dateTo = new Date(System.currentTimeMillis());
+        final ResponseEntity<MultipleTopStoriesPerDateResponse> digestsGroup = storiesController.getDigestsGroup(SESSION_TOKEN, dateFrom, dateTo);
 
         verify(userService).getUserFromDbUsingSessionToken(anyString());
         verify(digestsServiceMock).getGroupOfWeeklyDigests(any(User.class), any(Date.class), any(Date.class));

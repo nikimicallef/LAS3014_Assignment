@@ -42,26 +42,46 @@ public class UserTopicMappingServiceImplUnitTests {
     @Test
     public void findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfter_topicAndTimestampNotNull_retrievedOk(){
         when(userTopicMappingDaoRepositoryMock
-                .findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfterAndInterestedFromBefore(eq(topic), any(Timestamp.class), any(Timestamp.class)))
+                .findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfterAndInterestedFromBefore(eq(topic),
+                                                                                                   any(Timestamp.class),
+                                                                                                   any(Timestamp.class)))
                 .thenReturn(Collections.singletonList(
                         new UserTopicMapping(new User(USERNAME, PASSWORD), topic, new Timestamp(System.currentTimeMillis()))));
 
-        final List<UserTopicMapping> userTopicMappingList = userTopicMappingService.findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfterAndInterestedFromBefore(topic, new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()));
+        final Timestamp interestedToIsAfter = new Timestamp(System.currentTimeMillis());
+        final Timestamp interestedFromBefore = new Timestamp(System.currentTimeMillis());
+        final List<UserTopicMapping> userTopicMappingList = userTopicMappingService
+                            .findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfterAndInterestedFromBefore(topic,
+                                                                                                               interestedToIsAfter,
+                                                                                                               interestedFromBefore);
 
 
         assertEquals(1, userTopicMappingList.size());
-        verify(userTopicMappingDaoRepositoryMock).findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfterAndInterestedFromBefore(eq(topic), any(Timestamp.class), any(Timestamp.class));
+        verify(userTopicMappingDaoRepositoryMock)
+                .findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfterAndInterestedFromBefore(eq(topic),
+                                                                                                   any(Timestamp.class),
+                                                                                                   any(Timestamp.class));
     }
 
     @Test
     public void findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfter_noTopicsRetrieved_retrievedOk(){
         when(userTopicMappingDaoRepositoryMock
-                .findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfterAndInterestedFromBefore(any(Topic.class), any(Timestamp.class), any(Timestamp.class)))
+                .findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfterAndInterestedFromBefore(any(Topic.class),
+                                                                                                   any(Timestamp.class),
+                                                                                                   any(Timestamp.class)))
                 .thenReturn(new ArrayList<>());
 
-        final List<UserTopicMapping> userTopicMappingList = userTopicMappingService.findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfterAndInterestedFromBefore(topic, new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()));
+        final Timestamp interestedToIsAfter = new Timestamp(System.currentTimeMillis());
+        final Timestamp interestedFromBefore = new Timestamp(System.currentTimeMillis());
+        final List<UserTopicMapping> userTopicMappingList = userTopicMappingService
+                .findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfterAndInterestedFromBefore(topic,
+                                                                                                   interestedToIsAfter,
+                                                                                                   interestedFromBefore);
 
         assertEquals(0, userTopicMappingList.size());
-        verify(userTopicMappingDaoRepositoryMock).findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfterAndInterestedFromBefore(eq(topic), any(Timestamp.class), any(Timestamp.class));
+        verify(userTopicMappingDaoRepositoryMock)
+                .findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfterAndInterestedFromBefore(eq(topic),
+                                                                                                   any(Timestamp.class),
+                                                                                                   any(Timestamp.class));
     }
 }

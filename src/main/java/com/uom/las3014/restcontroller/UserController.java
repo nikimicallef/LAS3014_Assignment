@@ -46,7 +46,7 @@ public class UserController {
     public ResponseEntity<GenericMessageResponse> changeInterestedTopics(final @RequestHeader(name = "X-SessionToken") String sessionToken,
                                                                          final @RequestBody @Valid UserTopicsRequestBody userTopicsRequestBody) {
         final User user = userService.getUserFromDbUsingSessionToken(sessionToken);
-        //TODO: Get user from pointcut
+
         return userService.changeInterestedTopics(user, userTopicsRequestBody.getAdditions(), userTopicsRequestBody.getRemovals());
     }
 }

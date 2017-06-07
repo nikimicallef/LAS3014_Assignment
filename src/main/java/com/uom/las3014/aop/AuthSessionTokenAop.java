@@ -34,8 +34,6 @@ public class AuthSessionTokenAop {
     @Pointcut("execution(* com.uom.las3014.restcontroller..*.*(@org.springframework.web.bind.annotation.RequestHeader (java.lang.String),..)) && args(sessionToken,..)")
     public void sessionTokenPointcut(final String sessionToken) {}
 
-    //TODO: Change to around so user can be passed over as object to method
-
     /**
      * Check whether the provided session token in the {@link RequestHeader} is valid.
      * If the session token is not valid, an {@link InvalidCredentialsException} is thrown.

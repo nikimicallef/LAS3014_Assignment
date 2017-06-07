@@ -114,6 +114,7 @@ public class UserControllerUnitTests {
         userController.changeInterestedTopics(SESSION_TOKEN, userTopicsRequestBody);
 
         verify(userServiceMock).getUserFromDbUsingSessionToken(anyString());
-        verify(userServiceMock, times(0)).changeInterestedTopics(any(User.class), Matchers.<List<String>>any(), Matchers.<List<String>>any());
+        verify(userServiceMock, times(0))
+                            .changeInterestedTopics(any(User.class), Matchers.<List<String>>any(), Matchers.<List<String>>any());
     }
 }

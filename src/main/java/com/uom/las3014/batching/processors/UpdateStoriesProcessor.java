@@ -20,7 +20,6 @@ public class UpdateStoriesProcessor implements ItemProcessor<Story, Story>{
     @Autowired
     private HackernewsRequester hackernewsRequester;
 
-    //TODO: Error handling. What if url or title is too long? What if we get no response from HN etc.
     @Override
     public Story process(final Story story) throws Exception {
         final JsonObject updatedStory = hackernewsRequester.getItem(story.getStoryId()).orElse(null);

@@ -25,7 +25,6 @@ public class GetAndUpdateTopStoriesBatchJobScheduler {
     private Job newStoriesJob;
 
     //TODO: Configure this hourly
-    //TODO: What happens to job if DB goes down or HN goesdown?
 //    @Scheduled(fixedDelay = 999_000, initialDelay = 1_000)
     @Scheduled(cron = "0 30 * * * *")
     @CacheEvict(value ={MyCacheManager.TOPIC_CACHE, MyCacheManager.TOP_STORY_CACHE}, allEntries = true)

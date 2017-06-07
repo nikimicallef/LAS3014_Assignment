@@ -35,7 +35,6 @@ public class TopicServiceImpl implements TopicService{
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
     public Topic createNewTopicIfNotExists(final String topicName){
-        //TODO: Change with CREATE-IF-NOT-EXISTS instead of 2 queries.
         final Optional<Topic> existingTopic = topicsDaoRepository.findTopicsByTopicName(topicName);
 
         if(existingTopic.isPresent()){

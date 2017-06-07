@@ -49,7 +49,6 @@ public class UserServiceImpl implements UserService {
      * @return Response in model format
      */
     public ResponseEntity<GenericMessageResponse> createNewUser(final UserCreateRequestBody userCreateRequestBody){
-        //TODO: Convert this to AOP. But we need this once so is AOP useful here??
         if (userExistsInDbByUsername(userCreateRequestBody.getUsername())) {
             throw new UserAlreadyExistsException("User already exists.");
         } else {
@@ -73,7 +72,6 @@ public class UserServiceImpl implements UserService {
      * @return Response in model format
      */
     public ResponseEntity<SessionTokenAndMessageResponse> loginAndGenerateToken(final UserLoginRequestBody userLoginRequestBody){
-        //TODO: Convert this to AOP. But we need this once so is AOP useful here??
         final Optional<User> user = getUserFromDb(userLoginRequestBody.getUsername());
 
         final User retrievedUser = user.orElseThrow(() -> new InvalidCredentialsException("Invalid Credentials."));

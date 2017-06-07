@@ -58,6 +58,6 @@ public class UpdateStoriesBatchJobSchedulerUnitTests {
 
         verify(jobLauncher).run(eq(updateStoriesJob.newStoriesJobMethod(updateStoriesStep.updateStoriesStepMethod(),
                                                                                                        topStoryPerTopicStep.updateStoriesStepMethod())),
-                                                                  any(JobParameters.class));
+                                                                        any(JobParameters.class));
     }
 }

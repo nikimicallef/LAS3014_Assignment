@@ -247,7 +247,9 @@ public class UserServiceImplUnitTests {
         userTopicsRequestBody.setAdditions(new ArrayList<>());
         userTopicsRequestBody.setRemovals(new ArrayList<>());
 
-        final ResponseEntity<GenericMessageResponse> response = userService.changeInterestedTopics(user, userTopicsRequestBody.getAdditions(), userTopicsRequestBody.getRemovals());
+        final ResponseEntity<GenericMessageResponse> response = userService.changeInterestedTopics(user,
+                                                                                                   userTopicsRequestBody.getAdditions(),
+                                                                                                   userTopicsRequestBody.getRemovals());
 
         assertEquals(200, response.getStatusCodeValue());
         assertEquals("Topic changes applied.", response.getBody().getMessage());
@@ -270,7 +272,9 @@ public class UserServiceImplUnitTests {
 
         when(topicServiceMock.createNewTopicIfNotExists(testTopic3.toLowerCase())).thenReturn(new Topic(testTopic3));
 
-        final ResponseEntity<GenericMessageResponse> response = userService.changeInterestedTopics(user, userTopicsRequestBody.getAdditions(), userTopicsRequestBody.getRemovals());
+        final ResponseEntity<GenericMessageResponse> response = userService.changeInterestedTopics(user,
+                                                                                                   userTopicsRequestBody.getAdditions(),
+                                                                                                   userTopicsRequestBody.getRemovals());
 
         assertEquals(200, response.getStatusCodeValue());
         assertEquals("Topic changes applied.", response.getBody().getMessage());
@@ -301,7 +305,9 @@ public class UserServiceImplUnitTests {
         userTopicsRequestBody.setAdditions(new ArrayList<>());
         userTopicsRequestBody.setRemovals(Collections.singletonList(TOPIC2_NAME));
 
-        final ResponseEntity<GenericMessageResponse> response = userService.changeInterestedTopics(user, userTopicsRequestBody.getAdditions(), userTopicsRequestBody.getRemovals());
+        final ResponseEntity<GenericMessageResponse> response = userService.changeInterestedTopics(user,
+                                                                                                   userTopicsRequestBody.getAdditions(),
+                                                                                                   userTopicsRequestBody.getRemovals());
 
         assertEquals(200, response.getStatusCodeValue());
         assertEquals("Topic changes applied.", response.getBody().getMessage());
@@ -334,7 +340,9 @@ public class UserServiceImplUnitTests {
         userTopicsRequestBody.setAdditions(new ArrayList<>());
         userTopicsRequestBody.setRemovals(Collections.singletonList("TestTopic3"));
 
-        final ResponseEntity<GenericMessageResponse> response = userService.changeInterestedTopics(user, userTopicsRequestBody.getAdditions(), userTopicsRequestBody.getRemovals());
+        final ResponseEntity<GenericMessageResponse> response = userService.changeInterestedTopics(user,
+                                                                                                   userTopicsRequestBody.getAdditions(),
+                                                                                                   userTopicsRequestBody.getRemovals());
 
         assertEquals(200, response.getStatusCodeValue());
         assertEquals("Topic changes applied.", response.getBody().getMessage());

@@ -63,7 +63,8 @@ public class StoriesServiceImplUnitTests {
         when(storiesDaoRepository.findAllByDateCreatedIsAfterAndDeletedIsFalse(any(Timestamp.class)))
                 .thenReturn(new ArrayList<>());
 
-        final List<Story> stories = storiesService.getUndeletedTopicsAfterTimestamp(new Timestamp(System.currentTimeMillis()));
+        final Timestamp createdAfter = new Timestamp(System.currentTimeMillis());
+        final List<Story> stories = storiesService.getUndeletedTopicsAfterTimestamp(createdAfter);
 
         assertEquals(0, stories.size());
         verify(storiesDaoRepository).findAllByDateCreatedIsAfterAndDeletedIsFalse(any(Timestamp.class));
@@ -74,7 +75,8 @@ public class StoriesServiceImplUnitTests {
         when(storiesDaoRepository.findAllByDateCreatedIsAfterAndDeletedIsFalse(any(Timestamp.class)))
                 .thenReturn(Collections.singletonList(story1));
 
-        final List<Story> stories = storiesService.getUndeletedTopicsAfterTimestamp(new Timestamp(System.currentTimeMillis()));
+        final Timestamp createdAfter = new Timestamp(System.currentTimeMillis());
+        final List<Story> stories = storiesService.getUndeletedTopicsAfterTimestamp(createdAfter);
 
         assertEquals(1, stories.size());
         assertEquals(story1, stories.get(0));
@@ -86,7 +88,8 @@ public class StoriesServiceImplUnitTests {
         when(storiesDaoRepository.findAllByTitleContainingAndDateCreatedIsAfterAndDeletedIsFalse(anyString(), any(Timestamp.class)))
                 .thenReturn(new ArrayList<>());
 
-        final List<Story> stories = storiesService.getUndeletedStoriesContainingKeywordAndAfterTimestamp(STORY1_TITLE, new Timestamp(System.currentTimeMillis()));
+        final Timestamp createdAfter = new Timestamp(System.currentTimeMillis());
+        final List<Story> stories = storiesService.getUndeletedStoriesContainingKeywordAndAfterTimestamp(STORY1_TITLE, createdAfter);
 
         assertEquals(0, stories.size());
         verify(storiesDaoRepository).findAllByTitleContainingAndDateCreatedIsAfterAndDeletedIsFalse(anyString(), any(Timestamp.class));
@@ -97,7 +100,8 @@ public class StoriesServiceImplUnitTests {
         when(storiesDaoRepository.findAllByTitleContainingAndDateCreatedIsAfterAndDeletedIsFalse(anyString(), any(Timestamp.class)))
                 .thenReturn(Collections.singletonList(story1));
 
-        final List<Story> stories = storiesService.getUndeletedStoriesContainingKeywordAndAfterTimestamp(STORY1_TITLE, new Timestamp(System.currentTimeMillis()));
+        final Timestamp createdAfter = new Timestamp(System.currentTimeMillis());
+        final List<Story> stories = storiesService.getUndeletedStoriesContainingKeywordAndAfterTimestamp(STORY1_TITLE, createdAfter);
 
         assertEquals(1, stories.size());
         assertEquals(story1, stories.get(0));
@@ -118,8 +122,9 @@ public class StoriesServiceImplUnitTests {
         topic1 = new Topic(TOPIC1_NAME);
         topic2 = new Topic(TOPIC2_NAME);
 
-        final UserTopicMapping userTopicMapping1 = new UserTopicMapping(user, topic1, new Timestamp(System.currentTimeMillis()));
-        final UserTopicMapping userTopicMapping2 = new UserTopicMapping(user, topic2, new Timestamp(System.currentTimeMillis()));
+        final Timestamp interestedFrom = new Timestamp(System.currentTimeMillis());
+        final UserTopicMapping userTopicMapping1 = new UserTopicMapping(user, topic1, interestedFrom);
+        final UserTopicMapping userTopicMapping2 = new UserTopicMapping(user, topic2, interestedFrom);
 
         user.getUserTopics().add(userTopicMapping1);
         user.getUserTopics().add(userTopicMapping2);
@@ -146,8 +151,9 @@ public class StoriesServiceImplUnitTests {
         topic2 = new Topic(TOPIC2_NAME);
         topic2.setTopStoryId(story2);
 
-        final UserTopicMapping userTopicMapping1 = new UserTopicMapping(user, topic1, new Timestamp(System.currentTimeMillis()));
-        final UserTopicMapping userTopicMapping2 = new UserTopicMapping(user, topic2, new Timestamp(System.currentTimeMillis()));
+        final Timestamp interestedFrom = new Timestamp(System.currentTimeMillis());
+        final UserTopicMapping userTopicMapping1 = new UserTopicMapping(user, topic1, interestedFrom);
+        final UserTopicMapping userTopicMapping2 = new UserTopicMapping(user, topic2, interestedFrom);
 
         user.getUserTopics().add(userTopicMapping1);
         user.getUserTopics().add(userTopicMapping2);
@@ -157,10 +163,16 @@ public class StoriesServiceImplUnitTests {
         final TopStoriesForTopicResponse topic1Response = groupTopStoriesByDateResponse.new TopStoriesForTopicResponse(TOPIC1_NAME);
         final TopStoriesForTopicResponse topic2Response = groupTopStoriesByDateResponse.new TopStoriesForTopicResponse(TOPIC2_NAME);
 
-        final TopStoryResponse topic1StoryResponse = topic1Response.new TopStoryResponse(topic1.getTopStoryId().getTitle(), topic1.getTopStoryId().getUrl(), topic1.getTopStoryId().getScore());
+        final String title1 = topic1.getTopStoryId().getTitle();
+        final String url1 = topic1.getTopStoryId().getUrl();
+        final Integer score1 = topic1.getTopStoryId().getScore();
+        final TopStoryResponse topic1StoryResponse = topic1Response.new TopStoryResponse(title1, url1, score1);
         topic1Response.getTopStories().add(topic1StoryResponse);
 
-        final TopStoryResponse topic2StoryResponse = topic2Response.new TopStoryResponse(topic2.getTopStoryId().getTitle(), topic2.getTopStoryId().getUrl(), topic1.getTopStoryId().getScore());
+        final String title2 = topic2.getTopStoryId().getTitle();
+        final String url2 = topic2.getTopStoryId().getUrl();
+        final Integer score2 = topic2.getTopStoryId().getScore();
+        final TopStoryResponse topic2StoryResponse = topic2Response.new TopStoryResponse(title2, url2, score2);
         topic2Response.getTopStories().add(topic2StoryResponse);
 
         groupTopStoriesByDateResponse.getTopics().add(topic1Response);
@@ -191,7 +203,10 @@ public class StoriesServiceImplUnitTests {
 
         final TopStoriesForTopicResponse topic1Response = groupTopStoriesByDateResponse.new TopStoriesForTopicResponse(TOPIC1_NAME);
 
-        final TopStoryResponse topic1StoryResponse = topic1Response.new TopStoryResponse(topic1.getTopStoryId().getTitle(), topic1.getTopStoryId().getUrl(), topic1.getTopStoryId().getScore());
+        final String title1 = topic1.getTopStoryId().getTitle();
+        final String url1 = topic1.getTopStoryId().getUrl();
+        final Integer score1 = topic1.getTopStoryId().getScore();
+        final TopStoryResponse topic1StoryResponse = topic1Response.new TopStoryResponse(title1, url1, score1);
         topic1Response.getTopStories().add(topic1StoryResponse);
 
         groupTopStoriesByDateResponse.getTopics().add(topic1Response);
@@ -228,7 +243,8 @@ public class StoriesServiceImplUnitTests {
         when(storiesDaoRepository.findAllByDateCreatedIsAfterAndDeletedIsFalseAndScoreGreaterThan(any(Timestamp.class), any(Integer.class)))
             .thenReturn(new ArrayList<>());
 
-        final List<Story> returedStories = storiesService.getTop3UndeletedStoriesAfterTimestamp(new Timestamp(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(1)));
+        final Timestamp dateAfter = new Timestamp(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(1));
+        final List<Story> returedStories = storiesService.getTop3UndeletedStoriesAfterTimestamp(dateAfter);
 
         assertEquals(0, returedStories.size());
         verify(storiesDaoRepository).findAllByDateCreatedIsAfterAndDeletedIsFalseAndScoreGreaterThan(any(Timestamp.class), any(Integer.class));
@@ -239,7 +255,8 @@ public class StoriesServiceImplUnitTests {
         when(storiesDaoRepository.findAllByDateCreatedIsAfterAndDeletedIsFalseAndScoreGreaterThan(any(Timestamp.class), any(Integer.class)))
                 .thenReturn(Collections.singletonList(story1));
 
-        final List<Story> returnedStories = storiesService.getTop3UndeletedStoriesAfterTimestamp(new Timestamp(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(1)));
+        final Timestamp dateAfter = new Timestamp(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(1));
+        final List<Story> returnedStories = storiesService.getTop3UndeletedStoriesAfterTimestamp(dateAfter);
 
         assertEquals(1, returnedStories.size());
         assertEquals(story1, returnedStories.get(0));
@@ -253,7 +270,8 @@ public class StoriesServiceImplUnitTests {
         when(storiesDaoRepository.findAllByDateCreatedIsAfterAndDeletedIsFalseAndScoreGreaterThan(any(Timestamp.class), any(Integer.class)))
                 .thenReturn(Arrays.asList(story1, story2, story3));
 
-        final List<Story> returnedStories = storiesService.getTop3UndeletedStoriesAfterTimestamp(new Timestamp(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(1)));
+        final Timestamp dateAfter = new Timestamp(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(1));
+        final List<Story> returnedStories = storiesService.getTop3UndeletedStoriesAfterTimestamp(dateAfter);
 
         assertEquals(3, returnedStories.size());
         assertEquals(story3, returnedStories.get(0));
@@ -273,7 +291,8 @@ public class StoriesServiceImplUnitTests {
         when(storiesDaoRepository.findAllByDateCreatedIsAfterAndDeletedIsFalseAndScoreGreaterThan(any(Timestamp.class), any(Integer.class)))
                 .thenReturn(Arrays.asList(story1, story2, story3, story4, story5));
 
-        final List<Story> returnedStories = storiesService.getTop3UndeletedStoriesAfterTimestamp(new Timestamp(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(1)));
+        final Timestamp dateAfter = new Timestamp(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(1));
+        final List<Story> returnedStories = storiesService.getTop3UndeletedStoriesAfterTimestamp(dateAfter);
 
         assertEquals(3, returnedStories.size());
         assertEquals(story3, returnedStories.get(0));

@@ -36,7 +36,8 @@ public class AuthSessionTokenAopUnitTests {
 
     @Test(expected = InvalidCredentialsException.class)
     public void sessionTokenBefore_userDoesNotExist_invalidCredentialsException(){
-        when(userServiceMock.getUserFromDbUsingSessionToken(anyString())).thenThrow(new InvalidCredentialsException());
+        when(userServiceMock.getUserFromDbUsingSessionToken(anyString()))
+                                                .thenThrow(new InvalidCredentialsException());
 
         authSessionTokenAop.sessionTokenBefore(SESSION_TOKEN);
 
@@ -45,8 +46,10 @@ public class AuthSessionTokenAopUnitTests {
 
     @Test(expected = InvalidCredentialsException.class)
     public void sessionTokenBefore_sessionTokenNotActive_invalidCredentialsException(){
-        user.setSessionTokenCreated(new Timestamp(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(1)));
-        user.setSessionTokenLastUsed(new Timestamp(System.currentTimeMillis() - TimeUnit.HOURS.toMillis(1)));
+        final Timestamp sessionTokenCreated = new Timestamp(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(1));
+        user.setSessionTokenCreated(sessionTokenCreated);
+        final Timestamp sessionTokenLastUsed = new Timestamp(System.currentTimeMillis() - TimeUnit.HOURS.toMillis(1));
+        user.setSessionTokenLastUsed(sessionTokenLastUsed);
 
         when(userServiceMock.getUserFromDbUsingSessionToken(anyString())).thenReturn(user);
 

@@ -22,7 +22,8 @@ public class ExceptionMapperUnitTests {
     @Test
     public void userAlreadyExists_conflict(){
         final GenericErrorMessageResponse genericMessageResponse = new GenericErrorMessageResponse("User already exists");
-        final ResponseEntity<GenericErrorMessageResponse> genericErrorMessageResponseEntity = exceptionMapper.userAlreadyExists(new UserAlreadyExistsException("User already exists"));
+        final ResponseEntity<GenericErrorMessageResponse> genericErrorMessageResponseEntity = exceptionMapper
+                                                                .userAlreadyExists(new UserAlreadyExistsException("User already exists"));
 
         assertEquals(HttpStatus.CONFLICT, genericErrorMessageResponseEntity.getStatusCode());
         assertEquals(genericMessageResponse, genericErrorMessageResponseEntity.getBody());
@@ -31,7 +32,8 @@ public class ExceptionMapperUnitTests {
     @Test
     public void invalidCredentials_unauthorized(){
         final GenericErrorMessageResponse genericMessageResponse = new GenericErrorMessageResponse("Invalid Credentials");
-        final ResponseEntity<GenericErrorMessageResponse> genericErrorMessageResponseEntity = exceptionMapper.invalidCredentials(new InvalidCredentialsException("Invalid Credentials"));
+        final ResponseEntity<GenericErrorMessageResponse> genericErrorMessageResponseEntity = exceptionMapper
+                                                                .invalidCredentials(new InvalidCredentialsException("Invalid Credentials"));
 
         assertEquals(HttpStatus.UNAUTHORIZED, genericErrorMessageResponseEntity.getStatusCode());
         assertEquals(genericMessageResponse, genericErrorMessageResponseEntity.getBody());
@@ -40,7 +42,8 @@ public class ExceptionMapperUnitTests {
     @Test
     public void invalidDate_badRequest(){
         final GenericErrorMessageResponse genericMessageResponse = new GenericErrorMessageResponse("Invalid Date");
-        final ResponseEntity<GenericErrorMessageResponse> genericErrorMessageResponseEntity = exceptionMapper.invalidDate(new InvalidDateException("Invalid Date"));
+        final ResponseEntity<GenericErrorMessageResponse> genericErrorMessageResponseEntity = exceptionMapper
+                                                                .invalidDate(new InvalidDateException("Invalid Date"));
 
         assertEquals(HttpStatus.BAD_REQUEST, genericErrorMessageResponseEntity.getStatusCode());
         assertEquals(genericMessageResponse, genericErrorMessageResponseEntity.getBody());

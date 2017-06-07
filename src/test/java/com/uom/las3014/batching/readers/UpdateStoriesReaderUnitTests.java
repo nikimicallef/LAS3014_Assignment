@@ -30,7 +30,8 @@ public class UpdateStoriesReaderUnitTests {
 
     @Test
     public void read_storiesToUpdateIsEmpty_returnsNull() throws Exception {
-        when(storiesServiceMock.getUndeletedTopicsAfterTimestamp(any(Timestamp.class))).thenReturn(new ArrayList<>());
+        when(storiesServiceMock.getUndeletedTopicsAfterTimestamp(any(Timestamp.class)))
+                                                            .thenReturn(new ArrayList<>());
 
         updateStoriesReader = new UpdateStoriesReader(storiesServiceMock);
 
@@ -44,7 +45,8 @@ public class UpdateStoriesReaderUnitTests {
     public void read_storiesToUpdateReturnsList_returnsNewStoryId() throws Exception {
         final Story exampleStory = new Story(1L, 10, "Title", "Url", new Timestamp(System.currentTimeMillis()));
         final List<Story> storyList = Collections.singletonList(exampleStory);
-        when(storiesServiceMock.getUndeletedTopicsAfterTimestamp(any(Timestamp.class))).thenReturn(storyList);
+        when(storiesServiceMock.getUndeletedTopicsAfterTimestamp(any(Timestamp.class)))
+                                                                    .thenReturn(storyList);
 
         updateStoriesReader = new UpdateStoriesReader(storiesServiceMock);
 

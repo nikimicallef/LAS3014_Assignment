@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -111,7 +112,8 @@ public class DigestsServiceImplUnitTests {
 
         when(digestDaoRepository.findLatestDigestsForUser(user)).thenReturn(Sets.newHashSet(weeklyDigest1));
 
-        final GroupTopStoriesByDateResponse groupTopStoriesByDateResponse = new GroupTopStoriesByDateResponse(DIGEST_DAY_OF_WEEK.toLocalDate());
+        final LocalDate effectiveDate = DIGEST_DAY_OF_WEEK.toLocalDate();
+        final GroupTopStoriesByDateResponse groupTopStoriesByDateResponse = new GroupTopStoriesByDateResponse(effectiveDate);
 
         final TopStoriesForTopicResponse weeklyResponse = groupTopStoriesByDateResponse.new TopStoriesForTopicResponse("weekly");
         final TopStoriesForTopicResponse topicResponse = groupTopStoriesByDateResponse.new TopStoriesForTopicResponse(TOPIC_NAME);
@@ -138,7 +140,8 @@ public class DigestsServiceImplUnitTests {
 
         when(digestDaoRepository.findLatestDigestsForUser(user)).thenReturn(Sets.newHashSet(weeklyDigest1, topicDigest1));
 
-        final GroupTopStoriesByDateResponse groupTopStoriesByDateResponse = new GroupTopStoriesByDateResponse(DIGEST_DAY_OF_WEEK.toLocalDate());
+        final LocalDate effectiveDate = DIGEST_DAY_OF_WEEK.toLocalDate();
+        final GroupTopStoriesByDateResponse groupTopStoriesByDateResponse = new GroupTopStoriesByDateResponse(effectiveDate);
 
         final TopStoriesForTopicResponse weeklyResponse = groupTopStoriesByDateResponse.new TopStoriesForTopicResponse("weekly");
         final TopStoriesForTopicResponse topicResponse = groupTopStoriesByDateResponse.new TopStoriesForTopicResponse(TOPIC_NAME);
@@ -168,7 +171,8 @@ public class DigestsServiceImplUnitTests {
 
         when(digestDaoRepository.findLatestDigestsForUser(user)).thenReturn(Sets.newHashSet(weeklyDigest1, weeklyDigest2));
 
-        final GroupTopStoriesByDateResponse groupTopStoriesByDateResponse = new GroupTopStoriesByDateResponse(DIGEST_DAY_OF_WEEK.toLocalDate());
+        final LocalDate effectiveDate = DIGEST_DAY_OF_WEEK.toLocalDate();
+        final GroupTopStoriesByDateResponse groupTopStoriesByDateResponse = new GroupTopStoriesByDateResponse(effectiveDate);
 
         final TopStoriesForTopicResponse weeklyResponse = groupTopStoriesByDateResponse.new TopStoriesForTopicResponse("weekly");
         final TopStoriesForTopicResponse topicResponse = groupTopStoriesByDateResponse.new TopStoriesForTopicResponse(TOPIC_NAME);
@@ -192,7 +196,8 @@ public class DigestsServiceImplUnitTests {
 
     @Test(expected = InvalidDateException.class)
     public void getGroupOfWeeklyDigests_dateAfterBeforeDateBefore_invalidDateException(){
-        digestsService.getGroupOfWeeklyDigests(user, new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(1)));
+        final Date dateTo = new Date(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(1));
+        digestsService.getGroupOfWeeklyDigests(user, new Date(System.currentTimeMillis()), dateTo);
     }
 
     @Test
@@ -203,7 +208,8 @@ public class DigestsServiceImplUnitTests {
         final Date dateFrom = new Date(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(2));
         final Date dateTo = new Date(System.currentTimeMillis());
 
-        when(digestDaoRepository.findGroupOfDigestsBetweenDatesForUser(dateFrom, dateTo, user)).thenReturn(Sets.newHashSet(weeklyDigest1, weeklyDigest2));
+        when(digestDaoRepository.findGroupOfDigestsBetweenDatesForUser(dateFrom, dateTo, user))
+                                                            .thenReturn(Sets.newHashSet(weeklyDigest1, weeklyDigest2));
 
         final MultipleTopStoriesPerDateResponse digestsGroup = new MultipleTopStoriesPerDateResponse();
 
