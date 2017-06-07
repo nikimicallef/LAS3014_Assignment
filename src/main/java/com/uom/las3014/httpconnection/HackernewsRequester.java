@@ -45,7 +45,7 @@ public class HackernewsRequester {
         if (responseBody == null) {
             return Optional.empty();
         } else {
-            return Optional.of(Arrays.asList(responseBody.substring(1, responseBody.length() - 1).split(", ")));
+            return Optional.of(Arrays.asList(responseBody.substring(1, responseBody.length() - 1).split(",")));
         }
     }
 

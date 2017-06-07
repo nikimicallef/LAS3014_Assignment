@@ -21,10 +21,11 @@ public class UpdateStoriesBatchJobScheduler {
     @Qualifier("UpdateStoriesJobBean")
     private Job updateStoriesJob;
 
-    //TODO: Set to cron
+    //TODO: Set to cron. SET TO OLD CRON
     @Scheduled(cron = "0 0 2 ? * *")
+//    @Scheduled(cron = "0 0 * * * *")
     @CacheEvict(value = {MyCacheManager.TOPIC_CACHE, MyCacheManager.TOP_STORY_CACHE}, allEntries = true)
-//    @Scheduled(fixedDelay = 999_000, initialDelay = 300_000)
+//    @Scheduled(fixedDelay = 30_000, initialDelay = 120_000)
     public void performUpdateWeeklyStoriesJob() throws Exception {
         final JobParameters param = new JobParametersBuilder()
                 .addString("JobID", String.valueOf(System.currentTimeMillis()))

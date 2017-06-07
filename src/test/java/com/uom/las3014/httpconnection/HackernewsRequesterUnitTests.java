@@ -87,7 +87,7 @@ public class HackernewsRequesterUnitTests {
 
     @Test
     public void getNewStories_returnesArrayOfItems_arrayOfItemsResponse() throws Exception {
-        final InputStream inputStream = new ByteArrayInputStream("[1, 2]".getBytes());
+        final InputStream inputStream = new ByteArrayInputStream("[1,2]".getBytes());
 
         when(httpURLConnection.getInputStream()).thenReturn(inputStream);
 

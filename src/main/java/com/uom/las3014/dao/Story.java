@@ -86,7 +86,34 @@ public class Story {
         }
     }
 
+    @Override
+    public String toString() {
+        return "Story{" +
+            "storyId=" + storyId +
+            ", score=" + score +
+            ", title='" + title + '\'' +
+            ", url='" + url + '\'' +
+            ", dateCreated=" + dateCreated +
+            ", deleted=" + deleted +
+            '}';
+    }
+
     public int compareTo(final Story story){
         return this.getScore().compareTo(story.getScore());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Story story = (Story) o;
+
+        return storyId.equals(story.storyId);
+    }
+
+    @Override
+    public int hashCode() {
+        return storyId.hashCode();
     }
 }

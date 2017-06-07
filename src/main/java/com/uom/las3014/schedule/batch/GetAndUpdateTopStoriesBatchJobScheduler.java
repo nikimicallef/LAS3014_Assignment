@@ -1,8 +1,6 @@
 package com.uom.las3014.schedule.batch;
 
 import com.uom.las3014.cache.MyCacheManager;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
@@ -25,8 +23,8 @@ public class GetAndUpdateTopStoriesBatchJobScheduler {
 
     //TODO: Configure this hourly
     //TODO: What happens to job if DB goes down or HN goesdown?
-//    @Scheduled(fixedDelay = 999_000, initialDelay = 180_000)
-    @Scheduled(cron = "0 0 * * * *")
+//    @Scheduled(fixedDelay = 999_000, initialDelay = 1_000)
+    @Scheduled(cron = "0 30 * * * *")
     @CacheEvict(value ={MyCacheManager.TOPIC_CACHE, MyCacheManager.TOP_STORY_CACHE}, allEntries = true)
     public void performNewStoriesJob() throws Exception {
         final JobParameters param = new JobParametersBuilder()

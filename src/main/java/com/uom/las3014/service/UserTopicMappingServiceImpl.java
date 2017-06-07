@@ -18,7 +18,7 @@ public class UserTopicMappingServiceImpl implements UserTopicMappingService {
     private UserTopicMappingDaoRepository userTopicMappingDaoRepository;
 
     @Override
-    public List<UserTopicMapping> findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfter(Topic topic, Timestamp timestamp) {
-        return userTopicMappingDaoRepository.findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfter(topic, timestamp);
+    public List<UserTopicMapping> findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfterAndInterestedFromBefore(final Topic topic, final Timestamp interestedToIsAfter, final Timestamp interestedFromBefore) {
+        return userTopicMappingDaoRepository.findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfterAndInterestedFromBefore(topic, interestedToIsAfter, interestedFromBefore);
     }
 }

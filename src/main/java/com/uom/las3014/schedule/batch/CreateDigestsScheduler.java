@@ -44,8 +44,9 @@ public class CreateDigestsScheduler {
 
     //TODO: Set to run at 9 am
     @CacheEvict(value = MyCacheManager.DIGESTS_CACHE, allEntries = true)
-    @Scheduled(fixedDelay = 999_000, initialDelay = 540_000)
-    public void performWeeklyTopStoriesPerTopicJob() throws Exception {
+//    @Scheduled(fixedDelay = 999_000, initialDelay = 1_000)
+    @Scheduled(cron = "0 0 9 * * *")
+    public void performDigestsJob() throws Exception {
         final LocalDateTime dateTimeExecuted = LocalDateTime.of(LocalDate.now().getYear(),
                 LocalDate.now().getMonth(),
                 LocalDate.now().getDayOfMonth(),

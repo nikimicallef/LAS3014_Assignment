@@ -7,5 +7,5 @@ import java.sql.Timestamp;
 import java.util.List;
 
 public interface UserTopicMappingService {
-    List<UserTopicMapping> findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfter(final Topic topic, final Timestamp timestamp);
+    List<UserTopicMapping> findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfterAndInterestedFromBefore(Topic topic, Timestamp interestedToIsAfter, Timestamp interestedFromBefore);
 }

@@ -1,7 +1,15 @@
 package com.uom.las3014.api.request;
 
+import com.uom.las3014.restcontroller.UserController;
+
 import javax.validation.constraints.NotNull;
 
+/**
+ * Typically used as a representation of and input body, for example when logging in.
+ * Requires 2 input parameters;
+ * - {@link UserLoginRequestBody#username}: username of the new user
+ * - {@link UserLoginRequestBody#password}: password of the new used
+ */
 public class UserLoginRequestBody {
     @NotNull(message="Username can not be empty")
     private String username;
@@ -15,7 +23,7 @@ public class UserLoginRequestBody {
         return username;
     }
 
-    public void setUsername(String username) {
+    public void setUsername(final String username) {
         this.username = username;
     }
 
@@ -23,7 +31,7 @@ public class UserLoginRequestBody {
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(final String password) {
         this.password = password;
     }
 }

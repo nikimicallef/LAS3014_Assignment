@@ -1,5 +1,6 @@
 package com.uom.las3014.service;
 
+import com.google.common.collect.Sets;
 import com.uom.las3014.api.response.GroupTopStoriesByDateResponse;
 import com.uom.las3014.api.response.GroupTopStoriesByDateResponse.TopStoriesForTopicResponse;
 import com.uom.las3014.api.response.GroupTopStoriesByDateResponse.TopStoriesForTopicResponse.TopStoryResponse;
@@ -106,10 +107,9 @@ public class DigestsServiceImplUnitTests {
     @Test
     public void getLatestWeeklyDigest_oneStoryForWeeklyDigest_emptyResponse(){
         final Digest weeklyDigest1 = new Digest(DIGEST_DAY_OF_WEEK, null, story1, Collections.singleton(user));
-        user.getDigestsAssignedToUser().add(weeklyDigest1);
         user.getUserTopics().add(new UserTopicMapping(user, topic, new Timestamp(System.currentTimeMillis())));
 
-        when(digestDaoRepository.findLatestDigestsForUser(user)).thenReturn(user.getDigestsAssignedToUser());
+        when(digestDaoRepository.findLatestDigestsForUser(user)).thenReturn(Sets.newHashSet(weeklyDigest1));
 
         final GroupTopStoriesByDateResponse groupTopStoriesByDateResponse = new GroupTopStoriesByDateResponse(DIGEST_DAY_OF_WEEK.toLocalDate());
 
@@ -133,12 +133,10 @@ public class DigestsServiceImplUnitTests {
     @Test
     public void getLatestWeeklyDigest_oneStoryForTopicAndWeeklyDigest_emptyResponse(){
         final Digest weeklyDigest1 = new Digest(DIGEST_DAY_OF_WEEK, null, story1, Collections.singleton(user));
-        user.getDigestsAssignedToUser().add(weeklyDigest1);
         final Digest topicDigest1 = new Digest(DIGEST_DAY_OF_WEEK, topic, story2, Collections.singleton(user));
-        user.getDigestsAssignedToUser().add(topicDigest1);
         user.getUserTopics().add(new UserTopicMapping(user, topic, new Timestamp(System.currentTimeMillis())));
 
-        when(digestDaoRepository.findLatestDigestsForUser(user)).thenReturn(user.getDigestsAssignedToUser());
+        when(digestDaoRepository.findLatestDigestsForUser(user)).thenReturn(Sets.newHashSet(weeklyDigest1, topicDigest1));
 
         final GroupTopStoriesByDateResponse groupTopStoriesByDateResponse = new GroupTopStoriesByDateResponse(DIGEST_DAY_OF_WEEK.toLocalDate());
 
@@ -165,12 +163,10 @@ public class DigestsServiceImplUnitTests {
     @Test
     public void getLatestWeeklyDigest_twoStoryForWeeklyDigest_emptyResponse(){
         final Digest weeklyDigest1 = new Digest(DIGEST_DAY_OF_WEEK, null, story1, Collections.singleton(user));
-        user.getDigestsAssignedToUser().add(weeklyDigest1);
         final Digest weeklyDigest2 = new Digest(DIGEST_DAY_OF_WEEK, null, story2, Collections.singleton(user));
-        user.getDigestsAssignedToUser().add(weeklyDigest2);
         user.getUserTopics().add(new UserTopicMapping(user, topic, new Timestamp(System.currentTimeMillis())));
 
-        when(digestDaoRepository.findLatestDigestsForUser(user)).thenReturn(user.getDigestsAssignedToUser());
+        when(digestDaoRepository.findLatestDigestsForUser(user)).thenReturn(Sets.newHashSet(weeklyDigest1, weeklyDigest2));
 
         final GroupTopStoriesByDateResponse groupTopStoriesByDateResponse = new GroupTopStoriesByDateResponse(DIGEST_DAY_OF_WEEK.toLocalDate());
 
@@ -203,13 +199,11 @@ public class DigestsServiceImplUnitTests {
     public void getGroupOfWeeklyDigests_oneStoryForWeeklyDigest_emptyResponse(){
         final Digest weeklyDigest1 = new Digest(DIGEST_DAY_OF_WEEK, null, story1, Collections.singleton(user));
         final Digest weeklyDigest2 = new Digest(DIGEST_DAY_OF_WEEK, null, story2, Collections.singleton(user));
-        user.getDigestsAssignedToUser().add(weeklyDigest1);
-        user.getDigestsAssignedToUser().add(weeklyDigest2);
 
         final Date dateFrom = new Date(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(2));
         final Date dateTo = new Date(System.currentTimeMillis());
 
-        when(digestDaoRepository.findGroupOfDigestsBetweenDatesForUser(dateFrom, dateTo, user)).thenReturn(user.getDigestsAssignedToUser());
+        when(digestDaoRepository.findGroupOfDigestsBetweenDatesForUser(dateFrom, dateTo, user)).thenReturn(Sets.newHashSet(weeklyDigest1, weeklyDigest2));
 
         final MultipleTopStoriesPerDateResponse digestsGroup = new MultipleTopStoriesPerDateResponse();
 

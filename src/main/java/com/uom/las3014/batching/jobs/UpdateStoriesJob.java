@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * Batch job which does the following processes
  * a) Gets all {@link Story} created within the last 7 days and the HackerNews API is queried with the story ID,
- *    where the {@link Story} details are updated (namely score and isDeleted flag).
+ *    where the {@link Story} details are updated (namely score and/or isDeleted flag).
  * b) Find the top {@link Story} per {@link Topic} posted within the last 24 hours.
  */
 @Configuration

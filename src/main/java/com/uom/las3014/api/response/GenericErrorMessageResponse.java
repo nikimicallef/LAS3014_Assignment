@@ -1,5 +1,10 @@
 package com.uom.las3014.api.response;
 
+/**
+ * Similar to the {@link GenericMessageResponse} but used specifically in a failure case.
+ * Contains 1 parameter;
+ * - {@link GenericErrorMessageResponse#error}: Generic placeholder which describes the error occurred
+ */
 public class GenericErrorMessageResponse {
     private String error;
 

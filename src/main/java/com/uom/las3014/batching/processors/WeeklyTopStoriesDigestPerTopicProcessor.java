@@ -37,7 +37,7 @@ public class WeeklyTopStoriesDigestPerTopicProcessor implements ItemProcessor<To
         final List<Story> stories = storiesService.getUndeletedStoriesContainingKeywordAndAfterTimestamp(topic.getTopicName(),
                                                         new Timestamp(dateTimeExecutedMillis - TimeUnit.DAYS.toMillis(7)));
 
-        final List<UserTopicMapping> userTopicMapping = userTopicMappingService.findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfter(topic, new Timestamp(dateTimeExecutedMillis));
+        final List<UserTopicMapping> userTopicMapping = userTopicMappingService.findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfterAndInterestedFromBefore(topic, new Timestamp(dateTimeExecutedMillis), new Timestamp(dateTimeExecutedMillis));
 
         final Set<User> usersToMapWithDigest = userTopicMapping.stream().map(UserTopicMapping::getUser).collect(Collectors.toSet());
 

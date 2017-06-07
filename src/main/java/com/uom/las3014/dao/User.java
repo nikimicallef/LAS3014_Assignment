@@ -17,12 +17,8 @@ public class User {
     private String sessionToken;
     private Timestamp sessionTokenCreated;
     private Timestamp sessionTokenLastUsed;
-    //TODO: Orphan removal?
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<UserTopicMapping> userTopicMappings;
-    @ManyToMany(mappedBy = "usersAssignedToDigest")
-    private Set<Digest> digestsAssignedToUser;
 
     public User(){}
 
@@ -30,7 +26,6 @@ public class User {
         this.username = username;
         this.password = password;
         userTopicMappings = new HashSet<>();
-        digestsAssignedToUser = new HashSet<>();
     }
 
     public Long getUserId() {
@@ -87,15 +82,6 @@ public class User {
             return userTopicMappings;
         } else {
             return userTopicMappings;
-        }
-    }
-
-    public Set<Digest> getDigestsAssignedToUser() {
-        if(digestsAssignedToUser == null){
-            digestsAssignedToUser = new HashSet<>();
-            return digestsAssignedToUser;
-        } else {
-            return digestsAssignedToUser;
         }
     }
 

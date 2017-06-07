@@ -2,13 +2,21 @@ package com.uom.las3014.api.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.uom.las3014.dao.Story;
+import com.uom.las3014.dao.Topic;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-@JsonPropertyOrder({ "effective_date", "topic" })
+/**
+ * Represents the top stories per topics for a specific date.
+ * Contains 2 parameters;
+ * - {@link GroupTopStoriesByDateResponse#effectiveDate}: Gives the date of when the top stories provided are valid
+ * - {@link GroupTopStoriesByDateResponse#topics}: Top Topic-stories pairs for the specified effective date
+ */
+@JsonPropertyOrder({ "effective_date", "topics" })
 public class GroupTopStoriesByDateResponse {
     @JsonProperty("effective_date")
     private String effectiveDate;
@@ -50,22 +58,29 @@ public class GroupTopStoriesByDateResponse {
         return effectiveDate != null ? effectiveDate.hashCode() : 0;
     }
 
+    /**
+     * Represents the top stories for a specific {@link Topic}.
+     * Contains 2 parameters;
+     * - {@link TopStoriesForTopicResponse#topicName}: Name of the topic. Can be set to weekly when showing the top stories for the week
+     * - {@link TopStoriesForTopicResponse#topStories}: Collections of top stories for the topic specified
+     */
     public class TopStoriesForTopicResponse {
-        private String topic;
+        @JsonProperty("topic")
+        private String topicName;
         @JsonProperty("top_stories")
         private List<TopStoryResponse> topStories;
 
-        public TopStoriesForTopicResponse(final String topic) {
-            this.topic = topic;
+        public TopStoriesForTopicResponse(final String topicName) {
+            this.topicName = topicName;
             this.topStories = new ArrayList<>();
         }
 
-        public void setTopic(String topic) {
-            this.topic = topic;
+        public void setTopicName(final String topicName) {
+            this.topicName = topicName;
         }
 
-        public String getTopic() {
-            return topic;
+        public String getTopicName() {
+            return topicName;
         }
 
         public List<TopStoryResponse> getTopStories() {
@@ -83,14 +98,21 @@ public class GroupTopStoriesByDateResponse {
 
             TopStoriesForTopicResponse that = (TopStoriesForTopicResponse) o;
 
-            return topic != null ? topic.equals(that.topic) : that.topic == null;
+            return topicName != null ? topicName.equals(that.topicName) : that.topicName == null;
         }
 
         @Override
         public int hashCode() {
-            return topic != null ? topic.hashCode() : 0;
+            return topicName != null ? topicName.hashCode() : 0;
         }
 
+        /**
+         * Represents a {@link Story}.
+         * Contains 3 parameters;
+         * - {@link TopStoryResponse#title}: Title of the story
+         * - {@link TopStoryResponse#url}: URL of the story
+         * - {@link TopStoryResponse#score}: Score of the story
+         */
         public class TopStoryResponse {
             private String title;
             private String url;

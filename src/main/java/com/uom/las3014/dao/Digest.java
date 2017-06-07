@@ -78,16 +78,11 @@ public class Digest {
 
         Digest digest = (Digest) o;
 
-        if (!dayOfWeek.equals(digest.dayOfWeek)) return false;
-        if (topicId != null ? !topicId.getTopicName().equals(digest.topicId.getTopicName()) : digest.topicId.getTopicName() != null) return false;
-        return storyId != null ? storyId.getStoryId().equals(digest.storyId.getStoryId()) : digest.storyId == null;
+        return digestId != null ? digestId.equals(digest.digestId) : digest.digestId == null;
     }
 
     @Override
     public int hashCode() {
-        int result = dayOfWeek.hashCode();
-        result = 31 * result + (topicId != null ? topicId.getTopicName().hashCode() : 0);
-        result = 31 * result + (storyId != null ? storyId.getStoryId().hashCode() : 0);
-        return result;
+        return digestId != null ? digestId.hashCode() : 0;
     }
 }

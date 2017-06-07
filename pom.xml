@@ -9,7 +9,7 @@
 	<packaging>jar</packaging>
 
 	<name>assignment</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Niki Micallef assignment submission for course LAS 3014</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>

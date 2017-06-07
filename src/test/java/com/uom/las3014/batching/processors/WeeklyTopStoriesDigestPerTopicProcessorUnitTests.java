@@ -46,7 +46,7 @@ public class WeeklyTopStoriesDigestPerTopicProcessorUnitTests {
     @Test
     public void process_noStoriesAndNoUsers_digestCreatedWithNoStoryAndNoUsers() throws Exception {
         when(storiesService.getUndeletedStoriesContainingKeywordAndAfterTimestamp(anyString(), any(Timestamp.class))).thenReturn(new ArrayList<>());
-        when(userTopicMappingService.findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfter(any(Topic.class), any(Timestamp.class))).thenReturn(new ArrayList<>());
+        when(userTopicMappingService.findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfterAndInterestedFromBefore(any(Topic.class), any(Timestamp.class), any(Timestamp.class))).thenReturn(new ArrayList<>());
 
         final Digest expectedDigest = new Digest(new Date(DATE_TIME_EXECUTED_MILLIS), topic, null, new HashSet<>());
 
@@ -55,13 +55,13 @@ public class WeeklyTopStoriesDigestPerTopicProcessorUnitTests {
         assertEquals(1, digests.size());
         assertEquals(expectedDigest, digests.get(0));
         verify(storiesService).getUndeletedStoriesContainingKeywordAndAfterTimestamp(anyString(), any(Timestamp.class));
-        verify(userTopicMappingService).findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfter(any(Topic.class), any(Timestamp.class));
+        verify(userTopicMappingService).findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfterAndInterestedFromBefore(any(Topic.class), any(Timestamp.class), any(Timestamp.class));
     }
 
     @Test
     public void process_1StoriesButNoUsers_digestCreatedWithStoryButNoUsers() throws Exception {
         when(storiesService.getUndeletedStoriesContainingKeywordAndAfterTimestamp(anyString(), any(Timestamp.class))).thenReturn(Collections.singletonList(story1));
-        when(userTopicMappingService.findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfter(any(Topic.class), any(Timestamp.class))).thenReturn(new ArrayList<>());
+        when(userTopicMappingService.findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfterAndInterestedFromBefore(any(Topic.class), any(Timestamp.class), any(Timestamp.class))).thenReturn(new ArrayList<>());
 
         final Digest expectedDigest = new Digest(new Date(DATE_TIME_EXECUTED_MILLIS), topic, story1, new HashSet<>());
 
@@ -70,7 +70,7 @@ public class WeeklyTopStoriesDigestPerTopicProcessorUnitTests {
         assertEquals(1, digests.size());
         assertEquals(expectedDigest, digests.get(0));
         verify(storiesService).getUndeletedStoriesContainingKeywordAndAfterTimestamp(anyString(), any(Timestamp.class));
-        verify(userTopicMappingService).findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfter(any(Topic.class), any(Timestamp.class));
+        verify(userTopicMappingService).findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfterAndInterestedFromBefore(any(Topic.class), any(Timestamp.class), any(Timestamp.class));
     }
 
 
@@ -82,7 +82,7 @@ public class WeeklyTopStoriesDigestPerTopicProcessorUnitTests {
         final Story story5 = new Story(127L, 30, "TestTitle5", "url", new Timestamp(System.currentTimeMillis()));
 
         when(storiesService.getUndeletedStoriesContainingKeywordAndAfterTimestamp(anyString(), any(Timestamp.class))).thenReturn(Arrays.asList(story1, story2, story3, story4, story5));
-        when(userTopicMappingService.findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfter(any(Topic.class), any(Timestamp.class))).thenReturn(new ArrayList<>());
+        when(userTopicMappingService.findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfterAndInterestedFromBefore(any(Topic.class), any(Timestamp.class), any(Timestamp.class))).thenReturn(new ArrayList<>());
 
         final Digest expectedDigest1 = new Digest(new Date(DATE_TIME_EXECUTED_MILLIS), topic, story5, new HashSet<>());
         final Digest expectedDigest2 = new Digest(new Date(DATE_TIME_EXECUTED_MILLIS), topic, story4, new HashSet<>());
@@ -95,7 +95,7 @@ public class WeeklyTopStoriesDigestPerTopicProcessorUnitTests {
         assertEquals(expectedDigest2, digests.get(1));
         assertEquals(expectedDigest3, digests.get(2));
         verify(storiesService).getUndeletedStoriesContainingKeywordAndAfterTimestamp(anyString(), any(Timestamp.class));
-        verify(userTopicMappingService).findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfter(any(Topic.class), any(Timestamp.class));
+        verify(userTopicMappingService).findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfterAndInterestedFromBefore(any(Topic.class), any(Timestamp.class), any(Timestamp.class));
     }
 
     @Test
@@ -112,7 +112,7 @@ public class WeeklyTopStoriesDigestPerTopicProcessorUnitTests {
         final UserTopicMapping userTopicMapping1 = new UserTopicMapping(user1, topic, new Timestamp(System.currentTimeMillis()));
         final UserTopicMapping userTopicMapping2 = new UserTopicMapping(user2, topic, new Timestamp(System.currentTimeMillis()));
 
-        when(userTopicMappingService.findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfter(any(Topic.class), any(Timestamp.class))).thenReturn(Arrays.asList(userTopicMapping1, userTopicMapping2));
+        when(userTopicMappingService.findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfterAndInterestedFromBefore(any(Topic.class), any(Timestamp.class), any(Timestamp.class))).thenReturn(Arrays.asList(userTopicMapping1, userTopicMapping2));
 
         final Digest expectedDigest1 = new Digest(new Date(DATE_TIME_EXECUTED_MILLIS), topic, story5, new HashSet<>(Arrays.asList(user1, user2)));
         final Digest expectedDigest2 = new Digest(new Date(DATE_TIME_EXECUTED_MILLIS), topic, story4, new HashSet<>(Arrays.asList(user1, user2)));
@@ -125,6 +125,6 @@ public class WeeklyTopStoriesDigestPerTopicProcessorUnitTests {
         assertEquals(expectedDigest2, digests.get(1));
         assertEquals(expectedDigest3, digests.get(2));
         verify(storiesService).getUndeletedStoriesContainingKeywordAndAfterTimestamp(anyString(), any(Timestamp.class));
-        verify(userTopicMappingService).findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfter(any(Topic.class), any(Timestamp.class));
+        verify(userTopicMappingService).findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfterAndInterestedFromBefore(any(Topic.class), any(Timestamp.class), any(Timestamp.class));
     }
 }
