@@ -42,10 +42,8 @@ public class CreateDigestsScheduler {
     @Autowired
     private StoriesService storiesService;
 
-    //TODO: Set to run at 9 am
     @CacheEvict(value = MyCacheManager.DIGESTS_CACHE, allEntries = true)
-//    @Scheduled(fixedDelay = 999_000, initialDelay = 1_000)
-    @Scheduled(cron = "0 0 9 * * *")
+    @Scheduled(cron = "0 0 9 ? * SAT")
     public void performDigestsJob() throws Exception {
         final LocalDateTime dateTimeExecuted = LocalDateTime.of(LocalDate.now().getYear(),
                                                                 LocalDate.now().getMonth(),
@@ -67,16 +65,12 @@ public class CreateDigestsScheduler {
 
         jobLauncher.run(createDigestsJob, param);
 
-        //TODO: Delete digests older than a YEAR not a week
-//        digestsService.deleteDigestByDayOfWeekBefore(new Timestamp(dateTimeExecuted.minusWeeks(1).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()));
         final Timestamp yearBeforeDateTimeExecuted = new Timestamp(dateTimeExecuted.minusYears(1)
                                                                                    .atZone(ZoneId.systemDefault())
                                                                                    .toInstant()
                                                                                    .toEpochMilli());
         digestsService.deleteDigestByDayOfWeekBefore(yearBeforeDateTimeExecuted);
 
-        //TODO: Delete stories older than a WEEK not a day
-//        storiesService.deleteByDateCreatedBeforeAndDigestsEmpty(new Timestamp(dateTimeExecuted.minusDays(1).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()));
         final Timestamp weekBeforeDateTimeExecuted = new Timestamp(dateTimeExecuted.minusWeeks(1)
                                                                                    .atZone(ZoneId.systemDefault())
                                                                                    .toInstant()

@@ -108,6 +108,7 @@ public class DigestsServiceImplUnitTests {
     @Test
     public void getLatestWeeklyDigest_oneStoryForWeeklyDigest_emptyResponse(){
         final Digest weeklyDigest1 = new Digest(DIGEST_DAY_OF_WEEK, null, story1, Collections.singleton(user));
+        weeklyDigest1.setDigestId(1L);
         user.getUserTopics().add(new UserTopicMapping(user, topic, new Timestamp(System.currentTimeMillis())));
 
         when(digestDaoRepository.findLatestDigestsForUser(user)).thenReturn(Sets.newHashSet(weeklyDigest1));
@@ -135,6 +136,7 @@ public class DigestsServiceImplUnitTests {
     @Test
     public void getLatestWeeklyDigest_oneStoryForTopicAndWeeklyDigest_emptyResponse(){
         final Digest weeklyDigest1 = new Digest(DIGEST_DAY_OF_WEEK, null, story1, Collections.singleton(user));
+        weeklyDigest1.setDigestId(1L);
         final Digest topicDigest1 = new Digest(DIGEST_DAY_OF_WEEK, topic, story2, Collections.singleton(user));
         user.getUserTopics().add(new UserTopicMapping(user, topic, new Timestamp(System.currentTimeMillis())));
 
@@ -166,7 +168,9 @@ public class DigestsServiceImplUnitTests {
     @Test
     public void getLatestWeeklyDigest_twoStoryForWeeklyDigest_emptyResponse(){
         final Digest weeklyDigest1 = new Digest(DIGEST_DAY_OF_WEEK, null, story1, Collections.singleton(user));
+        weeklyDigest1.setDigestId(1L);
         final Digest weeklyDigest2 = new Digest(DIGEST_DAY_OF_WEEK, null, story2, Collections.singleton(user));
+        weeklyDigest2.setDigestId(2L);
         user.getUserTopics().add(new UserTopicMapping(user, topic, new Timestamp(System.currentTimeMillis())));
 
         when(digestDaoRepository.findLatestDigestsForUser(user)).thenReturn(Sets.newHashSet(weeklyDigest1, weeklyDigest2));
@@ -203,7 +207,9 @@ public class DigestsServiceImplUnitTests {
     @Test
     public void getGroupOfWeeklyDigests_oneStoryForWeeklyDigest_emptyResponse(){
         final Digest weeklyDigest1 = new Digest(DIGEST_DAY_OF_WEEK, null, story1, Collections.singleton(user));
+        weeklyDigest1.setDigestId(1L);
         final Digest weeklyDigest2 = new Digest(DIGEST_DAY_OF_WEEK, null, story2, Collections.singleton(user));
+        weeklyDigest2.setDigestId(2L);
 
         final Date dateFrom = new Date(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(2));
         final Date dateTo = new Date(System.currentTimeMillis());

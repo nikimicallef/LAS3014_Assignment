@@ -32,7 +32,7 @@ public class GetNewStoriesProcessor implements ItemProcessor<String, Story> {
             story = new Story(responseJson.get("id").getAsLong(),
                                 responseJson.get("score").getAsInt(),
                                 responseJson.get("title").getAsString(),
-                                responseJson.has("url") ? responseJson.get("url").getAsString() : "",
+                                responseJson.has("url") ? responseJson.get("url").getAsString() : ("news.ycombinator.com/item?id=" + storyId),
                                 new Timestamp(responseJson.get("time").getAsLong() * 1000L));
 
             logger.debug(story.toString());

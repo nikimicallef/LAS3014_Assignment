@@ -61,7 +61,7 @@ public class GetNewStoriesProcessorUnitTests {
         assertEquals(STORY_SCORE, newStory.getScore());
         assertEquals(STORY_TITLE, newStory.getTitle());
         assertEquals(STORY_TIME.getTime()*1000, newStory.getDateCreated().getTime());
-        assertEquals("", newStory.getUrl());
+        assertEquals("news.ycombinator.com/item?id=123", newStory.getUrl());
         verify(hackernewsRequester).getItem(anyLong());
     }
 
