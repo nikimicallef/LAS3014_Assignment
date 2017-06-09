@@ -14,7 +14,7 @@ import java.util.List;
  */
 @Repository
 public interface UserTopicMappingDaoRepository extends JpaRepository<UserTopicMapping, Long> {
-    List<UserTopicMapping> findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfterAndInterestedFromBefore(final Topic topic,
-                                                                                                             final Timestamp interestedToIsAfter,
-                                                                                                             final Timestamp interestedFromBefore);
+    List<UserTopicMapping> findAllByTopicIsAndInterestedToIsNullOrInterestedToIsAfterAndInterestedFromBefore(Topic topic,
+                                                                                                             Timestamp interestedToIsAfter,
+                                                                                                             Timestamp interestedFromBefore);
 }

@@ -51,7 +51,7 @@ public class StoriesController {
     @RequestMapping(method = RequestMethod.GET, value = "/digests/range")
     public ResponseEntity<MultipleTopStoriesPerDateResponse> getDigestsGroup(final @RequestHeader(name = "X-SessionToken") String sessionToken,
                                                                              final @RequestParam(value="from", required = true) @DateTimeFormat(pattern="yyyy-MM-dd") Date dateFrom,
-                                                                             final @RequestParam(value="from", required = true) @DateTimeFormat(pattern="yyyy-MM-dd") Date dateTo){
+                                                                             final @RequestParam(value="to", required = true) @DateTimeFormat(pattern="yyyy-MM-dd") Date dateTo){
         final User user = userService.getUserFromDbUsingSessionToken(sessionToken);
 
         return digestsService.getGroupOfWeeklyDigests(user, dateFrom, dateTo);

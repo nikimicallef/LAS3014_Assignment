@@ -20,10 +20,10 @@ public interface DigestDaoRepository extends JpaRepository<Digest, Long> {
     //The below query shows warning HHH90000016 on startup due to the member keyword used. This is a bug and was fixed on
     //a later version of Hibernate https://hibernate.atlassian.net/browse/HHH-11400
     @Query("select d from Digest d where d.dayOfWeek = (select MAX(d.dayOfWeek) from Digest d) and ?1 member d.usersAssignedToDigest")
-    Set<Digest> findLatestDigestsForUser(final User user);
+    Set<Digest> findLatestDigestsForUser(User user);
 
     //The below query shows warning HHH90000016 on startup due to the member keyword used. This is a bug and was fixed on
     //a later version of Hibernate https://hibernate.atlassian.net/browse/HHH-11400
     @Query("select d from Digest d where d.dayOfWeek >= ?1 and d.dayOfWeek <= ?2 and ?3 member d.usersAssignedToDigest")
-    Set<Digest> findGroupOfDigestsBetweenDatesForUser(final Date dateFrom, final Date dateTo, final User user);
+    Set<Digest> findGroupOfDigestsBetweenDatesForUser(Date dateFrom, Date dateTo, User user);
 }

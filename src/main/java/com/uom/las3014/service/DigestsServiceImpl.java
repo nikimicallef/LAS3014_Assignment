@@ -18,11 +18,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
+@Transactional
 public class DigestsServiceImpl implements DigestsService {
     @Autowired
     private DigestDaoRepository digestDaoRepository;

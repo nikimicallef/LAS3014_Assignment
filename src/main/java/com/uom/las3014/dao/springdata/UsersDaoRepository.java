@@ -13,11 +13,11 @@ import java.util.stream.Stream;
  */
 @Repository
 public interface UsersDaoRepository extends JpaRepository<User, Long>{
-    Optional<User> findUsersByUsername(final String username);
+    Optional<User> findUsersByUsername(String username);
 
-    Optional<User> findUsersBySessionToken(final String sessionToken);
+    Optional<User> findUsersBySessionToken(String sessionToken);
 
-    Integer countUsersByUsername(final String username);
+    Integer countUsersByUsername(String username);
 
     Stream<User> streamUsersBySessionTokenNotNull();
 }

@@ -71,6 +71,6 @@ CREATE TABLE `user_digest_mapping` (
   `user_id` BIGINT UNSIGNED NOT NULL,
   PRIMARY KEY (`digest_id` , `user_id`),
   KEY `fk_userdigestmapping_user_idx` (`user_id`),
-  CONSTRAINT `fk_userdigestmapping_digestid` FOREIGN KEY (`digest_id`) REFERENCES `digests` (`digest_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_userdigestmapping_userid` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `fk_userdigestmapping_digestid` FOREIGN KEY (`digest_id`) REFERENCES `digests` (`digest_id`),
+  CONSTRAINT `fk_userdigestmapping_userid` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
 ) ENGINE = InnoDB;

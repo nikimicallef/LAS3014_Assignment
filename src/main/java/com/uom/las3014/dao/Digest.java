@@ -21,7 +21,7 @@ public class Digest {
     @ManyToOne
     @JoinColumn(name = "story_id")
     private Story storyId;
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(name = "user_digest_mapping", joinColumns = @JoinColumn(name = "digest_id", referencedColumnName = "digestId"), inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "userId"))
     private Set<User> usersAssignedToDigest;
 

@@ -1,0 +1,183 @@
+{
+	"variables": [],
+	"info": {
+		"name": "LAS3014",
+		"_postman_id": "3e17d72e-0f2c-92ed-3518-f7f22ff9862c",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "01. UserMgmt",
+			"description": "",
+			"item": [
+				{
+					"name": "01. Create User",
+					"request": {
+						"url": "localhost:8080/user",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\" : \"nik\",\n  \"password\" : \"nik\",\n  \"interestedTopics\" : [\"java\", \"spring\"]\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "02. Login User",
+					"request": {
+						"url": "localhost:8080/user/login",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\" : \"nik\",\n  \"password\" : \"nik\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "03. Logout User",
+					"request": {
+						"url": "localhost:8080/user/logout",
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-SessionToken",
+								"value": "",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "04. Change Topics",
+					"request": {
+						"url": "localhost:8080/user/topics",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "X-SessionToken",
+								"value": "",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"additions\" : [],\n\t\"removals\" : []\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "02. Stories",
+			"description": "",
+			"item": [
+				{
+					"name": "01. Get Top Story Per Topic",
+					"request": {
+						"url": "localhost:8080/stories/top",
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-SessionToken",
+								"value": "",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "02. Get Latest Digest",
+					"request": {
+						"url": "localhost:8080/stories/digests/latest",
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-SessionToken",
+								"value": "",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "03. Digests Range",
+					"request": {
+						"url": {
+							"raw": "localhost:8080/stories/digests/range?from=&to=",
+							"auth": {},
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"stories",
+								"digests",
+								"range"
+							],
+							"query": [
+								{
+									"key": "from",
+									"value": "",
+									"equals": true,
+									"description": ""
+								},
+								{
+									"key": "to",
+									"value": "",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-SessionToken",
+								"value": "",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

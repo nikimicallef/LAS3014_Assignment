@@ -17,13 +17,13 @@ import java.util.List;
 public interface StoriesDaoRepository extends JpaRepository<Story, Long> {
     List<Story> findAllByDateCreatedIsAfterAndDeletedIsFalse(final Timestamp createdAfter);
 
-    List<Story> findAllByTitleContainingAndDateCreatedIsAfterAndDeletedIsFalse(final String keyword,
-                                                                               final Timestamp createdAfter);
+    List<Story> findAllByTitleContainingAndDateCreatedIsAfterAndDeletedIsFalse(String keyword,
+                                                                               Timestamp createdAfter);
 
-    List<Story> findAllByDateCreatedIsAfterAndDeletedIsFalseAndScoreGreaterThan(final Timestamp createdAfter,
-                                                                                final Integer scoreGreaterThan);
+    List<Story> findAllByDateCreatedIsAfterAndDeletedIsFalseAndScoreGreaterThan(Timestamp createdAfter,
+                                                                                Integer scoreGreaterThan);
 
     @Modifying
     @Query("delete from Story s where s.dateCreated < ?1 and s.digests IS EMPTY")
-    void deleteByDateCreatedBeforeAndDigestsEmpty(final Timestamp timestamp);
+    void deleteByDateCreatedBeforeAndDigestsEmpty(Timestamp timestamp);
 }
